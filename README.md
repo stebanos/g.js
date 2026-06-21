@@ -54,6 +54,19 @@ g.js targets Node.js 20 or newer (the repository pins a version in `.nvmrc`). Th
 - `npm run lint` — run ESLint.
 - `npm run build` — bundle the ESM and IIFE distributions with esbuild.
 - `npm run dist` — run the tests and rebuild the distributions.
+- `npm run dev` — start a watching dev server with live reload on http://localhost:8000.
+
+### Examples
+
+Run `npm run dev` and open one of the example pages in the browser:
+
+- `index.html` — an interactive notebook for evaluating g.js expressions.
+- `svg.html` — a notebook that renders pasted SVG via `g.svg.parseString`.
+- `img_examples/*.html` — imaging examples (layers, masks, blend modes, and
+  filters) built on `g.ImageCanvas` and `g.loadImages`.
+
+The dev server bundles the library to `build/g.js`, which every example page
+loads, so they need to be served (not opened as `file://`).
 
 ### Publishing a release
 
