@@ -1,144 +1,152 @@
 // Shape group object
 
-'use strict';
+import Path from "../objects/path";
+import Rect from "../objects/rect";
+import Color from "../objects/color";
 
-const Path = require('../objects/path');
-const Rect = require('../objects/rect');
-const Color = require('../objects/color');
-
-const Group = function (shapes) {
+export default class Group {
+  constructor(shapes) {
     if (!shapes) {
-        this.shapes = [];
+      this.shapes = [];
     } else if (shapes.shapes || shapes.commands) {
-        this.shapes = [shapes];
+      this.shapes = [shapes];
     } else if (shapes) {
-        this.shapes = shapes;
+      this.shapes = shapes;
     }
-};
-
-Group.prototype.add = function (shape) {
+  }
+  add(shape) {
     this.shapes.push(shape);
-};
-
-Group.prototype.clone = function () {
-    const n = this.shapes.length;
-	const newShapes = [];
+  }
+  clone() {
+    var newShapes = [],
+      n = this.shapes.length,
+      i;
     newShapes.length = n;
-    for (let i = 0; i < n; i++) {
-        newShapes[i] = this.shapes[i].clone();
+    for (i = 0; i < n; i += 1) {
+      newShapes[i] = this.shapes[i].clone();
     }
     return new Group(newShapes);
-};
-
-Group.prototype.colorize = function (options) {
-    if (typeof options !== 'object' || options instanceof Color) {
-        options = {};
-        if (arguments[0] !== undefined) { options.fill = arguments[0]; }
-        if (arguments[1] !== undefined) { options.stroke = arguments[1]; }
-        if (arguments[2] !== undefined) { options.strokeWidth = arguments[2]; }
+  }
+  colorize(options) {
+    var args = arguments;
+    if (typeof options !== "object" || options instanceof Color) {
+      options = {};
+      if (args[0] !== undefined) {
+        options.fill = args[0];
+      }
+      if (args[1] !== undefined) {
+        options.stroke = args[1];
+      }
+      if (args[2] !== undefined) {
+        options.strokeWidth = args[2];
+      }
     }
-    const shapes = [];
+    var shapes = [];
     shapes.length = this.shapes.length;
-    for (let i = 0; i < this.shapes.length; i++) {
-        shapes[i] = this.shapes[i].colorize(options);
+    for (var i = 0; i < this.shapes.length; i += 1) {
+      shapes[i] = this.shapes[i].colorize(options);
     }
     return new Group(shapes);
-};
-
-Group.prototype.desaturate = function (options) {
-    const shapes = [];
+  }
+  desaturate(options) {
+    var shapes = [];
     shapes.length = this.shapes.length;
-    for (let i = 0; i < this.shapes.length; i++) {
-        shapes[i] = this.shapes[i].desaturate(options);
+    for (var i = 0; i < this.shapes.length; i += 1) {
+      shapes[i] = this.shapes[i].desaturate(options);
     }
     return new Group(shapes);
-};
-
-Group.prototype.invert = function () {
-    const shapes = [];
+  }
+  invert() {
+    var shapes = [];
     shapes.length = this.shapes.length;
-    for (let i = 0; i < this.shapes.length; i++) {
-        shapes[i] = this.shapes[i].invert();
+    for (var i = 0; i < this.shapes.length; i += 1) {
+      shapes[i] = this.shapes[i].invert();
     }
     return new Group(shapes);
-};
-
-Group.prototype.bounds = function () {
-    if (this.shapes.length === 0) { return new Rect(0, 0, 0, 0); }
-    const shapes = this.shapes;
-    let r;
-    for (let i = 0; i < shapes.length; i++) {
-        const shape = shapes[i];
-        if (r === undefined) {
-            r = shape.bounds();
-        }
-        if ((shape.shapes && shape.shapes.length !== 0) ||
-            (shape.commands && shape.commands.length !== 0)) {
-            r = r.unite(shape.bounds());
-        }
+  }
+  bounds() {
+    if (this.shapes.length === 0) {
+      return new Rect(0, 0, 0, 0);
     }
-    return (r !== undefined) ? r : new Rect(0, 0, 0, 0);
-};
-
-// Returns true when point (x,y) falls within the contours of the group.
-Group.prototype.contains = function (x, y, precision) {
-    if (precision === undefined) { precision = 100; }
-    const shapes = this.shapes;
-    for (let i = 0; i < shapes.length; i++) {
-        if (shapes[i].contains(x, y, precision)) {
-            return true;
-        }
+    var i,
+      r,
+      shape,
+      shapes = this.shapes;
+    for (i = 0; i < shapes.length; i += 1) {
+      shape = shapes[i];
+      if (r === undefined) {
+        r = shape.bounds();
+      }
+      if (
+        (shape.shapes && shape.shapes.length !== 0) ||
+        (shape.commands && shape.commands.length !== 0)
+      ) {
+        r = r.unite(shape.bounds());
+      }
+    }
+    return r !== undefined ? r : new Rect(0, 0, 0, 0);
+  }
+  // Returns true when point (x,y) falls within the contours of the group.
+  contains(x, y, precision) {
+    if (precision === undefined) {
+      precision = 100;
+    }
+    var i,
+      shapes = this.shapes;
+    for (i = 0; i < shapes.length; i += 1) {
+      if (shapes[i].contains(x, y, precision)) {
+        return true;
+      }
     }
     return false;
-};
-
-Group.prototype.length = function (precision) {
-    if (precision === undefined) { precision = 10; }
-    const shapes = this.shapes;
-    let sum = 0;
-    for (let i = 0; i < shapes.length; i++) {
-        sum += shapes[i].length(precision);
+  }
+  length(precision) {
+    if (precision === undefined) {
+      precision = 10;
+    }
+    var sum = 0;
+    var shapes = this.shapes;
+    for (var i = 0; i < shapes.length; i += 1) {
+      sum += shapes[i].length(precision);
     }
     return sum;
-};
-
-Group.prototype.resampleByAmount = function (points, perContour) {
+  }
+  resampleByAmount(points, perContour) {
+    var path;
     if (!perContour) {
-        const path = new Path.combine(this);
-        return path.resampleByAmount(points, perContour);
+      path = new Path.combine(this);
+      return path.resampleByAmount(points, perContour);
     }
-    const shapes = [];
+    var shapes = [];
     shapes.length = this.shapes.length;
-    for (let i = 0; i < this.shapes.length; i++) {
-        shapes[i] = this.shapes[i].resampleByAmount(points, perContour);
+    for (var i = 0; i < this.shapes.length; i += 1) {
+      shapes[i] = this.shapes[i].resampleByAmount(points, perContour);
     }
     return new Group(shapes);
-};
-
-Group.prototype.resampleByLength = function (length) {
-    const shapes = [];
+  }
+  resampleByLength(length) {
+    var shapes = [];
     shapes.length = this.shapes.length;
-    for (let i = 0; i < this.shapes.length; i++) {
-        shapes[i] = this.shapes[i].resampleByLength(length);
+    for (var i = 0; i < this.shapes.length; i += 1) {
+      shapes[i] = this.shapes[i].resampleByLength(length);
     }
     return new Group(shapes);
-};
-
-Group.prototype.toSVG = function () {
-    const l = [];
+  }
+  toSVG() {
+    var l = [];
     l.length = this.shapes.length;
-    for (let i = 0; i < this.shapes.length; i++) {
-        l[i] = this.shapes[i].toSVG();
+    for (var i = 0; i < this.shapes.length; i += 1) {
+      l[i] = this.shapes[i].toSVG();
     }
-    return '<g>' + l.join('') + '</g>';
-};
-
-// Draw the group to a 2D context.
-Group.prototype.draw = function (ctx) {
-    const shapes = this.shapes;
-    for (let i = 0; i < shapes.length; i++) {
-        shapes[i].draw(ctx);
+    return "<g>" + l.join("") + "</g>";
+  }
+  // Draw the group to a 2D context.
+  draw(ctx) {
+    var i,
+      shapes = this.shapes,
+      nShapes = shapes.length;
+    for (i = 0; i < nShapes; i += 1) {
+      shapes[i].draw(ctx);
     }
-};
-
-module.exports = Group;
+  }
+}
