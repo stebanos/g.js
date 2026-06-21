@@ -24766,15 +24766,21 @@ export {
   g_default as default
 };
 /*!
- * Image processing based on Pixastic library:
+ * SPDX-License-Identifier: MPL-1.1
+ *
+ * Image processing based on the Pixastic library:
  *
  * Pixastic - JavaScript Image Processing
- * http://pixastic.com/
+ * https://github.com/jseidelin/pixastic
  * Copyright 2012, Jacob Seidelin
  *
- * Dual licensed under the MPL 1.1 or GPLv3 licenses.
- * http://pixastic.com/license-mpl.txt
- * http://pixastic.com/license-gpl-3.0.txt
+ * Pixastic is dual licensed under the MPL 1.1 or GPLv3 licenses. This file
+ * is used here under the MPL 1.1 (https://www.mozilla.org/MPL/1.1/). It
+ * remains under MPL 1.1; the rest of g.js is MIT (see the project LICENSE).
+ *
+ * The polar/distortion filters below are from clips/pattern's canvas.js
+ * (https://github.com/clips/pattern/blob/master/pattern/canvas.js) under
+ * the BSD license.
  *
  */
 //# sourceMappingURL=g.js.map
