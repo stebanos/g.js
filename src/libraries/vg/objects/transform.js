@@ -1,10 +1,10 @@
 // 2-dimensional transformation matrix
 
-import { MOVETO, LINETO, QUADTO, CURVETO, CLOSE } from '../util/bezier';
-import { radians } from '../util/math';
-import Group from '../objects/group';
-import Path from '../objects/path';
-import Point from '../objects/point';
+import { MOVETO, LINETO, QUADTO, CURVETO, CLOSE } from '../util/bezier.js';
+import { radians } from '../util/math.js';
+import Group from '../objects/group.js';
+import Path from '../objects/path.js';
+import Point from '../objects/point.js';
 
 // A geometric transformation in Euclidean space (i.e. 2D)
 // that preserves collinearity and ratio of distance between points.

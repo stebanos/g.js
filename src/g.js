@@ -1,16 +1,16 @@
 "use strict";
 
-import * as vg from "./libraries/vg";
-// import * as img from "./libraries/img";
-import * as util from "./libraries/util";
+import * as vg from "./libraries/vg/index.js";
+// import * as img from "./libraries/img/index.js";
+import * as util from "./libraries/util.js";
 
-import * as mathCommands from "./libraries/math";
-import * as stringCommands from "./libraries/string";
-import * as listCommands from "./libraries/list";
-import * as dataCommands from "./libraries/data";
-// import * as imageCommands from "./libraries/image";
-import * as graphicsCommands from "./libraries/graphics";
-import * as easingCommands from "./libraries/easing";
+import * as mathCommands from "./libraries/math.js";
+import * as stringCommands from "./libraries/string.js";
+import * as listCommands from "./libraries/list.js";
+import * as dataCommands from "./libraries/data.js";
+// import * as imageCommands from "./libraries/image.js";
+import * as graphicsCommands from "./libraries/graphics.js";
+import * as easingCommands from "./libraries/easing.js";
 
 function importSVG(svgString) {
   return g.svg.parseString(svgString);

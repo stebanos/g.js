@@ -7,11 +7,11 @@
 
 import { DOMParser } from "@xmldom/xmldom";
 
-import Color from "../objects/color";
-import Group from "../objects/group";
-import Path from "../objects/path";
-import Point from "../objects/point";
-import Transform from "../objects/transform";
+import Color from "../objects/color.js";
+import Group from "../objects/group.js";
+import Path from "../objects/path.js";
+import Point from "../objects/point.js";
+import Transform from "../objects/transform.js";
 
 // var getReflection = function (a, b, relative) {
 //     var theta,

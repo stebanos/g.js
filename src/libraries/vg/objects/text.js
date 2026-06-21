@@ -1,8 +1,8 @@
 // Text object
 
-import Color from "../objects/color";
-import Rect from "../objects/rect";
-import Transform from "../objects/transform";
+import Color from "../objects/color.js";
+import Rect from "../objects/rect.js";
+import Transform from "../objects/transform.js";
 
 let _dummyContext = null;
 

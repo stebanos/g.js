@@ -1,5 +1,5 @@
-import { Rect, Color } from './vg';
-import { Img, Layer, ImageCanvas } from './img';
+import { Rect, Color } from './vg/index.js';
+import { Img, Layer, ImageCanvas } from './img/index.js';
 
 const g = {};
 

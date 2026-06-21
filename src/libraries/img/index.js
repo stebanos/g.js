@@ -1,10 +1,10 @@
 "use strict";
 
-import * as async from "async-es";
+import async from "async";
 
-import { clamp, transform } from "./util";
-import CanvasRenderer from "./canvasrenderer";
-import AsyncRenderer from "./asyncrenderer";
+import { clamp, transform } from "./util.js";
+import CanvasRenderer from "./canvasrenderer.js";
+import AsyncRenderer from "./asyncrenderer.js";
 
 const DEFAULT_WIDTH = 800;
 const DEFAULT_HEIGHT = 800;

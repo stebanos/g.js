@@ -1,6 +1,6 @@
 // 3-dimensional matrix
 
-import Vec3 from "../objects/vec3";
+import Vec3 from "../objects/vec3.js";
 
 // Construct a 4x4 matrix.
 export default class Matrix4 {

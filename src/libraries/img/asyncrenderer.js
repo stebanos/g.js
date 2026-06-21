@@ -1,7 +1,7 @@
 "use strict";
 
-import * as async from "async-es";
-import CanvasRenderer from "./canvasrenderer";
+import async from "async";
+import CanvasRenderer from "./canvasrenderer.js";
 
 // Utility function that passes its input (normally a html canvas) to the next function.
 function passThrough(canvas, callback) {

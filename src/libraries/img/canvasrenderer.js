@@ -1,8 +1,8 @@
 "use strict";
 
-import blend from "./blend";
-import process from "./process";
-import { transform } from "./util";
+import blend from "./blend.js";
+import process from "./process.js";
+import { transform } from "./util.js";
 
 // Dictionary of blend modes that the client browser does or does not support.
 const nativeBlendModes = blend.getNativeModes();

@@ -1,9 +1,9 @@
 // Bézier Math
 // Thanks to Prof. F. De Smedt at the Vrije Universiteit Brussel, 2006.
 
-import { sum } from "../util/math";
-import Point from "../objects/point";
-import Rect from "../objects/rect";
+import { sum } from "../util/math.js";
+import Point from "../objects/point.js";
+import Rect from "../objects/rect.js";
 
 export const MOVETO = "M";
 export const LINETO = "L";

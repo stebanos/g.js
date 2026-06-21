@@ -1,7 +1,7 @@
 "use strict";
 
-import randomGenerator from "./random";
-import { noise } from "./vg";
+import randomGenerator from "./random.js";
+import { noise } from "./vg/index.js";
 
 const TWO_PI = Math.PI * 2;
 
