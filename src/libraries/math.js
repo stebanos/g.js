@@ -1,7 +1,7 @@
 "use strict";
 
 import randomGenerator from "./random.js";
-import { noise } from "./vg/index.js";
+import { noise } from "./vg/util/math.js";
 
 const TWO_PI = Math.PI * 2;
 
@@ -16,11 +16,14 @@ function _checkIfFirstArgIsArray(args) {
 
 export function accumulate(...args) {
   args = _checkIfFirstArgIsArray(args);
+  if (!args || args.length === 0) {
+    return [0];
+  }
   const result = [];
   let sum = 0;
   for (let i = 0; i < args.length; i++) {
-    sum += args[i];
     result.push(sum);
+    sum += args[i];
   }
   return result;
 }
@@ -29,7 +32,7 @@ export function add(...args) {
   if (args.length === 2) {
     return args[0] + args[1];
   }
-  return args.reduce((a, b) => a + b);
+  return args.reduce((a, b) => a + b, 0);
 }
 
 export function and(...args) {
@@ -94,11 +97,12 @@ export function divide(...args) {
       throw new Error("Divide by zero");
     }
   }
-  if (args === 2) {
+  if (argLength === 2) {
     checkIfZero(args[1]);
-    return a / args[1];
+    return args[0] / args[1];
   } else if (argLength === 1) {
-    return a;
+    checkIfZero(args[0]);
+    return 1 / args[0];
   } else if (argLength === 0) {
     throw new Error("Wrong number of arguments");
   }

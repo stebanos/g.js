@@ -3,6 +3,7 @@
 "use strict";
 
 import Color from "../objects/color.js";
+import * as vg from "../index.js";
 
 // Return true if an object can be drawn using the `g.draw` function.
 export function isDrawable(o) {

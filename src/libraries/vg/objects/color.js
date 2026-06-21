@@ -161,11 +161,8 @@ export default class Color {
   static toHex(c, ignoreAlpha) {
     return Color.parse(c, ignoreAlpha).toHex();
   }
-  static make() {
-    const c = Object.create(Color.prototype);
-    c.constructor = Color.prototype;
-    Color.apply(c, arguments);
-    return c;
+  static make(...args) {
+    return new Color(...args);
   }
   static parse(s) {
     function startsWith(s, value) {

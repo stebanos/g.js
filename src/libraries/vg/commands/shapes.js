@@ -8,6 +8,7 @@ import Color from "../objects/color.js";
 import Path from "../objects/path.js";
 import Point from "../objects/point.js";
 import Text from "../objects/text.js";
+import * as vg from "../index.js";
 
 export function roundedRect(cx, cy, width, height, rx, ry) {
   const p = new Path();

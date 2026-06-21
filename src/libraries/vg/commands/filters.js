@@ -4,7 +4,7 @@ import { flatten } from "../../util.js";
 
 import { MOVETO, LINETO, QUADTO, CURVETO, CLOSE } from "../util/bezier.js";
 import { pointInPolygon, angle, distance, coordinates } from "../util/geo.js";
-import { degrees, snap } from "../util/math.js";
+import { degrees, snap as snapValue } from "../util/math.js";
 import randomGenerator from "../../random.js";
 
 import Color from "../objects/color.js";
@@ -16,6 +16,11 @@ import Transform from "../objects/transform.js";
 import Transformable from "../objects/transformable.js";
 import ClipperLib from "js-clipper";
 // var ClipperLib = require("../../../../third_party/clipper");
+
+// The vg namespace re-exports everything in this package; commands reference
+// sibling commands and objects through it (e.g. vg.bounds, vg.Rect). The import
+// is circular but only used inside function bodies, so it resolves lazily.
+import * as vg from "../index.js";
 
 function _cloneCommand(cmd) {
   const newCmd = { type: cmd.type };
@@ -559,7 +564,7 @@ export function align(shape, position, hAlign, vAlign) {
 }
 
 // Snap geometry to a grid.
-export function snapShape(shape, distance, strength, center) {
+export function snap(shape, distance, strength, center) {
   if (!shape) return null;
   strength = strength !== undefined ? strength : 1;
   center = center || Point.ZERO;
@@ -571,17 +576,17 @@ export function snapShape(shape, distance, strength, center) {
     for (i = 0; i < shape.commands.length; i += 1) {
       cmd = shape.commands[i];
       if (cmd.type === MOVETO || cmd.type === LINETO || cmd.type === CURVETO) {
-        x = snap(cmd.x + center.x, distance, strength) - center.x;
-        y = snap(cmd.y + center.y, distance, strength) - center.y;
+        x = snapValue(cmd.x + center.x, distance, strength) - center.x;
+        y = snapValue(cmd.y + center.y, distance, strength) - center.y;
         if (cmd.type === MOVETO) {
           p.moveTo(x, y);
         } else if (cmd.type === LINETO) {
           p.lineTo(x, y);
         } else if (cmd.type === CURVETO) {
-          x1 = snap(cmd.x1 + center.x, distance, strength) - center.x;
-          y1 = snap(cmd.y1 + center.y, distance, strength) - center.y;
-          x2 = snap(cmd.x2 + center.x, distance, strength) - center.x;
-          y2 = snap(cmd.y2 + center.y, distance, strength) - center.y;
+          x1 = snapValue(cmd.x1 + center.x, distance, strength) - center.x;
+          y1 = snapValue(cmd.y1 + center.y, distance, strength) - center.y;
+          x2 = snapValue(cmd.x2 + center.x, distance, strength) - center.x;
+          y2 = snapValue(cmd.y2 + center.y, distance, strength) - center.y;
           p.curveTo(x1, y1, x2, y2, x, y);
         }
       } else if (cmd.type === CLOSE) {
@@ -609,8 +614,8 @@ export function snapShape(shape, distance, strength, center) {
     sPoints.length = shape.length;
     for (i = 0; i < shape.length; i += 1) {
       point = shape[i];
-      x = snap(point.x + center.x, distance, strength) - center.x;
-      y = snap(point.y + center.y, distance, strength) - center.y;
+      x = snapValue(point.x + center.x, distance, strength) - center.x;
+      y = snapValue(point.y + center.y, distance, strength) - center.y;
       sPoints[i] = new Point(x, y);
     }
     return sPoints;

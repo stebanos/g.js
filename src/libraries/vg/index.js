@@ -10,8 +10,12 @@
 export * from "./util/bezier.js";
 export * from "./util/color.js";
 export * from "./util/geo.js";
-export * from "./util/math.js";
-export * from "./util/svg.js";
+// Exposed as a namespace (vg.math) rather than flattened: its `snap` would
+// otherwise collide with the `snap` path filter from ./commands/filters.js.
+export * as math from "./util/math.js";
+
+// Exposed as a namespace (vg.svg / g.svg.parseString).
+export * as svg from "./util/svg.js";
 
 // Objects
 import Color from "./objects/color.js";
