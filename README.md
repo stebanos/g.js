@@ -2,49 +2,63 @@ g.js
 ====
 g.js is a JavaScript library for working with graphical objects. It provides a unified API for working with vector graphics (rectangles, paths, and text) and images.
 
-Build status: [![Build Status](https://travis-ci.org/nodebox/g.js.svg?branch=master)](https://travis-ci.org/nodebox/g.js)
+[![CI](https://github.com/nodebox/g.js/actions/workflows/ci.yml/badge.svg)](https://github.com/nodebox/g.js/actions/workflows/ci.yml)
+
+g.js is distributed as an ES module.
 
 Installation
 ------------
 
-### Directly
+### Using npm
 
-[Download the latest ZIP](https://github.com/nodebox/g.js/archive/master.zip) and grab the files in the `dist` folder.
-These are compiled.
+    npm install g.js
 
-### Using Bower
+Then import the library and start creating shapes:
 
-To install using [Bower](http://bower.io/), enter the following command in your project directory:
+```js
+import g from "g.js";
 
-    bower install g.js
+// A 100×50 rectangle centred at (10, 20).
+const shape = g.rect(new g.Point(10, 20), 100, 50);
+```
 
-You can then include them in your scripts using:
+This works with any modern bundler (Vite, esbuild, webpack, Rollup).
 
-    <script src="/bower_components/g.js/dist/g.js"></script>
+### In the browser
 
-### Using Browserify
+`npm run build` produces two minified bundles in `dist/`:
 
-To install using [Browserify](http://browserify.org/), enter the following command in your project directory:
+- `dist/esm/g.min.js` — an ES module, for `<script type="module">` or a bundler
+- `dist/iife/g.min.js` — a classic script that exposes a global `g`
 
-    npm install --save g.js
+```html
+<script src="dist/iife/g.min.js"></script>
+<script>
+  const shape = g.rect(new g.Point(10, 20), 100, 50);
+</script>
+```
+
+Or with native ES modules:
+
+```html
+<script type="module">
+  import g from "./dist/esm/g.min.js";
+</script>
+```
 
 Development
 -----------
-We use a set of [npm scripts](https://www.npmjs.org/doc/misc/npm-scripts.html) to build releases:
+g.js targets Node.js 20 or newer (the repository pins a version in `.nvmrc`). The following npm scripts are available:
 
-### During development
-
-Running `npm run watchify` will automatically create new builds in the `build` directory whenever the source changes.
-
-### Updating the dist
-
-Running `npm run dist` will build a complete and minified version of g.js in the `dist` folder. You can also run
-`npm run browserify` and `npm run uglify` separately.
+- `npm test` — run the Mocha test suite.
+- `npm run lint` — run ESLint.
+- `npm run build` — bundle the ESM and IIFE distributions with esbuild.
+- `npm run dist` — run the tests and rebuild the distributions.
 
 ### Publishing a release
 
 1. Update the version number in `package.json`.
-2. Run `npm run dist` to update the files in the `dist` folder.
+2. Run `npm run dist` to test and rebuild the files in the `dist` folder.
 3. Commit (`git commit -a`) and create a tag (e.g. `git tag 1.2.1`). Push and push tags (`git push && git push --tags`).
 4. Run `npm publish` to publish the package to npm.
 
