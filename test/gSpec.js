@@ -28,8 +28,8 @@ describe('The import function', function () {
     it('can import CSV files', function () {
         function assertTable(table) {
             assert.equal(table.length, 2);
-            assert.deepEqual(table[0], {name: 'Alice', age: 42});
-            assert.deepEqual(table[1], {name: 'Bob', age: 33});
+            assert.deepEqual(table[0], { name: 'Alice', age: 42 });
+            assert.deepEqual(table[1], { name: 'Bob', age: 33 });
 
         }
 

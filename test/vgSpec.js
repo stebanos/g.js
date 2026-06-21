@@ -137,7 +137,7 @@ describe('A path', function () {
         p.moveTo(33, 66);
         newP = p.clone();
         assert.deepEqual(newP.commands, [
-            {type: 'M', x: 33, y: 66}
+            { type: 'M', x: 33, y: 66 }
         ]);
         assert.equal(newP.fill, 'red');
         assert.equal(newP.stroke, 'green');
@@ -198,9 +198,9 @@ describe('A path', function () {
         f(p, 'black', null, 1);
         p = p.colorize('red');
         f(p, 'red', null, 1);
-        p = p.colorize({stroke: 'green'});
+        p = p.colorize({ stroke: 'green' });
         f(p, 'red', 'green', 1);
-        p = p.colorize({fill: 'pink', strokeWidth: 3});
+        p = p.colorize({ fill: 'pink', strokeWidth: 3 });
         f(p, 'pink', 'green', 3);
     });
 });
@@ -286,10 +286,10 @@ describe('A group', function () {
         group = group.colorize('pink');
         f(group.shapes[0], 'pink', 'yellow', 1);
         f(group.shapes[1], 'pink', 'purple', 2);
-        group = group.colorize({stroke: 'orange'});
+        group = group.colorize({ stroke: 'orange' });
         f(group.shapes[0], 'pink', 'orange', 1);
         f(group.shapes[1], 'pink', 'orange', 2);
-        group = group.colorize({fill: 'white', strokeWidth: 3});
+        group = group.colorize({ fill: 'white', strokeWidth: 3 });
         f(group.shapes[0], 'white', 'orange', 3);
         f(group.shapes[1], 'white', 'orange', 3);
     });
@@ -319,31 +319,31 @@ describe('A text object', function () {
     it('has many constructor options', function () {
         testArgs(new vg.Text('Hello', 10, 20, 'Helvetica', 12, 'right'));
         testArgs(new vg.Text('Hello', [10, 20], 'Helvetica', 12, 'right'));
-        testArgs(new vg.Text('Hello', {x: 10, y: 20}, 'Helvetica', 12, 'right'));
-        testArgs(new vg.Text('Hello', 10, 20, {fontFamily: 'Helvetica', fontSize: 12, textAlign: 'right'}));
-        testArgs(new vg.Text('Hello', [10, 20], {fontFamily: 'Helvetica', fontSize: 12, textAlign: 'right'}));
-        testArgs(new vg.Text('Hello', [10, 20], {fontFamily: 'Helvetica', fontSize: 12, textAlign: 'right'}));
-        testArgs(new vg.Text('Hello', {x: 10, y: 20, fontFamily: 'Helvetica', fontSize: 12, textAlign: 'right'}));
+        testArgs(new vg.Text('Hello', { x: 10, y: 20 }, 'Helvetica', 12, 'right'));
+        testArgs(new vg.Text('Hello', 10, 20, { fontFamily: 'Helvetica', fontSize: 12, textAlign: 'right' }));
+        testArgs(new vg.Text('Hello', [10, 20], { fontFamily: 'Helvetica', fontSize: 12, textAlign: 'right' }));
+        testArgs(new vg.Text('Hello', [10, 20], { fontFamily: 'Helvetica', fontSize: 12, textAlign: 'right' }));
+        testArgs(new vg.Text('Hello', { x: 10, y: 20, fontFamily: 'Helvetica', fontSize: 12, textAlign: 'right' }));
 
         testDefaultArgs(new vg.Text('Hello'));
         testDefaultArgs(new vg.Text('Hello', 0, 0));
         testDefaultArgs(new vg.Text('Hello', [0, 0]));
-        testDefaultArgs(new vg.Text('Hello', {x: 0, y: 0}));
+        testDefaultArgs(new vg.Text('Hello', { x: 0, y: 0 }));
         testDefaultArgs(new vg.Text('Hello', 0, 0, 'sans-serif'));
-        testDefaultArgs(new vg.Text('Hello', {x: 0, y: 0}, 'sans-serif'));
-        testDefaultArgs(new vg.Text('Hello', {fontFamily: 'sans-serif'}));
+        testDefaultArgs(new vg.Text('Hello', { x: 0, y: 0 }, 'sans-serif'));
+        testDefaultArgs(new vg.Text('Hello', { fontFamily: 'sans-serif' }));
     });
 
     it('has a corresponding function', function () {
         testArgs(vg.text('Hello', 10, 20, 'Helvetica', 12, 'right'));
-        testArgs(vg.text('Hello', [10, 20], {fontFamily: 'Helvetica', fontSize: 12, textAlign: 'right'}));
+        testArgs(vg.text('Hello', [10, 20], { fontFamily: 'Helvetica', fontSize: 12, textAlign: 'right' }));
         testDefaultArgs(vg.text('Hello'));
         testDefaultArgs(vg.text('Hello', [0, 0], 'sans-serif'));
     });
 
     it('can take options', function () {
         // `font` and `fontName` are aliases of `fontFamily`.
-        const t = new vg.Text('Hello', 20, 20, {fontSize: 18, font: 'Arial'});
+        const t = new vg.Text('Hello', 20, 20, { fontSize: 18, font: 'Arial' });
         assert.equal(t.fontSize, 18);
         assert.equal(t.fontFamily, 'Arial');
     });
@@ -357,7 +357,7 @@ describe('A text object', function () {
     it('has bounds', function () {
         const text = 'Hello',
             fontSize = 24,
-            t = new vg.Text('Hello', 20, 20, {fontSize: fontSize}),
+            t = new vg.Text('Hello', 20, 20, { fontSize: fontSize }),
             bounds = vg.bounds(t);
         assert.equal(bounds.x, 20);
         assert.equal(bounds.y, -4);
@@ -371,9 +371,9 @@ describe('A text object', function () {
     });
 
     it('supports alignment', function () {
-        const tLeft = new vg.Text('Hello', 0, 0, {textAlign: 'left'}),
-            tRight = new vg.Text('Hello', 0, 0, {textAlign: 'right'}),
-            tCenter = new vg.Text('Hello', 0, 0, {textAlign: 'center'});
+        const tLeft = new vg.Text('Hello', 0, 0, { textAlign: 'left' }),
+            tRight = new vg.Text('Hello', 0, 0, { textAlign: 'right' }),
+            tCenter = new vg.Text('Hello', 0, 0, { textAlign: 'center' });
         assert.equal(tLeft.bounds().x, 0);
         assert.equal(tRight.bounds().x, -(tRight.text.length * tRight.fontSize * 0.6));
         assert.equal(tCenter.bounds().x, -(tCenter.text.length * tRight.fontSize * 0.6) / 2);
@@ -398,9 +398,9 @@ describe('A color', function () {
 
     it('can take a value range', function () {
         let c;
-        c = new vg.Color(10, 20, 30, {range: 100});
+        c = new vg.Color(10, 20, 30, { range: 100 });
         assert.deepEqual(c.rgba, [0.1, 0.2, 0.3, 1]);
-        c = new vg.Color(10, 20, 30, 40, {range: 100});
+        c = new vg.Color(10, 20, 30, 40, { range: 100 });
         assert.deepEqual(c.rgba, [0.1, 0.2, 0.3, 0.4]);
     });
 
@@ -410,17 +410,17 @@ describe('A color', function () {
         assert.deepEqual(c.rgba, [0.1, 0.2, 0.3, 0.4]);
         c = new vg.Color([0, 0, 0, 0]);
         assert.deepEqual(c.rgba, [0, 0, 0, 0]);
-        c = new vg.Color([10, 20, 30], {range: 100});
+        c = new vg.Color([10, 20, 30], { range: 100 });
         assert.deepEqual(c.rgba, [0.1, 0.2, 0.3, 1]);
-        c = new vg.Color([10, 20, 30, 40], {range: 100});
+        c = new vg.Color([10, 20, 30, 40], { range: 100 });
         assert.deepEqual(c.rgba, [0.1, 0.2, 0.3, 0.4]);
     });
 
     it('can be constructed using a Color object', function () {
         let c;
-        c = new vg.Color({r: 0.1, g: 0.2, b: 0.3});
+        c = new vg.Color({ r: 0.1, g: 0.2, b: 0.3 });
         assert.deepEqual(c.rgba, [0.1, 0.2, 0.3, 1.0]);
-        c = new vg.Color({r: 0.1, g: 0.2, b: 0.3, a: 0.4});
+        c = new vg.Color({ r: 0.1, g: 0.2, b: 0.3, a: 0.4 });
         assert.deepEqual(c.rgba, [0.1, 0.2, 0.3, 0.4]);
     });
 
@@ -434,11 +434,11 @@ describe('A color', function () {
         let c;
         c = new vg.Color(0.3);
         assert.deepEqual(c.rgba, [0.3, 0.3, 0.3, 1]);
-        c = new vg.Color(30, {range: 100});
+        c = new vg.Color(30, { range: 100 });
         assert.deepEqual(c.rgba, [0.3, 0.3, 0.3, 1]);
         c = new vg.Color(0.3, 0.5);
         assert.deepEqual(c.rgba, [0.3, 0.3, 0.3, 0.5]);
-        c = new vg.Color(30, 50, {range: 100});
+        c = new vg.Color(30, 50, { range: 100 });
         assert.deepEqual(c.rgba, [0.3, 0.3, 0.3, 0.5]);
     });
 
@@ -448,7 +448,7 @@ describe('A color', function () {
         assert.deepEqual(vg.Color.parse('cornflowerblue').rgba, [0.39, 0.58, 0.93, 1.0]);
         assert.deepEqual(vg.Color.parse('none').rgba, [0.0, 0.0, 0.0, 0.0]);
         assert.deepEqual(vg.Color.parse(new vg.Color(0.1, 0.2, 0.3, 0.4)).rgba, [0.1, 0.2, 0.3, 0.4]);
-        assert.throws(function() { vg.Color.parse(true); });
+        assert.throws(function () { vg.Color.parse(true); });
     });
 
     it('can be converted to a hexadecimal value', function () {
@@ -484,7 +484,7 @@ describe('A color', function () {
         assert.equal(vg.Color.toCSS(null), 'none', 'null is none, meaning no color');
         assert.equal(vg.Color.toCSS('red'), 'red', 'strings are kept as-is');
         assert.equal(vg.Color.toCSS(c), 'rgba(26, 51, 77, 0.4)', 'color objects are converted');
-        assert.throws(function() { vg.Color.toCSS(new vg.Point()); });
+        assert.throws(function () { vg.Color.toCSS(new vg.Point()); });
     });
 
 });
@@ -531,7 +531,7 @@ describe('The grid generator', function () {
     it('generates grids', function () {
         const grid = vg.grid(3, 3, 100, 100);
         assert.equal(grid.length, 3 * 3);
-        assert.deepEqual(vg.bounds(grid), {x: -100, y: -100, width: 200, height: 200});
+        assert.deepEqual(vg.bounds(grid), { x: -100, y: -100, width: 200, height: 200 });
     });
 
 });
@@ -633,10 +633,10 @@ describe('The SVG module', function () {
 
     it('can parse paths', function () {
         const p = vg.svg.parseString('<path d="M10,20 L30,40 L100,0 Z" fill="red"/>');
-        assert.deepEqual(p.commands[0], {type: vg.bezier.MOVETO, x: 10, y: 20});
-        assert.deepEqual(p.commands[1], {type: vg.bezier.LINETO, x: 30, y: 40});
-        assert.deepEqual(p.commands[2], {type: vg.bezier.LINETO, x: 100, y: 0});
-        assert.deepEqual(p.commands[3], {type: vg.bezier.CLOSE});
+        assert.deepEqual(p.commands[0], { type: vg.bezier.MOVETO, x: 10, y: 20 });
+        assert.deepEqual(p.commands[1], { type: vg.bezier.LINETO, x: 30, y: 40 });
+        assert.deepEqual(p.commands[2], { type: vg.bezier.LINETO, x: 100, y: 0 });
+        assert.deepEqual(p.commands[3], { type: vg.bezier.CLOSE });
         assert.deepEqual(p.fill.rgba, [1, 0, 0, 1]);
     });
 

@@ -1,150 +1,150 @@
-"use strict";
+'use strict';
 
-import * as vg from "./libraries/vg/index.js";
+import * as vg from './libraries/vg/index.js';
 // import * as img from "./libraries/img/index.js";
-import * as util from "./libraries/util.js";
+import * as util from './libraries/util.js';
 
-import * as mathCommands from "./libraries/math.js";
-import * as stringCommands from "./libraries/string.js";
-import * as listCommands from "./libraries/list.js";
-import * as dataCommands from "./libraries/data.js";
+import * as mathCommands from './libraries/math.js';
+import * as stringCommands from './libraries/string.js';
+import * as listCommands from './libraries/list.js';
+import * as dataCommands from './libraries/data.js';
 // import * as imageCommands from "./libraries/image.js";
-import * as graphicsCommands from "./libraries/graphics.js";
-import * as easingCommands from "./libraries/easing.js";
+import * as graphicsCommands from './libraries/graphics.js';
+import * as easingCommands from './libraries/easing.js';
 
 function importSVG(svgString) {
-  return g.svg.parseString(svgString);
+    return g.svg.parseString(svgString);
 }
 
 function importImage(image) {
-  const layer = g.Layer.fromImage(image);
-  return new g.Img(layer.toCanvas());
+    const layer = g.Layer.fromImage(image);
+    return new g.Img(layer.toCanvas());
 }
 
 function importText(string) {
-  return string ? String(string) : "";
+    return string ? String(string) : '';
 }
 
 // Split the row, taking quotes into account.
 function splitRow(s, delimiter) {
-  let row = [],
-    c,
-    col = "",
-    i,
-    inString = false;
-  s = s.trim();
-  for (i = 0; i < s.length; i += 1) {
-    c = s[i];
-    if (c === '"') {
-      if (s[i + 1] === '"') {
-        col += '"';
-        i += 1;
-      } else {
-        inString = !inString;
-      }
-    } else if (c === delimiter) {
-      if (!inString) {
-        row.push(col);
-        col = "";
-      } else {
-        col += c;
-      }
-    } else {
-      col += c;
+    let row = [],
+        c,
+        col = '',
+        i,
+        inString = false;
+    s = s.trim();
+    for (i = 0; i < s.length; i += 1) {
+        c = s[i];
+        if (c === '"') {
+            if (s[i + 1] === '"') {
+                col += '"';
+                i += 1;
+            } else {
+                inString = !inString;
+            }
+        } else if (c === delimiter) {
+            if (!inString) {
+                row.push(col);
+                col = '';
+            } else {
+                col += c;
+            }
+        } else {
+            col += c;
+        }
     }
-  }
-  row.push(col);
-  return row;
+    row.push(col);
+    return row;
 }
 
 function importCSV(csvString, delimiter) {
-  let csvRows, header;
-  delimiter = delimiter || ",";
+    let csvRows, header;
+    delimiter = delimiter || ',';
 
-  if (!csvString) return null;
-  csvRows = csvString.split(/\r\n|\r|\n/g);
-  header = splitRow(csvRows[0], delimiter);
-  csvRows = csvRows.slice(1);
+    if (!csvString) { return null; }
+    csvRows = csvString.split(/\r\n|\r|\n/g);
+    header = splitRow(csvRows[0], delimiter);
+    csvRows = csvRows.slice(1);
 
-  let row,
-    rows = [];
-  let m, sr, col, index;
-  for (let i = 0; i < csvRows.length; i += 1) {
-    row = csvRows[i];
-    if (row) {
-      m = {};
-      sr = splitRow(row, delimiter);
-      for (index = 0; index < sr.length; index += 1) {
-        col = sr[index];
-        m[header[index]] = isNaN(col) ? col : parseFloat(col);
-      }
-      rows.push(m);
+    let row,
+        rows = [];
+    let m, sr, col, index;
+    for (let i = 0; i < csvRows.length; i += 1) {
+        row = csvRows[i];
+        if (row) {
+            m = {};
+            sr = splitRow(row, delimiter);
+            for (index = 0; index < sr.length; index += 1) {
+                col = sr[index];
+                m[header[index]] = isNaN(col) ? col : parseFloat(col);
+            }
+            rows.push(m);
+        }
     }
-  }
-  return rows;
+    return rows;
 }
 
 function merge() {
-  const args = util.flatten(arguments);
-  if (Array.isArray(args)) {
-    const objects = [];
-    for (let i = 0; i < args.length; i += 1) {
-      if (args[i]) {
-        objects.push(args[i]);
-      }
+    const args = util.flatten(arguments);
+    if (Array.isArray(args)) {
+        const objects = [];
+        for (let i = 0; i < args.length; i += 1) {
+            if (args[i]) {
+                objects.push(args[i]);
+            }
+        }
+        if (objects.length > 0) {
+            const o = objects[0];
+            if (o && (o.commands || o.shapes || o.fontFamily)) {
+                return vg.merge(objects);
+            }
+        }
     }
-    if (objects.length > 0) {
-      const o = objects[0];
-      if (o && (o.commands || o.shapes || o.fontFamily)) {
-        return vg.merge(objects);
-      }
-    }
-  }
-  return null;
+    return null;
 }
 
 function mix(a, b, t) {
-  t = t !== undefined ? t : 0.5;
-  if (typeof a === "number") {
-    return a * (1 - t) + b * t;
-  } else if (a instanceof g.Color && b instanceof g.Color) {
-    return new g.Color(
-      g.mix(a.r, b.r, t),
-      g.mix(a.g, b.g, t),
-      g.mix(a.b, b.b, t),
-      g.mix(a.a, b.a, t)
-    );
-  } else if (typeof a === "object") {
-    const result = {};
-    const keys = Object.keys(a);
-    for (let i = 0, n = keys.length; i < n; i += 1) {
-      const k = keys[i];
-      const va = a[k];
-      const vb = b[k];
-      if (va !== undefined && vb !== undefined) {
-        result[k] = g.mix(va, vb, t);
-      }
+    t = t !== undefined ? t : 0.5;
+    if (typeof a === 'number') {
+        return a * (1 - t) + b * t;
+    } else if (a instanceof g.Color && b instanceof g.Color) {
+        return new g.Color(
+            g.mix(a.r, b.r, t),
+            g.mix(a.g, b.g, t),
+            g.mix(a.b, b.b, t),
+            g.mix(a.a, b.a, t)
+        );
+    } else if (typeof a === 'object') {
+        const result = {};
+        const keys = Object.keys(a);
+        for (let i = 0, n = keys.length; i < n; i += 1) {
+            const k = keys[i];
+            const va = a[k];
+            const vb = b[k];
+            if (va !== undefined && vb !== undefined) {
+                result[k] = g.mix(va, vb, t);
+            }
+        }
+        return result;
+    } else {
+        return 0;
     }
-    return result;
-  } else {
-    return 0;
-  }
 }
 
 const g = {
-  ...vg,
-  ...util,
-  ...mathCommands,
-  ...stringCommands,
-  ...listCommands,
-  ...dataCommands,
-  ...graphicsCommands,
-  ...easingCommands,
-  importSVG,
-  importImage,
-  importText,
-  importCSV,
-  merge,
-  mix,
+    ...vg,
+    ...util,
+    ...mathCommands,
+    ...stringCommands,
+    ...listCommands,
+    ...dataCommands,
+    ...graphicsCommands,
+    ...easingCommands,
+    importSVG,
+    importImage,
+    importText,
+    importCSV,
+    merge,
+    mix
 };
 export default g;

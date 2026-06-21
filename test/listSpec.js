@@ -27,7 +27,7 @@ describe('The sort function', function () {
     });
 
     it('supports keys', function () {
-        assert.deepEqual(g.sort([{x: 2}, {x: 3}, {x: 1}], 'x'), [{x: 1}, {x: 2}, {x: 3}]);
+        assert.deepEqual(g.sort([{ x: 2 }, { x: 3 }, { x: 1 }], 'x'), [{ x: 1 }, { x: 2 }, { x: 3 }]);
     });
 
     it('supports null values', function () {

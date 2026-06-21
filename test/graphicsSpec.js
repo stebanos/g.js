@@ -11,9 +11,9 @@ describe('The angle function', function () {
     it('returns the angle between two points', function () {
         assert.equal(g.angle(0, 0, 100, 100), 45);
         assert.equal(g.angle(0, 0, 0, 120), 90);
-        assert.equal(g.angle({x: 100, y: 100}, {x: 0, y: 0}), -135);
+        assert.equal(g.angle({ x: 100, y: 100 }, { x: 0, y: 0 }), -135);
         assert.equal(g.angle([150, 0], [0, 150]), 135);
-        assertAlmostEqual(g.angle([50, 0], {x: -100, y: 259.8076}), 120);
+        assertAlmostEqual(g.angle([50, 0], { x: -100, y: 259.8076 }), 120);
     });
 
 });
@@ -24,7 +24,7 @@ describe('The coordinates function', function () {
         let p = g.coordinates(0, 0, 37, 27);
         assertAlmostEqual(p.x, 21.56316);
         assertAlmostEqual(p.y, 16.249);
-        p = g.coordinates({x: 0, y: 0}, 90, 70);
+        p = g.coordinates({ x: 0, y: 0 }, 90, 70);
         assertAlmostEqual(p.x, 0);
         assertAlmostEqual(p.y, 70);
         p = g.coordinates([0, 10], 180, 25);
@@ -37,7 +37,7 @@ describe('The coordinates function', function () {
 describe('The copy function', function () {
 
     it('can handle null values', function () {
-        const p = g.copy(null, 10, 'rts', {x: 0, y: 0}, 0, {x: 1.0, y: 1.0});
+        const p = g.copy(null, 10, 'rts', { x: 0, y: 0 }, 0, { x: 1.0, y: 1.0 });
         assert.deepEqual(p, []);
     });
 
@@ -47,7 +47,7 @@ describe('The distance function', function () {
 
     it('returns the distance between two points', function () {
         assertAlmostEqual(g.distance(0, 0, 21.56316, 16.249), 27);
-        assert.equal(g.distance({x: 0, y: 0}, {x: 0, y: 70}), 70);
+        assert.equal(g.distance({ x: 0, y: 0 }, { x: 0, y: 70 }), 70);
         assert.equal(g.distance([0, 10], [-25, 10]), 25);
     });
 
@@ -60,7 +60,7 @@ describe('The stack function', function () {
         const r2 = g.rect(0, 0, 100, 100);
         const stacked = g.stack([r1, r2], 'e', 10);
         const bounds = g.bounds(stacked);
-        assert.deepEqual(bounds, {x: -50, y: -50, width: 210, height: 100});
+        assert.deepEqual(bounds, { x: -50, y: -50, width: 210, height: 100 });
     });
 
 });

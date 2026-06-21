@@ -1,11 +1,11 @@
-"use strict";
+'use strict';
 
-import async from "async";
-import CanvasRenderer from "./canvasrenderer.js";
+import async from 'async';
+import CanvasRenderer from './canvasrenderer.js';
 
 // Utility function that passes its input (normally a html canvas) to the next function.
 function passThrough(canvas, callback) {
-  callback(null, canvas);
+    callback(null, canvas);
 }
 
 // RENDERING.
@@ -20,85 +20,85 @@ const AsyncRenderer = {};
 
 // Renders a html canvas as an html Image. Currently unused.
 AsyncRenderer.toImage = function () {
-  return function (canvas, callback) {
-    callback(null, CanvasRenderer.toImage(canvas));
-  };
+    return function (canvas, callback) {
+        callback(null, CanvasRenderer.toImage(canvas));
+    };
 };
 
 // 'LOADING' OF LAYERS.
 
 // Returns a html canvas dependent on the type of the layer provided.
 AsyncRenderer.load = function (iCanvas, layer) {
-  if (layer.isPath()) {
-    return AsyncRenderer.loadFile(layer.data);
-  } else if (layer.isFill()) {
-    return AsyncRenderer.generateColor(iCanvas, layer);
-  } else if (layer.isGradient()) {
-    return AsyncRenderer.generateGradient(iCanvas, layer);
-  } else if (layer.isHtmlCanvas()) {
-    return AsyncRenderer.loadHtmlCanvas(layer.data);
-  } else if (layer.isImage()) {
-    return AsyncRenderer.loadImage(layer.data);
-  } else if (layer.isImageCanvas()) {
-    return AsyncRenderer.loadImageCanvas(layer.data);
-  }
+    if (layer.isPath()) {
+        return AsyncRenderer.loadFile(layer.data);
+    } else if (layer.isFill()) {
+        return AsyncRenderer.generateColor(iCanvas, layer);
+    } else if (layer.isGradient()) {
+        return AsyncRenderer.generateGradient(iCanvas, layer);
+    } else if (layer.isHtmlCanvas()) {
+        return AsyncRenderer.loadHtmlCanvas(layer.data);
+    } else if (layer.isImage()) {
+        return AsyncRenderer.loadImage(layer.data);
+    } else if (layer.isImageCanvas()) {
+        return AsyncRenderer.loadImageCanvas(layer.data);
+    }
 };
 
 // Returns a html canvas from an image file location.
 AsyncRenderer.loadFile = function (src) {
-  return function (_, callback) {
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
+    return function (_, callback) {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
 
-    const source = new Image();
-    source.onload = function () {
-      canvas.width = source.width;
-      canvas.height = source.height;
-      ctx.drawImage(source, 0, 0, canvas.width, canvas.height);
-      callback(null, canvas);
+        const source = new Image();
+        source.onload = function () {
+            canvas.width = source.width;
+            canvas.height = source.height;
+            ctx.drawImage(source, 0, 0, canvas.width, canvas.height);
+            callback(null, canvas);
+        };
+        source.src = src;
     };
-    source.src = src;
-  };
 };
 
 // Passes a html canvas.
 AsyncRenderer.loadHtmlCanvas = function (canvas) {
-  return function (_, callback) {
-    callback(null, canvas);
-  };
+    return function (_, callback) {
+        callback(null, canvas);
+    };
 };
 
 // Returns a html canvas from rendering an ImageCanvas.
 AsyncRenderer.loadImageCanvas = function (iCanvas) {
-  return function (_, callback) {
-    iCanvas.render(function (canvas) {
-      callback(null, canvas);
-    });
-  };
+    return function (_, callback) {
+        iCanvas.render(function (canvas) {
+            callback(null, canvas);
+        });
+    };
 };
 
 // Returns a html canvas from rendering a stored Image file.
 AsyncRenderer.loadImage = function (img) {
-  return function (_, callback) {
-    const canvas = CanvasRenderer.loadImage(img);
-    callback(null, canvas);
-  };
+    return function (_, callback) {
+        const canvas = CanvasRenderer.loadImage(img);
+        callback(null, canvas);
+    };
 };
 
 // Returns a html canvas with a solid fill color.
 AsyncRenderer.generateColor = function (iCanvas, layer) {
-  return function (_, callback) {
-    const canvas = CanvasRenderer.generateColor(iCanvas, layer);
-    callback(null, canvas);
-  };
+    return function (_, callback) {
+        const canvas = CanvasRenderer.generateColor(iCanvas, layer);
+        callback(null, canvas);
+    };
 };
 
 // Returns a html canvas with a gradient.
 AsyncRenderer.generateGradient = function (iCanvas, layer) {
-  return function (_, callback) {
-    const canvas = CanvasRenderer.generateGradient(iCanvas, layer);
-    callback(null, canvas);
-  };
+    return function (_, callback) {
+        const canvas = CanvasRenderer.generateGradient(iCanvas, layer);
+        callback(null, canvas);
+    };
 };
 
 // PROCESSING OF LAYERS.
@@ -106,49 +106,49 @@ AsyncRenderer.generateGradient = function (iCanvas, layer) {
 // Performs a number of filtering operations on an html image.
 // This method executes on the main thread if web workers aren't available on the current system.
 AsyncRenderer.processImage = function (filters) {
-  if (filters.length === 0) {
-    return passThrough;
-  }
+    if (filters.length === 0) {
+        return passThrough;
+    }
 
-  return function (canvas, callback) {
-    CanvasRenderer.processImage(canvas, filters);
-    callback(null, canvas);
-  };
+    return function (canvas, callback) {
+        CanvasRenderer.processImage(canvas, filters);
+        callback(null, canvas);
+    };
 };
 
 // Renders the layer mask and applies it to the layer that it is supposed to mask.
 AsyncRenderer.processMask = function (mask) {
-  if (mask.layers.length === 0) {
-    return passThrough;
-  }
-  return function (canvas, callback) {
-    mask.width = canvas.width;
-    mask.height = canvas.height;
+    if (mask.layers.length === 0) {
+        return passThrough;
+    }
+    return function (canvas, callback) {
+        mask.width = canvas.width;
+        mask.height = canvas.height;
 
-    // First, make a black and white version of the masking canvas and pass
-    // the result to the masking operation.
-    AsyncRenderer.renderBW(mask, function (c) {
-      const data = c.getContext("2d").getImageData(0, 0, c.width, c.height).data;
-      const maskFilter = {
-        name: "mask",
-        options: { data: data, x: 0, y: 0, width: c.width, height: c.height },
-      };
-      const fn = AsyncRenderer.processImage([maskFilter]);
-      fn(canvas, callback);
-    });
-  };
+        // First, make a black and white version of the masking canvas and pass
+        // the result to the masking operation.
+        AsyncRenderer.renderBW(mask, function (c) {
+            const data = c.getContext('2d').getImageData(0, 0, c.width, c.height).data;
+            const maskFilter = {
+                name: 'mask',
+                options: { data: data, x: 0, y: 0, width: c.width, height: c.height }
+            };
+            const fn = AsyncRenderer.processImage([maskFilter]);
+            fn(canvas, callback);
+        });
+    };
 };
 
 // Processes a single layer. First the layer image is loaded, then a mask (if applicable) is applied to it,
 // and finally the filters (if any) are applied to it.
 function processLayers(iCanvas) {
-  return function (layer, callback) {
-    async.compose(
-      AsyncRenderer.processImage(layer.filters),
-      AsyncRenderer.processMask(layer.mask),
-      AsyncRenderer.load(iCanvas, layer)
-    )(null, callback);
-  };
+    return function (layer, callback) {
+        async.compose(
+            AsyncRenderer.processImage(layer.filters),
+            AsyncRenderer.processMask(layer.mask),
+            AsyncRenderer.load(iCanvas, layer)
+        )(null, callback);
+    };
 }
 
 // LAYER BLENDING.
@@ -156,82 +156,82 @@ function processLayers(iCanvas) {
 // Blends the subsequent layer images with the base layer and returns a single image.
 // This method is used when web workers aren't available for use on this system.
 AsyncRenderer.mergeManualBlend = function (iCanvas, layerData) {
-  return function (canvas, callback) {
-    CanvasRenderer.mergeManualBlend(iCanvas, layerData)(canvas);
-    callback(null, canvas);
-  };
+    return function (canvas, callback) {
+        CanvasRenderer.mergeManualBlend(iCanvas, layerData)(canvas);
+        callback(null, canvas);
+    };
 };
 
 // Blends the subsequent layer images with the base layer and returns the resulting image.
 // This method is used when the system supports the requested blending mode(s).
 AsyncRenderer.mergeNativeBlend = function (iCanvas, layerData) {
-  return function (canvas, callback) {
-    CanvasRenderer.mergeNativeBlend(iCanvas, layerData)(canvas);
-    callback(null, canvas);
-  };
+    return function (canvas, callback) {
+        CanvasRenderer.mergeNativeBlend(iCanvas, layerData)(canvas);
+        callback(null, canvas);
+    };
 };
 
 // Merges the different canvas layers together in a single image and returns this as a html canvas.
 AsyncRenderer.merge = function (iCanvas, layerData, callback) {
-  const renderPipe = CanvasRenderer.createRenderPipe(
-    AsyncRenderer,
-    iCanvas,
-    layerData
-  );
-  renderPipe.reverse();
+    const renderPipe = CanvasRenderer.createRenderPipe(
+        AsyncRenderer,
+        iCanvas,
+        layerData
+    );
+    renderPipe.reverse();
 
-  const canvas = CanvasRenderer.singleLayerWithOpacity(iCanvas, layerData[0]);
-  renderPipe.push(function (_, cb) {
-    cb(null, canvas);
-  });
+    const canvas = CanvasRenderer.singleLayerWithOpacity(iCanvas, layerData[0]);
+    renderPipe.push(function (_, cb) {
+        cb(null, canvas);
+    });
 
-  async.compose.apply(null, renderPipe)(null, function () {
-    callback(canvas);
-  });
+    async.compose.apply(null, renderPipe)(null, function () {
+        callback(canvas);
+    });
 };
 
 AsyncRenderer.composite = function (iCanvas, layerData, callback) {
-  if (!layerData || layerData.length === 0) {
-    callback(null);
-    return;
-  }
-  if (layerData.length === 1) {
-    callback(CanvasRenderer.singleLayerWithOpacity(iCanvas, layerData[0]));
-    return;
-  }
+    if (!layerData || layerData.length === 0) {
+        callback(null);
+        return;
+    }
+    if (layerData.length === 1) {
+        callback(CanvasRenderer.singleLayerWithOpacity(iCanvas, layerData[0]));
+        return;
+    }
 
-  AsyncRenderer.merge(iCanvas, layerData, callback);
+    AsyncRenderer.merge(iCanvas, layerData, callback);
 };
 
 // Renders the image canvas. Top level.
 AsyncRenderer.render = function (iCanvas, callback) {
-  async.map(
-    iCanvas.layers,
-    processLayers(iCanvas),
-    function (err, layerImages) {
-      if (callback) {
-        AsyncRenderer.composite(
-          iCanvas,
-          CanvasRenderer.getLayerData(iCanvas, layerImages),
-          callback
-        );
-      }
-    }
-  );
+    async.map(
+        iCanvas.layers,
+        processLayers(iCanvas),
+        function (err, layerImages) {
+            if (callback) {
+                AsyncRenderer.composite(
+                    iCanvas,
+                    CanvasRenderer.getLayerData(iCanvas, layerImages),
+                    callback
+                );
+            }
+        }
+    );
 };
 
 // Renders the image canvas and turns it into a black and white image. Useful for rendering a layer mask.
 AsyncRenderer.renderBW = function (iCanvas, callback) {
-  AsyncRenderer.render(iCanvas, function (canvas) {
-    const data = canvas
-      .getContext("2d")
-      .getImageData(0, 0, canvas.width, canvas.height).data;
-    const bwFilter = { name: "desaturate", options: { method: "ITU-R BT.709" } };
-    const fn = AsyncRenderer.processImage([bwFilter]);
-    fn(canvas, function (err, c) {
-      callback(c);
+    AsyncRenderer.render(iCanvas, function (canvas) {
+        const data = canvas
+            .getContext('2d')
+            .getImageData(0, 0, canvas.width, canvas.height).data;
+        const bwFilter = { name: 'desaturate', options: { method: 'ITU-R BT.709' } };
+        const fn = AsyncRenderer.processImage([bwFilter]);
+        fn(canvas, function (err, c) {
+            callback(c);
+        });
     });
-  });
 };
 
 export default AsyncRenderer;

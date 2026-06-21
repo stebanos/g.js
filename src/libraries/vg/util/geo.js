@@ -1,23 +1,23 @@
 // Geometry
 
-import { radians, degrees } from "./math.js";
-import Point from "../objects/point.js";
+import { radians, degrees } from './math.js';
+import Point from '../objects/point.js';
 
 // Returns the angle between two points.
 export function angle(x0, y0, x1, y1) {
-  return degrees(Math.atan2(y1 - y0, x1 - x0));
+    return degrees(Math.atan2(y1 - y0, x1 - x0));
 }
 
 // Returns the distance between two points.
 export function distance(x0, y0, x1, y1) {
-  return Math.sqrt(Math.pow(x1 - x0, 2) + Math.pow(y1 - y0, 2));
+    return Math.sqrt(Math.pow(x1 - x0, 2) + Math.pow(y1 - y0, 2));
 }
 
 // Returns the location of a point by rotating around origin (x0,y0).
 export function coordinates(x0, y0, angle, distance) {
-  const x = x0 + Math.cos(radians(angle)) * distance,
-    y = y0 + Math.sin(radians(angle)) * distance;
-  return new Point(x, y);
+    const x = x0 + Math.cos(radians(angle)) * distance,
+        y = y0 + Math.sin(radians(angle)) * distance;
+    return new Point(x, y);
 }
 
 // Determines if the given point is within the polygon, given as a list of points.
@@ -30,26 +30,26 @@ export function coordinates(x0, y0, angle, distance) {
 //
 // Based on: W. Randolph Franklin, 1970, http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
 export function pointInPolygon(points, x, y) {
-  let i,
-    j,
-    x0,
-    y0,
-    x1,
-    y1,
-    odd = false,
-    n = points.length;
+    let i,
+        j,
+        x0,
+        y0,
+        x1,
+        y1,
+        odd = false,
+        n = points.length;
 
-  for (i = 0; i < n; i += 1) {
-    j = i < n - 1 ? i + 1 : 0;
-    x0 = points[i].x;
-    y0 = points[i].y;
-    x1 = points[j].x;
-    y1 = points[j].y;
-    if ((y0 < y && y1 >= y) || (y1 < y && y0 >= y)) {
-      if (x0 + ((y - y0) / (y1 - y0)) * (x1 - x0) < x) {
-        odd = !odd;
-      }
+    for (i = 0; i < n; i += 1) {
+        j = i < n - 1 ? i + 1 : 0;
+        x0 = points[i].x;
+        y0 = points[i].y;
+        x1 = points[j].x;
+        y1 = points[j].y;
+        if ((y0 < y && y1 >= y) || (y1 < y && y0 >= y)) {
+            if (x0 + ((y - y0) / (y1 - y0)) * (x1 - x0) < x) {
+                odd = !odd;
+            }
+        }
     }
-  }
-  return odd;
+    return odd;
 }
