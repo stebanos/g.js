@@ -24,7 +24,7 @@ function defaultOptions(options, defaults) {
     let opt,
         o = {};
     for (opt in defaults) {
-        if (defaults.hasOwnProperty(opt)) {
+        if (Object.prototype.hasOwnProperty.call(defaults, opt)) {
             if (typeof options[opt] === 'undefined') {
                 o[opt] = defaults[opt];
             } else {
@@ -1514,32 +1514,50 @@ const process = {
                     maxR = c;
                 }
 
-                minG = inData[pyc + pxp + 1];
+                minG = maxG = inData[pyc + pxp + 1];
                 c = inData[pyc + pxn + 1];
                 if (c < minG) {
                     minG = c;
+                }
+                if (c > maxG) {
+                    maxG = c;
                 }
                 c = inData[pyp + pxc + 1];
                 if (c < minG) {
                     minG = c;
                 }
+                if (c > maxG) {
+                    maxG = c;
+                }
                 c = inData[pyn + pxc + 1];
                 if (c < minG) {
                     minG = c;
                 }
+                if (c > maxG) {
+                    maxG = c;
+                }
 
-                minB = inData[pyc + pxp + 2];
+                minB = maxB = inData[pyc + pxp + 2];
                 c = inData[pyc + pxn + 2];
                 if (c < minB) {
                     minB = c;
+                }
+                if (c > maxB) {
+                    maxB = c;
                 }
                 c = inData[pyp + pxc + 2];
                 if (c < minB) {
                     minB = c;
                 }
+                if (c > maxB) {
+                    maxB = c;
+                }
                 c = inData[pyn + pxc + 2];
                 if (c < minB) {
                     minB = c;
+                }
+                if (c > maxB) {
+                    maxB = c;
                 }
 
                 r = inData[idx];

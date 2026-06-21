@@ -95,7 +95,7 @@ export function easeInOutExpo(t, b, c, d) {
     if ((t /= d / 2) < 1) {
         return (c / 2) * Math.pow(2, 10 * (t - 1)) + b;
     }
-    return (c / 2) * (-Math.pow(2, -10 * --t) + 2) + b;
+    return (c / 2) * (-Math.pow(2, -10 * (t - 1)) + 2) + b;
 }
 
 export function easeInCirc(t, b, c, d) {
@@ -114,7 +114,7 @@ export function easeInOutCirc(t, b, c, d) {
 }
 
 export function easeInElastic(t, b, c, d) {
-    let s = 1.70158;
+    let s; // always assigned below before use
     let p = 0;
     let a = c;
     if (t === 0) {
@@ -140,7 +140,7 @@ export function easeInElastic(t, b, c, d) {
 }
 
 export function easeOutElastic(t, b, c, d) {
-    let s = 1.70158;
+    let s; // always assigned below before use
     let p = 0;
     let a = c;
     if (t === 0) {
@@ -164,7 +164,7 @@ export function easeOutElastic(t, b, c, d) {
 }
 
 export function easeInOutElastic(t, b, c, d) {
-    let s = 1.70158;
+    let s; // always assigned below before use
     let p = 0;
     let a = c;
     if (t === 0) {

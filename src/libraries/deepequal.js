@@ -70,7 +70,7 @@ export default function deepEqual(actual, expected) {
     // 7.4. Other pairs that do not both pass typeof value == 'object',
     // equivalence is determined by ==.
     } else if (!util.isObject(actual) && !util.isObject(expected)) {
-        return actual == expected;
+        return actual == expected; // eslint-disable-line eqeqeq -- spec 7.4: equivalence of non-objects is determined by ==
 
     // 7.5 For all other Object pairs, including Array objects, equivalence is
     // determined by having the same number of owned properties (as verified
@@ -117,7 +117,7 @@ objEquiv = function (a, b) {
     kb.sort();
     //~~~cheap key test
     for (i = ka.length - 1; i >= 0; i--) {
-        if (ka[i] != kb[i]) { return false; }
+        if (ka[i] !== kb[i]) { return false; }
     }
     //equivalent values for every corresponding key, and
     //~~~possibly expensive deep test

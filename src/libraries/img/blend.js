@@ -1000,8 +1000,6 @@ const blend = (function () {
         mode = modes[i];
         d[mode] = _wrap(mode);
     }
-    modes = Object.keys(modes);
-    for (let i = 0; i < modes.length; i += 1) {}
     // Aliases for the blending modes
     addAliases(d);
 

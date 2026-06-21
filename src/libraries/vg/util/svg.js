@@ -409,7 +409,7 @@ const read = {
             if (!tag) {
                 return;
             }
-            tagName = tag.replace(/svg\:/gi, '').toLowerCase();
+            tagName = tag.replace(/svg:/gi, '').toLowerCase();
             if (read[tagName] !== undefined) {
                 o = read[tagName].call(this, n, attributes);
                 shapes.push(o);
@@ -421,7 +421,7 @@ const read = {
     _polyline: function (node) {
         const points = node.getAttribute('points');
         const p = new Path();
-        points.replace(/([\d\.?]+),([\d\.?]+)/g, function (match, p1, p2) {
+        points.replace(/([\d.?]+),([\d.?]+)/g, function (match, p1, p2) {
             const x = parseFloat(p1);
             const y = parseFloat(p2);
             if (p.commands.length === 0) {
@@ -639,7 +639,7 @@ const read = {
         ); // separate commands from commands
         d = d.replace(/([MmZzLlHhVvCcSsQqTtAa])([^\s])/gm, '$1 $2'); // separate commands from points
         d = d.replace(/([^\s])([MmZzLlHhVvCcSsQqTtAa])/gm, '$1 $2'); // separate commands from points
-        d = d.replace(/([0-9])([+\-])/gm, '$1 $2'); // separate digits when no comma
+        d = d.replace(/([0-9])([+-])/gm, '$1 $2'); // separate digits when no comma
         d = d.replace(/(\.[0-9]*)(\.)/gm, '$1 $2'); // separate digits when no comma
         d = d.replace(/([Aa](\s+[0-9]+){3})\s+([01])\s*([01])/gm, '$1 $3 $4 '); // shorthand elliptical arc path syntax
         d = compressSpaces(d); // compress multiple spaces
@@ -794,7 +794,6 @@ const read = {
             case 'C':
             case 'c':
                 while (!pp.isCommandOrEnd()) {
-                    curr = pp.current;
                     p1 = pp.getPoint();
                     cntrl = pp.getAsControlPoint();
                     cp = pp.getAsCurrentPoint();
@@ -804,7 +803,6 @@ const read = {
             case 'S':
             case 's':
                 while (!pp.isCommandOrEnd()) {
-                    curr = pp.current;
                     p1 = pp.getReflectedControlPoint();
                     cntrl = pp.getAsControlPoint();
                     cp = pp.getAsCurrentPoint();

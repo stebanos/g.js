@@ -38,8 +38,7 @@ export function filterData(data, key, op, value) {
         for (i = 0, l = data.length; i < l; i++) {
             row = data[i];
             obj = row[key];
-            if (obj == value) {
-                // jshint ignore:line
+            if (obj == value) { // eslint-disable-line eqeqeq -- '==' is the documented loose-equality query operator
                 results.push(row);
             }
         }
@@ -47,8 +46,7 @@ export function filterData(data, key, op, value) {
         for (i = 0, l = data.length; i < l; i++) {
             row = data[i];
             obj = row[key];
-            if (obj != value) {
-                // jshint ignore:line
+            if (obj != value) { // eslint-disable-line eqeqeq -- '!=' is the documented loose-inequality query operator
                 results.push(row);
             }
         }

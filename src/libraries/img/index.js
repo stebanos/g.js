@@ -206,13 +206,13 @@ function toGradientData(v1, v2, v3, v4, v5) {
     try {
         data.startColor = toColor(startColor);
     } catch (e1) {
-        throw new Error('startColor is not a valid color: ' + startColor);
+        throw new Error('startColor is not a valid color: ' + startColor, { cause: e1 });
     }
 
     try {
         data.endColor = toColor(endColor);
     } catch (e2) {
-        throw new Error('endColor is not a valid color: ' + endColor);
+        throw new Error('endColor is not a valid color: ' + endColor, { cause: e2 });
     }
 
     if (type === undefined) {
