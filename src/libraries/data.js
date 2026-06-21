@@ -1,6 +1,3 @@
-import values from 'lodash.values';
-import _groupBy from 'lodash.groupby';
-
 import { distinct } from './list.js';
 
 // Convert values from one range to another
@@ -89,7 +86,18 @@ export function filterData(data, key, op, value) {
 }
 
 export function groupBy(data, key) {
-    return values(_groupBy(data, key));
+    const iteratee = typeof key === 'function' ? key : (row) => row[key];
+    const groups = new Map();
+    for (const item of data) {
+        const k = iteratee(item);
+        const group = groups.get(k);
+        if (group) {
+            group.push(item);
+        } else {
+            groups.set(k, [item]);
+        }
+    }
+    return Array.from(groups.values());
 }
 
 /* // Draw a legend. ==> rename to axis?

@@ -36,8 +36,6 @@
     "@xmldom/xmldom": "0.8.7",
     "async": "^3.2.6",
     "js-clipper": "1.0.1",
-    "lodash.groupby": "^4.6.0",
-    "lodash.values": "^4.3.0",
     "stackblur": "^1.0.0"
   },
   "devDependencies": {
