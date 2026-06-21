@@ -97,8 +97,6 @@ function merge() {
       var o = objects[0];
       if (o && (o.commands || o.shapes || o.fontFamily)) {
         return vg.merge(objects);
-      } else if (o instanceof img.Img) {
-        return img.merge(objects);
       }
     }
   }
@@ -135,16 +133,14 @@ function mix(a, b, t) {
 
 const g = {
   ...vg,
-  ...img,
   ...util,
   ...mathCommands,
   ...stringCommands,
   ...listCommands,
   ...dataCommands,
-  ...imageCommands,
   ...graphicsCommands,
   ...easingCommands,
-  importSvg,
+  importSVG,
   importImage,
   importText,
   importCSV,

@@ -1,11 +1,6 @@
-'use strict';
-
-var assert = require('assert');
-var mocha = require('mocha');
-var describe = mocha.describe;
-var it = mocha.it;
-
-var img = require('../src/libraries/img/img');
+import assert from 'assert';
+import { describe, it } from 'mocha';
+import * as img from '../src/libraries/img/index.js';
 
 describe('The library', function () {
 

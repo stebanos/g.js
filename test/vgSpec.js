@@ -1,11 +1,11 @@
-'use strict';
-
-var assert = require('assert');
-var mocha = require('mocha');
-var describe = mocha.describe;
-var it = mocha.it;
-
-var vg = require('../src/libraries/vg/vg');
+import assert from 'assert';
+import { describe, it } from 'mocha';
+import * as vgExports from '../src/libraries/vg/index.js';
+import * as math from '../src/libraries/vg/util/math.js';
+import * as bezier from '../src/libraries/vg/util/bezier.js';
+import * as colorUtil from '../src/libraries/vg/util/color.js';
+import * as svg from '../src/libraries/vg/util/svg.js';
+const vg = { ...vgExports, math, bezier, color: colorUtil, svg };
 
 function assertAlmostEqual(v1, v2, delta) {
     delta = delta !== undefined ? delta : 0.0001;

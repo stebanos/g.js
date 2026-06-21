@@ -1,19 +1,10 @@
 // 2-dimensional transformation matrix
 
-"use strict";
-
-var bezier = require("../util/bezier");
-var math = require("../util/math");
-
-var Group = require("../objects/group");
-var Path = require("../objects/path");
-var Point = require("../objects/point");
-
-var MOVETO = bezier.MOVETO;
-var LINETO = bezier.LINETO;
-var QUADTO = bezier.QUADTO;
-var CURVETO = bezier.CURVETO;
-var CLOSE = bezier.CLOSE;
+import { MOVETO, LINETO, QUADTO, CURVETO, CLOSE } from '../util/bezier';
+import { radians } from '../util/math';
+import Group from '../objects/group';
+import Path from '../objects/path';
+import Point from '../objects/point';
 
 // A geometric transformation in Euclidean space (i.e. 2D)
 // that preserves collinearity and ratio of distance between points.
@@ -88,8 +79,8 @@ export default class Transform {
     return Transform._mmult([1, 0, 0, 1, x, y], this.m);
   }
   rotate(angle) {
-    var c = Math.cos(math.radians(angle)),
-      s = Math.sin(math.radians(angle));
+    var c = Math.cos(radians(angle)),
+      s = Math.sin(radians(angle));
     return Transform._mmult([c, s, -s, c, 0, 0], this.m);
   }
   skew(x, y) {

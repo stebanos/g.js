@@ -1,11 +1,6 @@
-'use strict';
-
-var assert = require('assert');
-var mocha = require('mocha');
-var describe = mocha.describe;
-var it = mocha.it;
-
-var g = require('../src/g');
+import assert from 'assert';
+import { describe, it } from 'mocha';
+import g from '../src/g.js';
 
 describe('The string module', function () {
 

@@ -1,18 +1,13 @@
-"use strict";
+import { Rect, Color } from './vg';
+import { Img, Layer, ImageCanvas } from './img';
 
-var vg = require("./vg");
-var img = require("./img");
-
-var Img = img.Img;
-var Layer = img.Layer;
-var ImageCanvas = img.ImageCanvas;
-var g = {};
+const g = {};
 
 g.blend = function (image1, image2, mode) {
   var b1 = image1.bounds();
   var b2 = image2.bounds();
 
-  var b = new vg.Rect(b1.x, b1.y, b1.width, b1.height).unite(b2);
+  var b = new Rect(b1.x, b1.y, b1.width, b1.height).unite(b2);
   var width = Math.ceil(b.width);
   var height = Math.ceil(b.height);
   var dx = width / 2 + b.x;
@@ -188,7 +183,7 @@ g.mask = function (image, mask) {
   var b1 = image.bounds();
   var b2 = mask.bounds();
 
-  var b = new vg.Rect(b1.x, b1.y, b1.width, b1.height).unite(b2);
+  var b = new Rect(b1.x, b1.y, b1.width, b1.height).unite(b2);
   var width = Math.ceil(b.width);
   var height = Math.ceil(b.height);
   var dx = width / 2 + b.x;
@@ -279,7 +274,7 @@ g.toPixels = function (image, step) {
         g: pg,
         b: pb,
         a: pa,
-        color: new vg.Color(pr / 255, pg / 255, pb / 255, pa / 255),
+        color: new Color(pr / 255, pg / 255, pb / 255, pa / 255),
       });
     }
   }
@@ -297,4 +292,4 @@ g.twirl = function (image, position, radius, angle) {
   return image.withCanvas(layer.toCanvas());
 };
 
-module.exports = g;
+export default g;

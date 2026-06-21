@@ -1,11 +1,6 @@
-'use strict';
-
-var assert = require('assert');
-var mocha = require('mocha');
-var describe = mocha.describe;
-var it = mocha.it;
-
-var g = require('../src/g');
+import assert from 'assert';
+import { describe, it } from 'mocha';
+import g from '../src/g.js';
 
 function assertAlmostEqual(actual, expected) {
     assert(Math.abs(actual - expected) < 0.00001, 'Expected ' + expected + ', got ' + actual);
