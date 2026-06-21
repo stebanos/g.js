@@ -119,7 +119,6 @@ const process = function (inData, outData, width, height, options) {
     let blend_fn, sr, sg, sb, sa, dr, dg, db, da, or, og, ob;
     const max = Math.max;
     const min = Math.min;
-    const div_2_255 = 2 / 255;
 
     /*R = 0.299;
      G = 0.587;
@@ -240,34 +239,16 @@ const process = function (inData, outData, width, height, options) {
         return [r, g, b];
     }
 
-    function _sourceover() {
-        or = sr;
-        og = sg;
-        ob = sb;
-    }
-
     function _svg_sourceover() {
         or = sr + dr - dr * sa;
         og = sg + dg - dg * sa;
         ob = sb + db - db * sa;
     }
 
-    function _multiply() {
-        or = (dr * sr) / 255;
-        og = (dg * sg) / 255;
-        ob = (db * sb) / 255;
-    }
-
     function _svg_multiply() {
         or = sr * dr + sr * (1 - da) + dr * (1 - sa);
         og = sg * dg + sg * (1 - da) + dg * (1 - sa);
         ob = sb * db + sb * (1 - da) + db * (1 - sa);
-    }
-
-    function _subtract() {
-        or = max(dr - sr, 0);
-        og = max(dg - sg, 0);
-        ob = max(db - sb, 0);
     }
 
     function _svg_subtract() {
@@ -282,22 +263,10 @@ const process = function (inData, outData, width, height, options) {
         ob = sb === 0 ? 0 : (db / sb) * 255;
     }
 
-    function _screen() {
-        or = 255 - (((255 - dr) * (255 - sr)) >> 8);
-        og = 255 - (((255 - dg) * (255 - sg)) >> 8);
-        ob = 255 - (((255 - db) * (255 - sb)) >> 8);
-    }
-
     function _svg_screen() {
         or = sr + dr - sr * dr;
         og = sg + dg - sg * dg;
         ob = sb + db - sb * db;
-    }
-
-    function _lighten() {
-        or = dr > sr ? dr : sr;
-        og = dg > sg ? dg : sg;
-        ob = db > sb ? db : sb;
     }
 
     function _svg_lighten() {
@@ -306,28 +275,10 @@ const process = function (inData, outData, width, height, options) {
         ob = max(sb * da, db * sa) + sb * (1 - da) + db * (1 - sa);
     }
 
-    function _darken() {
-        or = dr < sr ? dr : sr;
-        og = dg < sg ? dg : sg;
-        ob = db < sb ? db : sb;
-    }
-
     function _svg_darken() {
         or = min(sr * da, dr * sa) + sr * (1 - da) + dr * (1 - sa);
         og = min(sg * da, dg * sa) + sg * (1 - da) + dg * (1 - sa);
         ob = min(sb * da, db * sa) + sb * (1 - da) + db * (1 - sa);
-    }
-
-    function _darkercolor() {
-        if (dr * 0.3 + dg * 0.59 + db * 0.11 <= sr * 0.3 + sg * 0.59 + sb * 0.11) {
-            or = dr;
-            og = dg;
-            ob = db;
-        } else {
-            or = sr;
-            og = sg;
-            ob = sb;
-        }
     }
 
     function _svg_darkercolor() {
@@ -346,18 +297,6 @@ const process = function (inData, outData, width, height, options) {
         or += sr * (1 - da) + dr * (1 - sa);
         og += sg * (1 - da) + dg * (1 - sa);
         ob += sb * (1 - da) + db * (1 - sa);
-    }
-
-    function _lightercolor() {
-        if (dr * 0.3 + dg * 0.59 + db * 0.11 > sr * 0.3 + sg * 0.59 + sb * 0.11) {
-            or = dr;
-            og = dg;
-            ob = db;
-        } else {
-            or = sr;
-            og = sg;
-            ob = sb;
-        }
     }
 
     function _svg_lightercolor() {
@@ -395,52 +334,16 @@ const process = function (inData, outData, width, height, options) {
         ob = ob < 255 ? 0 : ob - 255;
     }
 
-    function _difference() {
-        or = dr - sr;
-        og = dg - sg;
-        ob = db - sb;
-
-        or = or < 0 ? -or : or;
-        og = og < 0 ? -og : og;
-        ob = ob < 0 ? -ob : ob;
-    }
-
     function _svg_difference() {
         or = sr + dr - 2 * min(sr * da, dr * sa);
         og = sg + dg - 2 * min(sg * da, dg * sa);
         ob = sb + db - 2 * min(sb * da, db * sa);
     }
 
-    function _exclusion() {
-        or = dr - (dr * div_2_255 - 1) * sr;
-        og = dg - (dg * div_2_255 - 1) * sg;
-        ob = db - (db * div_2_255 - 1) * sb;
-    }
-
     function _svg_exclusion() {
         or = sr * da + dr * sa - 2 * sr * dr + sr * (1 - da) + dr * (1 - sa);
         og = sg * da + dg * sa - 2 * sg * dg + sg * (1 - da) + dg * (1 - sa);
         ob = sb * da + db * sa - 2 * sb * db + sb * (1 - da) + db * (1 - sa);
-    }
-
-    function _overlay() {
-        if (dr < 128) {
-            or = sr * dr * div_2_255;
-        } else {
-            or = 255 - (255 - sr) * (255 - dr) * div_2_255;
-        }
-
-        if (dg < 128) {
-            og = sg * dg * div_2_255;
-        } else {
-            og = 255 - (255 - sg) * (255 - dg) * div_2_255;
-        }
-
-        if (db < 128) {
-            ob = sb * db * div_2_255;
-        } else {
-            ob = 255 - (255 - sb) * (255 - db) * div_2_255;
-        }
     }
 
     function _svg_overlay() {
@@ -458,26 +361,6 @@ const process = function (inData, outData, width, height, options) {
             ob = 2 * sb * db + sb * (1 - da) + db * (1 - sa);
         } else {
             ob = sb * (1 + da) + db * (1 + sa) - 2 * db * sb - da * sa;
-        }
-    }
-
-    function _softlight() {
-        if (dr < 128) {
-            or = ((sr >> 1) + 64) * dr * div_2_255;
-        } else {
-            or = 255 - (191 - (sr >> 1)) * (255 - dr) * div_2_255;
-        }
-
-        if (dg < 128) {
-            og = ((sg >> 1) + 64) * dg * div_2_255;
-        } else {
-            og = 255 - (191 - (sg >> 1)) * (255 - dg) * div_2_255;
-        }
-
-        if (db < 128) {
-            ob = ((sb >> 1) + 64) * db * div_2_255;
-        } else {
-            ob = 255 - (191 - (sb >> 1)) * (255 - db) * div_2_255;
         }
     }
 
@@ -532,26 +415,6 @@ const process = function (inData, outData, width, height, options) {
         }
     }
 
-    function _hardlight() {
-        if (sr < 128) {
-            or = dr * sr * div_2_255;
-        } else {
-            or = 255 - (255 - dr) * (255 - sr) * div_2_255;
-        }
-
-        if (sg < 128) {
-            og = dg * sg * div_2_255;
-        } else {
-            og = 255 - (255 - dg) * (255 - sg) * div_2_255;
-        }
-
-        if (sb < 128) {
-            ob = db * sb * div_2_255;
-        } else {
-            ob = 255 - (255 - db) * (255 - sb) * div_2_255;
-        }
-    }
-
     function _svg_hardlight() {
         if (2 * sr <= sa) {
             or = 2 * sr * dr + sr * (1 - da) + dr * (1 - sa);
@@ -570,16 +433,6 @@ const process = function (inData, outData, width, height, options) {
         } else {
             ob = sb * (1 + da) + db * (1 + sa) - sa * da - 2 * sb * db;
         }
-    }
-
-    function _colordodge() {
-        const dr1 = (dr << 8) / (255 - sr);
-        const dg1 = (dg << 8) / (255 - sg);
-        const db1 = (db << 8) / (255 - sb);
-
-        or = dr1 > 255 || sr === 255 ? 255 : dr1;
-        og = dg1 > 255 || sg === 255 ? 255 : dg1;
-        ob = db1 > 255 || sb === 255 ? 255 : db1;
     }
 
     function _svg_colordodge() {
@@ -622,16 +475,6 @@ const process = function (inData, outData, width, height, options) {
         sb * (1 - da) +
         db * (1 - sa);
         }
-    }
-
-    function _colorburn() {
-        const dr1 = 255 - ((255 - dr) << 8) / sr;
-        const dg1 = 255 - ((255 - dg) << 8) / sg;
-        const db1 = 255 - ((255 - db) << 8) / sb;
-
-        or = dr1 < 0 || sr === 0 ? 0 : dr1;
-        og = dg1 < 0 || sg === 0 ? 0 : dg1;
-        ob = db1 < 0 || sb === 0 ? 0 : db1;
     }
 
     function _svg_colorburn() {
