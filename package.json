@@ -6,6 +6,7 @@
   "main": "src/g.js",
   "scripts": {
     "build": "node scripts/build.mjs",
+    "dev": "node scripts/dev.mjs",
     "test": "mocha --recursive",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",

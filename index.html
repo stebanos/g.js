@@ -3,7 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>g.js notebook</title>
-    <script src="build/g.js"></script>
+	<script src="build/g.js"></script>
+
+	<script type="text/javascript">
+		// Live reload when served by `npm run dev` (esbuild dev server on :8000).
+		// No-op for static/production hosting on other ports.
+		if (window.location.port === '8000') {
+			new EventSource('/esbuild').addEventListener('change', () => location.reload());
+		}
+	</script>
+
     <style>
         body {
             margin: 0;
