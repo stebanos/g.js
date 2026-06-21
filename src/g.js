@@ -71,7 +71,7 @@ function importCSV(csvString, delimiter) {
   let m, sr, col, index;
   for (let i = 0; i < csvRows.length; i += 1) {
     row = csvRows[i];
-    if (!!row) {
+    if (row) {
       m = {};
       sr = splitRow(row, delimiter);
       for (index = 0; index < sr.length; index += 1) {
@@ -89,7 +89,7 @@ function merge() {
   if (Array.isArray(args)) {
     const objects = [];
     for (let i = 0; i < args.length; i += 1) {
-      if (!!args[i]) {
+      if (args[i]) {
         objects.push(args[i]);
       }
     }

@@ -268,7 +268,7 @@ export function range(min, max, step, includeMax) {
   const values = [];
   let i;
   if (min < max) {
-    if (!!includeMax) {
+    if (includeMax) {
       for (i = min; i <= max; i += step) {
         values.push(i);
       }
@@ -278,7 +278,7 @@ export function range(min, max, step, includeMax) {
       }
     }
   } else {
-    if (!!includeMax) {
+    if (includeMax) {
       for (i = min; i >= max; i += step) {
         values.push(i);
       }
