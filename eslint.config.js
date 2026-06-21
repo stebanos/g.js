@@ -48,4 +48,15 @@ export default [
       },
     },
   },
+  {
+    // Build/dev scripts run on Node.
+    files: ["scripts/**/*.mjs"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: {
+        ...globals.node,
+      },
+    },
+  },
 ];
