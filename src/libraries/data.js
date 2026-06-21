@@ -20,7 +20,7 @@ export function convert(v, inMin, inMax, outMin, outMax) {
     }
     try {
         v = (v - inMin) / (inMax - inMin);
-    } catch (e) {
+    } catch {
         v = inMin;
     }
     // Convert value to target range.

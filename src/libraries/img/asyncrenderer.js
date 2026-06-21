@@ -223,9 +223,6 @@ AsyncRenderer.render = function (iCanvas, callback) {
 // Renders the image canvas and turns it into a black and white image. Useful for rendering a layer mask.
 AsyncRenderer.renderBW = function (iCanvas, callback) {
     AsyncRenderer.render(iCanvas, function (canvas) {
-        const data = canvas
-            .getContext('2d')
-            .getImageData(0, 0, canvas.width, canvas.height).data;
         const bwFilter = { name: 'desaturate', options: { method: 'ITU-R BT.709' } };
         const fn = AsyncRenderer.processImage([bwFilter]);
         fn(canvas, function (err, c) {

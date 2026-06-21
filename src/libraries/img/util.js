@@ -31,13 +31,10 @@ export function transform(m) {
 
         const m0 = m[0];
         const m1 = m[1];
-        const m2 = m[2];
         const m3 = m[3];
         const m4 = m[4];
-        const m5 = m[5];
         const m6 = m[6];
         const m7 = m[7];
-        const m8 = m[8];
 
         m[0] = a[0] * m0 + a[1] * m3;
         m[1] = a[0] * m1 + a[1] * m4;

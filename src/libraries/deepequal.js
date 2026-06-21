@@ -105,7 +105,7 @@ objEquiv = function (a, b) {
     try {
         ka = Object.keys(a);
         kb = Object.keys(b);
-    } catch (e) {
+    } catch {
     //happens when one is a string literal and the other isn't
         return false;
     }

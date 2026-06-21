@@ -12,7 +12,7 @@
  */
 
 import stackblur from 'stackblur';
-import { radians, distance, transform, clamp } from './util.js';
+import { radians, distance, clamp } from './util.js';
 
 const LUMINOSITY_ITU_R_BT601 = 'ITU-R BT.601';
 const LUMINOSITY_ITU_R_BT709 = 'ITU-R BT.709';
@@ -48,14 +48,6 @@ function smoothstep(a, b, x) {
     }
     x = (x - a) / (b - a);
     return x * x * (3 - 2 * x);
-}
-
-function noise() {
-    return Math.random() * 0.5 + 0.5;
-}
-
-function colorDistance(scale, dest, src) {
-    return clamp(scale * dest + (1 - scale) * src, 0, 255);
 }
 
 function convolve3x3(
@@ -1187,7 +1179,6 @@ const process = {
             h1,
             chroma,
             tmp,
-            m,
             ar = clamp(options.r, 0, 1),
             ag = clamp(options.g, 0, 1),
             ab = clamp(options.b, 0, 1);
@@ -1643,7 +1634,7 @@ const process = {
         }
     },
 
-    equalize: function (inData, outData, width, height, options) {
+    equalize: function (inData, outData, width, height) {
         let n = width * height,
             p,
             i,

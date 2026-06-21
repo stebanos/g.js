@@ -491,9 +491,6 @@ CanvasRenderer.render = function (iCanvas) {
 // Renders the image canvas and turns it into a black and white image. Useful for rendering a layer mask.
 CanvasRenderer.renderBW = function (iCanvas) {
     const canvas = CanvasRenderer.render(iCanvas);
-    const data = canvas
-        .getContext('2d')
-        .getImageData(0, 0, canvas.width, canvas.height).data;
     const bwFilter = { name: 'desaturate', options: { method: 'ITU-R BT.709' } };
     return CanvasRenderer.processImage(canvas, [bwFilter]);
 };

@@ -46,7 +46,7 @@ const colors = [
 // Converts a number of arguments to a type of color argument that the html canvas context can understand:
 // a named color, a hex color or a string in the form of rgba(r, g, b, a)
 function toColor(v1, v2, v3, v4, v5) {
-    let _r, _g, _b, _a, R, G, B, rgb, options;
+    let _r, _g, _b, _a, R, G, B, options;
     if (v1 === undefined) {
         _r = _g = _b = 0;
         _a = 1;
@@ -561,11 +561,11 @@ export class ImageCanvas {
 
         try {
             return this.addGradientLayer.apply(this, arguments);
-        } catch (e1) {}
+        } catch {}
 
         try {
             return this.addColorLayer.apply(this, arguments);
-        } catch (e2) {}
+        } catch {}
 
         if (arguments.length === 1) {
             if (typeof arg0 === 'string') {

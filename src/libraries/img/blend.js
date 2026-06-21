@@ -105,7 +105,7 @@ function getNativeModes() {
                 ctx.fillRect(0, 0, 1, 1);
                 ok = ctx.getImageData(0, 0, 1, 1).data[0] !== (darken ? 170 : 51);
             }
-        } catch (e) {}
+        } catch {}
         ctx.restore();
         nativeModes[mode] = ok;
     }
@@ -116,7 +116,7 @@ function getNativeModes() {
 }
 
 const process = function (inData, outData, width, height, options) {
-    let blend_fn, sr, sg, sb, sa, dr, dg, db, da, or, og, ob, oa;
+    let blend_fn, sr, sg, sb, sa, dr, dg, db, da, or, og, ob;
     const max = Math.max;
     const min = Math.min;
     const div_2_255 = 2 / 255;
