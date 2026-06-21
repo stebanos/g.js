@@ -622,7 +622,7 @@ var g = (() => {
       var errors = require_errors();
       var DOMException = errors.DOMException;
       var DOMExceptionName = errors.DOMExceptionName;
-      var g2 = require_grammar();
+      var g3 = require_grammar();
       function checkSymbol(symbol) {
         if (symbol !== PDC) {
           throw new TypeError("Illegal constructor");
@@ -651,7 +651,7 @@ var g = (() => {
         };
       }
       function validateQualifiedName(qualifiedName) {
-        if (!g2.QName_exact.test(qualifiedName)) {
+        if (!g3.QName_exact.test(qualifiedName)) {
           throw new DOMException(DOMException.INVALID_CHARACTER_ERR, 'invalid character in qualified name "' + qualifiedName + '"');
         }
       }
@@ -2298,7 +2298,7 @@ var g = (() => {
          * @see https://dom.spec.whatwg.org/#dom-document-createattribute
          */
         createAttribute: function(name) {
-          if (!g2.QName_exact.test(name)) {
+          if (!g3.QName_exact.test(name)) {
             throw new DOMException(DOMException.INVALID_CHARACTER_ERR, 'invalid character in name "' + name + '"');
           }
           if (this.type === "html") {
@@ -2333,7 +2333,7 @@ var g = (() => {
          * @see https://www.w3.org/TR/DOM-Level-3-Core/core.html#ID-392B75AE
          */
         createEntityReference: function(name) {
-          if (!g2.Name.test(name)) {
+          if (!g3.Name.test(name)) {
             throw new DOMException(DOMException.INVALID_CHARACTER_ERR, 'not a valid xml name "' + name + '"');
           }
           if (this.type === "html") {
@@ -2904,7 +2904,7 @@ var g = (() => {
                   addSerializedAttribute(buf, n.name, n.value);
                   return null;
                 case TEXT_NODE:
-                  if (requireWellFormed && g2.InvalidChar.test(n.data)) {
+                  if (requireWellFormed && g3.InvalidChar.test(n.data)) {
                     throw new DOMException(
                       "The Text node data contains characters outside the XML Char production",
                       DOMExceptionName.InvalidStateError
@@ -2917,14 +2917,14 @@ var g = (() => {
                     throw new DOMException('The CDATASection data contains "]]>"', DOMExceptionName.InvalidStateError);
                   }
                   if (splitCDATASections) {
-                    buf.push(g2.CDATA_START, n.data.replace(/]]>/g, "]]]]><![CDATA[>"), g2.CDATA_END);
+                    buf.push(g3.CDATA_START, n.data.replace(/]]>/g, "]]]]><![CDATA[>"), g3.CDATA_END);
                   } else {
-                    buf.push(g2.CDATA_START, n.data, g2.CDATA_END);
+                    buf.push(g3.CDATA_START, n.data, g3.CDATA_END);
                   }
                   return null;
                 case COMMENT_NODE:
                   if (requireWellFormed) {
-                    if (g2.InvalidChar.test(n.data)) {
+                    if (g3.InvalidChar.test(n.data)) {
                       throw new DOMException(
                         "The comment node data contains characters outside the XML Char production",
                         DOMExceptionName.InvalidStateError
@@ -2937,30 +2937,30 @@ var g = (() => {
                       );
                     }
                   }
-                  buf.push(g2.COMMENT_START, n.data, g2.COMMENT_END);
+                  buf.push(g3.COMMENT_START, n.data, g3.COMMENT_END);
                   return null;
                 case DOCUMENT_TYPE_NODE:
                   var pubid = n.publicId;
                   var sysid = n.systemId;
                   if (requireWellFormed) {
-                    if (pubid && !g2.PubidLiteral_match.test(pubid)) {
+                    if (pubid && !g3.PubidLiteral_match.test(pubid)) {
                       throw new DOMException("DocumentType publicId is not a valid PubidLiteral", DOMExceptionName.InvalidStateError);
                     }
-                    if (sysid && sysid !== "." && !g2.SystemLiteral_match.test(sysid)) {
+                    if (sysid && sysid !== "." && !g3.SystemLiteral_match.test(sysid)) {
                       throw new DOMException("DocumentType systemId is not a valid SystemLiteral", DOMExceptionName.InvalidStateError);
                     }
                     if (n.internalSubset && n.internalSubset.indexOf("]>") !== -1) {
                       throw new DOMException('DocumentType internalSubset contains "]>"', DOMExceptionName.InvalidStateError);
                     }
                   }
-                  buf.push(g2.DOCTYPE_DECL_START, " ", n.name);
+                  buf.push(g3.DOCTYPE_DECL_START, " ", n.name);
                   if (pubid) {
-                    buf.push(" ", g2.PUBLIC, " ", pubid);
+                    buf.push(" ", g3.PUBLIC, " ", pubid);
                     if (sysid && sysid !== ".") {
                       buf.push(" ", sysid);
                     }
                   } else if (sysid && sysid !== ".") {
-                    buf.push(" ", g2.SYSTEM, " ", sysid);
+                    buf.push(" ", g3.SYSTEM, " ", sysid);
                   }
                   if (n.internalSubset) {
                     buf.push(" [", n.internalSubset, "]");
@@ -2972,7 +2972,7 @@ var g = (() => {
                     if (n.target.indexOf(":") !== -1 || n.target.toLowerCase() === "xml") {
                       throw new DOMException("The ProcessingInstruction target is not well-formed", DOMExceptionName.InvalidStateError);
                     }
-                    if (g2.InvalidChar.test(n.data)) {
+                    if (g3.InvalidChar.test(n.data)) {
                       throw new DOMException(
                         "The ProcessingInstruction data contains characters outside the XML Char production",
                         DOMExceptionName.InvalidStateError
@@ -5315,7 +5315,7 @@ var g = (() => {
     "node_modules/@xmldom/xmldom/lib/sax.js"(exports) {
       "use strict";
       var conventions = require_conventions();
-      var g2 = require_grammar();
+      var g3 = require_grammar();
       var errors = require_errors();
       var isHTMLEscapableRawTextElement = conventions.isHTMLEscapableRawTextElement;
       var isHTMLMimeType = conventions.isHTMLMimeType;
@@ -5346,7 +5346,7 @@ var g = (() => {
       var ENTITY_REG = /&#?\w+;?/g;
       function parse(source, defaultNSMapCopy, entityMap, domBuilder, errorHandler) {
         var isHTML = isHTMLMimeType(domBuilder.mimeType);
-        if (source.indexOf(g2.UNICODE_REPLACEMENT_CHARACTER) >= 0) {
+        if (source.indexOf(g3.UNICODE_REPLACEMENT_CHARACTER) >= 0) {
           errorHandler.warning("Unicode replacement character detected, source encoding issues?");
         }
         function fixedFromCharCode(code) {
@@ -5364,7 +5364,7 @@ var g = (() => {
             errorHandler.error("EntityRef: expecting ;");
             return a2;
           }
-          var match = g2.Reference.exec(complete);
+          var match = g3.Reference.exec(complete);
           if (!match || match[0].length !== complete.length) {
             errorHandler.error("entity not matching Reference production: " + a2);
             return a2;
@@ -5423,7 +5423,7 @@ var g = (() => {
             if (tagStart > start) {
               var fromSource = source.substring(start, tagStart);
               if (!isHTML && unclosedTags.length === 0) {
-                fromSource = fromSource.replace(new RegExp(g2.S_OPT.source, "g"), "");
+                fromSource = fromSource.replace(new RegExp(g3.S_OPT.source, "g"), "");
                 fromSource && errorHandler.error("Unexpected content outside root element: '" + fromSource + "'");
               }
               appendText(tagStart);
@@ -5435,7 +5435,7 @@ var g = (() => {
                 if (!tagNameRaw) {
                   return errorHandler.fatalError("end tag name missing");
                 }
-                var tagNameMatch = end > 0 && g2.reg("^", g2.QName_group, g2.S_OPT, "$").exec(tagNameRaw);
+                var tagNameMatch = end > 0 && g3.reg("^", g3.QName_group, g3.S_OPT, "$").exec(tagNameRaw);
                 if (!tagNameMatch) {
                   return errorHandler.fatalError('end tag name contains invalid characters: "' + tagNameRaw + '"');
                 }
@@ -5823,7 +5823,7 @@ var g = (() => {
           return source.substring(index2, index2 + text2.length).toUpperCase() === text2.toUpperCase();
         }
         function getMatch(args) {
-          var expr = g2.reg("^", args);
+          var expr = g3.reg("^", args);
           var match = expr.exec(substringFromIndex());
           if (match) {
             skip(match[0].length);
@@ -5849,7 +5849,7 @@ var g = (() => {
       }
       function parseDoctypeInternalSubset(p, errorHandler) {
         function parsePI(p2, errorHandler2) {
-          var match = g2.PI.exec(p2.substringFromIndex());
+          var match = g3.PI.exec(p2.substringFromIndex());
           if (!match) {
             return errorHandler2.fatalError("processing instruction is not well-formed at position " + p2.getIndex());
           }
@@ -5877,25 +5877,25 @@ var g = (() => {
               switch (p.char(2)) {
                 case "E":
                   if (p.char(3) === "L") {
-                    current = p.getMatch(g2.elementdecl);
+                    current = p.getMatch(g3.elementdecl);
                   } else if (p.char(3) === "N") {
-                    current = p.getMatch(g2.EntityDecl);
+                    current = p.getMatch(g3.EntityDecl);
                   }
                   break;
                 case "A":
-                  current = p.getMatch(g2.AttlistDecl);
+                  current = p.getMatch(g3.AttlistDecl);
                   break;
                 case "N":
-                  current = p.getMatch(g2.NotationDecl);
+                  current = p.getMatch(g3.NotationDecl);
                   break;
                 case "-":
-                  current = p.getMatch(g2.Comment);
+                  current = p.getMatch(g3.Comment);
                   break;
               }
             } else if (p.char() === "<" && p.char(1) === "?") {
               current = parsePI(p, errorHandler);
             } else if (p.char() === "%") {
-              current = p.getMatch(g2.PEReference);
+              current = p.getMatch(g3.PEReference);
             } else {
               return errorHandler.fatalError("Error detected in Markup declaration");
             }
@@ -5910,21 +5910,21 @@ var g = (() => {
         var p = parseUtils(source, start);
         switch (isHTML ? p.char(2).toUpperCase() : p.char(2)) {
           case "-":
-            var comment = p.getMatch(g2.Comment);
+            var comment = p.getMatch(g3.Comment);
             if (comment) {
-              domBuilder.comment(comment, g2.COMMENT_START.length, comment.length - g2.COMMENT_START.length - g2.COMMENT_END.length);
+              domBuilder.comment(comment, g3.COMMENT_START.length, comment.length - g3.COMMENT_START.length - g3.COMMENT_END.length);
               return p.getIndex();
             } else {
               return errorHandler.fatalError("comment is not well-formed at position " + p.getIndex());
             }
           case "[":
-            var cdata = p.getMatch(g2.CDSect);
+            var cdata = p.getMatch(g3.CDSect);
             if (cdata) {
               if (!isHTML && !domBuilder.currentElement) {
                 return errorHandler.fatalError("CDATA outside of element");
               }
               domBuilder.startCDATA();
-              domBuilder.characters(cdata, g2.CDATA_START.length, cdata.length - g2.CDATA_START.length - g2.CDATA_END.length);
+              domBuilder.characters(cdata, g3.CDATA_START.length, cdata.length - g3.CDATA_START.length - g3.CDATA_END.length);
               domBuilder.endCDATA();
               return p.getIndex();
             } else {
@@ -5934,12 +5934,12 @@ var g = (() => {
             if (domBuilder.doc && domBuilder.doc.documentElement) {
               return errorHandler.fatalError("Doctype not allowed inside or after documentElement at position " + p.getIndex());
             }
-            if (isHTML ? !p.substringStartsWithCaseInsensitive(g2.DOCTYPE_DECL_START) : !p.substringStartsWith(g2.DOCTYPE_DECL_START)) {
-              return errorHandler.fatalError("Expected " + g2.DOCTYPE_DECL_START + " at position " + p.getIndex());
+            if (isHTML ? !p.substringStartsWithCaseInsensitive(g3.DOCTYPE_DECL_START) : !p.substringStartsWith(g3.DOCTYPE_DECL_START)) {
+              return errorHandler.fatalError("Expected " + g3.DOCTYPE_DECL_START + " at position " + p.getIndex());
             }
-            p.skip(g2.DOCTYPE_DECL_START.length);
+            p.skip(g3.DOCTYPE_DECL_START.length);
             if (p.skipBlanks() < 1) {
-              return errorHandler.fatalError("Expected whitespace after " + g2.DOCTYPE_DECL_START + " at position " + p.getIndex());
+              return errorHandler.fatalError("Expected whitespace after " + g3.DOCTYPE_DECL_START + " at position " + p.getIndex());
             }
             var doctype = {
               name: void 0,
@@ -5947,15 +5947,15 @@ var g = (() => {
               systemId: void 0,
               internalSubset: void 0
             };
-            doctype.name = p.getMatch(g2.Name);
+            doctype.name = p.getMatch(g3.Name);
             if (!doctype.name)
               return errorHandler.fatalError("doctype name missing or contains unexpected characters at position " + p.getIndex());
             if (isHTML && doctype.name.toLowerCase() !== "html") {
               errorHandler.warning("Unexpected DOCTYPE in HTML document at position " + p.getIndex());
             }
             p.skipBlanks();
-            if (p.substringStartsWith(g2.PUBLIC) || p.substringStartsWith(g2.SYSTEM)) {
-              var match = g2.ExternalID_match.exec(p.substringFromIndex());
+            if (p.substringStartsWith(g3.PUBLIC) || p.substringStartsWith(g3.SYSTEM)) {
+              var match = g3.ExternalID_match.exec(p.substringFromIndex());
               if (!match) {
                 return errorHandler.fatalError("doctype external id is not well-formed at position " + p.getIndex());
               }
@@ -5966,19 +5966,19 @@ var g = (() => {
                 doctype.publicId = match.groups.PubidLiteral;
               }
               p.skip(match[0].length);
-            } else if (isHTML && p.substringStartsWithCaseInsensitive(g2.SYSTEM)) {
-              p.skip(g2.SYSTEM.length);
+            } else if (isHTML && p.substringStartsWithCaseInsensitive(g3.SYSTEM)) {
+              p.skip(g3.SYSTEM.length);
               if (p.skipBlanks() < 1) {
-                return errorHandler.fatalError("Expected whitespace after " + g2.SYSTEM + " at position " + p.getIndex());
+                return errorHandler.fatalError("Expected whitespace after " + g3.SYSTEM + " at position " + p.getIndex());
               }
-              doctype.systemId = p.getMatch(g2.ABOUT_LEGACY_COMPAT_SystemLiteral);
+              doctype.systemId = p.getMatch(g3.ABOUT_LEGACY_COMPAT_SystemLiteral);
               if (!doctype.systemId) {
                 return errorHandler.fatalError(
-                  "Expected " + g2.ABOUT_LEGACY_COMPAT + " in single or double quotes after " + g2.SYSTEM + " at position " + p.getIndex()
+                  "Expected " + g3.ABOUT_LEGACY_COMPAT + " in single or double quotes after " + g3.SYSTEM + " at position " + p.getIndex()
                 );
               }
             }
-            if (isHTML && doctype.systemId && !g2.ABOUT_LEGACY_COMPAT_SystemLiteral.test(doctype.systemId)) {
+            if (isHTML && doctype.systemId && !g3.ABOUT_LEGACY_COMPAT_SystemLiteral.test(doctype.systemId)) {
               errorHandler.warning("Unexpected doctype.systemId in HTML document at position " + p.getIndex());
             }
             if (!isHTML) {
@@ -5999,7 +5999,7 @@ var g = (() => {
         }
       }
       function parseProcessingInstruction(source, start, domBuilder, errorHandler) {
-        var match = source.substring(start).match(g2.PI);
+        var match = source.substring(start).match(g3.PI);
         if (!match) {
           return errorHandler.fatalError("Invalid processing instruction starting at position " + start);
         }
@@ -6009,7 +6009,7 @@ var g = (() => {
               "processing instruction at position " + start + " is an xml declaration which is only at the start of the document"
             );
           }
-          if (!g2.XMLDecl.test(source.substring(start))) {
+          if (!g3.XMLDecl.test(source.substring(start))) {
             return errorHandler.fatalError("xml declaration is not well-formed");
           }
         }
@@ -6021,13 +6021,13 @@ var g = (() => {
       }
       ElementAttributes.prototype = {
         setTagName: function(tagName) {
-          if (!g2.QName_exact.test(tagName)) {
+          if (!g3.QName_exact.test(tagName)) {
             throw new Error("invalid tagName:" + tagName);
           }
           this.tagName = tagName;
         },
         addValue: function(qName, value, offset) {
-          if (!g2.QName_exact.test(qName)) {
+          if (!g3.QName_exact.test(qName)) {
             throw new Error("invalid attribute:" + qName);
           }
           this.attributeNames[qName] = this.length;
@@ -6899,11 +6899,11 @@ var g = (() => {
       }
       function bnpExp(e2, z) {
         if (e2 > 4294967295 || e2 < 1) return BigInteger.ONE;
-        var r = nbi(), r2 = nbi(), g2 = z.convert(this), i = nbits(e2) - 1;
-        g2.copyTo(r);
+        var r = nbi(), r2 = nbi(), g3 = z.convert(this), i = nbits(e2) - 1;
+        g3.copyTo(r);
         while (--i >= 0) {
           z.sqrTo(r, r2);
-          if ((e2 & 1 << i) > 0) z.mulTo(r2, g2, r);
+          if ((e2 & 1 << i) > 0) z.mulTo(r2, g3, r);
           else {
             var t = r;
             r = r2;
@@ -7366,14 +7366,14 @@ var g = (() => {
           z = new Barrett(m);
         else
           z = new Montgomery(m);
-        var g2 = new Array(), n = 3, k1 = k - 1, km = (1 << k) - 1;
-        g2[1] = z.convert(this);
+        var g3 = new Array(), n = 3, k1 = k - 1, km = (1 << k) - 1;
+        g3[1] = z.convert(this);
         if (k > 1) {
           var g22 = nbi();
-          z.sqrTo(g2[1], g22);
+          z.sqrTo(g3[1], g22);
           while (n <= km) {
-            g2[n] = nbi();
-            z.mulTo(g22, g2[n - 2], g2[n]);
+            g3[n] = nbi();
+            z.mulTo(g22, g3[n - 2], g3[n]);
             n += 2;
           }
         }
@@ -7395,7 +7395,7 @@ var g = (() => {
             --j;
           }
           if (is1) {
-            g2[w].copyTo(r);
+            g3[w].copyTo(r);
             is1 = false;
           } else {
             while (n > 1) {
@@ -7409,7 +7409,7 @@ var g = (() => {
               r = r2;
               r2 = t;
             }
-            z.mulTo(r2, g2[w], r);
+            z.mulTo(r2, g3[w], r);
           }
           while (j >= 0 && (e2[j] & 1 << i) == 0) {
             z.sqrTo(r, r2);
@@ -7432,12 +7432,12 @@ var g = (() => {
           x = y;
           y = t;
         }
-        var i = x.getLowestSetBit(), g2 = y.getLowestSetBit();
-        if (g2 < 0) return x;
-        if (i < g2) g2 = i;
-        if (g2 > 0) {
-          x.rShiftTo(g2, x);
-          y.rShiftTo(g2, y);
+        var i = x.getLowestSetBit(), g3 = y.getLowestSetBit();
+        if (g3 < 0) return x;
+        if (i < g3) g3 = i;
+        if (g3 > 0) {
+          x.rShiftTo(g3, x);
+          y.rShiftTo(g3, y);
         }
         while (x.signum() > 0) {
           if ((i = x.getLowestSetBit()) > 0) x.rShiftTo(i, x);
@@ -7450,7 +7450,7 @@ var g = (() => {
             y.rShiftTo(1, y);
           }
         }
-        if (g2 > 0) y.lShiftTo(g2, y);
+        if (g3 > 0) y.lShiftTo(g3, y);
         return y;
       }
       function bnpModInt(n) {
@@ -13345,14 +13345,14 @@ var g = (() => {
       return s;
     }
   }
-  function rgb2hex(r, g2, b) {
-    return "#" + toHex(Math.round(r * 255)) + toHex(Math.round(g2 * 255)) + toHex(Math.round(b * 255));
+  function rgb2hex(r, g3, b) {
+    return "#" + toHex(Math.round(r * 255)) + toHex(Math.round(g3 * 255)) + toHex(Math.round(b * 255));
   }
-  function rgba2hex(r, g2, b, a) {
-    return "#" + toHex(Math.round(r * 255)) + toHex(Math.round(g2 * 255)) + toHex(Math.round(b * 255)) + toHex(Math.round(a * 255));
+  function rgba2hex(r, g3, b, a) {
+    return "#" + toHex(Math.round(r * 255)) + toHex(Math.round(g3 * 255)) + toHex(Math.round(b * 255)) + toHex(Math.round(a * 255));
   }
   function hex2rgb(hex) {
-    let r, g2, b;
+    let r, g3, b;
     hex = hex.replace(/^#/, "");
     if (hex.length !== 3 && hex.length !== 6 || !/^[0-9a-fA-F]*$/.test(hex)) {
       throw new Error("Invalid hex value: #" + hex);
@@ -13361,22 +13361,22 @@ var g = (() => {
       hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
     }
     r = parseInt(hex.substr(0, 2), 16) / 255;
-    g2 = parseInt(hex.substr(2, 2), 16) / 255;
+    g3 = parseInt(hex.substr(2, 2), 16) / 255;
     b = parseInt(hex.substr(4, 2), 16) / 255;
-    return [r, g2, b];
+    return [r, g3, b];
   }
-  function rgb2hsb(r, g2, b) {
-    let h = 0, s = 0, v = Math.max(r, g2, b), d = v - Math.min(r, g2, b);
+  function rgb2hsb(r, g3, b) {
+    let h = 0, s = 0, v = Math.max(r, g3, b), d = v - Math.min(r, g3, b);
     if (v !== 0) {
       s = d / v;
     }
     if (s !== 0) {
       if (r === v) {
-        h = 0 + (g2 - b) / d;
-      } else if (g2 === v) {
+        h = 0 + (g3 - b) / d;
+      } else if (g3 === v) {
         h = 2 + (b - r) / d;
       } else {
-        h = 4 + (r - g2) / d;
+        h = 4 + (r - g3) / d;
       }
     }
     h = h * (60 / 360);
@@ -13402,16 +13402,16 @@ var g = (() => {
       [z, x, v]
     ][parseInt(i, 10)];
   }
-  function rgb2hsl(r, g2, b) {
-    let min2 = Math.min(r, g2, b), max2 = Math.max(r, g2, b), delta = max2 - min2, h, s, l;
+  function rgb2hsl(r, g3, b) {
+    let min2 = Math.min(r, g3, b), max2 = Math.max(r, g3, b), delta = max2 - min2, h, s, l;
     if (max2 === min2) {
       h = 0;
     } else if (r === max2) {
-      h = (g2 - b) / delta;
-    } else if (g2 === max2) {
+      h = (g3 - b) / delta;
+    } else if (g3 === max2) {
       h = 2 + (b - r) / delta;
     } else if (b === max2) {
-      h = 4 + (r - g2) / delta;
+      h = 4 + (r - g3) / delta;
     }
     h = Math.min(h * 60, 360);
     if (h < 0) {
@@ -17726,780 +17726,16 @@ var g = (() => {
   Object.assign(Group.prototype, transformable_default);
   Object.assign(Text.prototype, transformable_default);
 
-  // src/libraries/string.js
-  var string_exports = {};
-  __export(string_exports, {
-    characterAt: () => characterAt,
-    concatenate: () => concatenate,
-    endsWith: () => endsWith,
-    reverse: () => reverse,
-    startsWith: () => startsWith,
-    string: () => string,
-    stringContains: () => stringContains,
-    stringEquals: () => stringEquals,
-    stringLength: () => stringLength,
-    stringReplace: () => stringReplace,
-    stringSplit: () => stringSplit,
-    stringTrim: () => stringTrim,
-    substring: () => substring,
-    toCharacterCodes: () => toCharacterCodes,
-    toCharacters: () => toCharacters,
-    toLowerCase: () => toLowerCase,
-    toTitleCase: () => toTitleCase,
-    toUpperCase: () => toUpperCase,
-    toWords: () => toWords,
-    wordCount: () => wordCount
-  });
-  function characterAt(s, index2) {
-    if (!s || s.length === 0) {
-      return "";
-    }
-    s = String(s);
-    if (index2 < 0) {
-      index2 = s.length + index2;
-    }
-    return s.charAt(index2);
-  }
-  function concatenate() {
-    let result = "";
-    for (let i = 0; i < arguments.length; i++) {
-      let s = arguments[i];
-      s = s !== void 0 ? String(s) : "";
-      result += s;
-    }
-    return result;
-  }
-  function endsWith(s, value) {
-    if (!s || !value) {
-      return false;
-    }
-    s = String(s);
-    return s.indexOf(value, s.length - value.length) !== -1;
-  }
-  function reverse(l) {
-    return l.slice().reverse();
-  }
-  function startsWith(s, value) {
-    if (!s || !value) {
-      return false;
-    }
-    s = String(s);
-    return s.indexOf(value) === 0;
-  }
-  var string = String;
-  function stringContains(s, sub) {
-    if (!s || !sub) {
-      return false;
-    }
-    s = String(s);
-    return s.indexOf(sub) !== -1;
-  }
-  function stringEquals(string1, string2, ignoreCase) {
-    string1 = String(string1);
-    string2 = String(string2);
-    if (!string1 || !string2) {
-      return false;
-    }
-    if (ignoreCase) {
-      return string1.toLowerCase() === string2.toLowerCase();
-    } else {
-      return string1 === string2;
-    }
-  }
-  function stringLength(s) {
-    if (!s) {
-      return 0;
-    }
-    s = String(s);
-    return s.length;
-  }
-  function stringReplace(s, old, new_) {
-    s = String(s);
-    return s.replace(new RegExp(old, "g"), new_);
-  }
-  function stringSplit(s, separator) {
-    if (!s) {
-      return [];
-    }
-    if (!separator || separator.length === 0) {
-      separator = "";
-    }
-    s = String(s);
-    return s.split(separator);
-  }
-  function stringTrim(s) {
-    if (!s) {
-      return null;
-    }
-    s = String(s);
-    return s.trim();
-  }
-  function substring(s, start, end, endOffset) {
-    if (!s) {
-      return "";
-    }
-    if (end < start) {
-      return "";
-    }
-    s = String(s);
-    if (start < 0 && end < 0) {
-      start = s.length + start;
-      end = s.length + end;
-    }
-    if (end !== void 0) {
-      if (endOffset) {
-        end += 1;
-      }
-    }
-    return s.substring(start, end);
-  }
-  function toCharacterCodes(s) {
-    if (!s) {
-      return [];
-    }
-    const codes = [];
-    codes.length = s.length;
-    for (let i = 0; i < s.length; i += 1) {
-      codes[i] = s.charCodeAt(i);
-    }
-    return codes;
-  }
-  function toCharacters(s) {
-    if (!s) {
-      return [];
-    }
-    s = String(s);
-    return s.split("");
-  }
-  function toLowerCase(s) {
-    s = String(s);
-    return s.toLowerCase();
-  }
-  function toTitleCase(s) {
-    let c, result = "";
-    s = String(s);
-    for (let i = 0; i < s.length; i += 1) {
-      c = s[i];
-      if (result.length === 0 || result[result.length - 1] === " ") {
-        result += c.toUpperCase();
-      } else {
-        result += c;
-      }
-    }
-    return result;
-  }
-  function toUpperCase(s) {
-    s = String(s);
-    return s.toUpperCase();
-  }
-  function wordCount(s) {
-    if (!s) {
-      return 0;
-    }
-    s = String(s);
-    const split = s.split(new RegExp("\\w+"));
-    return split.length - 1;
-  }
-  function toWords(s) {
-    const l = s.split(/\W+/);
-    if (l[l.length - 1] === "") {
-      l.pop();
-    }
-    return l;
-  }
-
-  // src/libraries/list.js
-  var list_exports = {};
-  __export(list_exports, {
-    combine: () => combine,
-    contains: () => contains,
-    count: () => count,
-    cull: () => cull,
-    cycle: () => cycle,
-    distinct: () => distinct,
-    equals: () => equals,
-    first: () => first,
-    get: () => get,
-    interleave: () => interleave,
-    last: () => last,
-    pick: () => pick,
-    randomSample: () => randomSample,
-    repeat: () => repeat,
-    rest: () => rest,
-    reverse: () => reverse2,
-    second: () => second,
-    shift: () => shift,
-    shuffle: () => shuffle,
-    slice: () => slice,
-    sort: () => sort,
-    switch_: () => switch_,
-    takeEvery: () => takeEvery,
-    zipMap: () => zipMap
-  });
-
-  // src/libraries/deepequal.js
-  function isBuffer() {
-    return false;
-  }
-  function isObject(arg) {
-    return typeof arg === "object" && arg !== null;
-  }
-  function objectToString(o) {
-    return Object.prototype.toString.call(o);
-  }
-  function isRegExp(re) {
-    return isObject(re) && objectToString(re) === "[object RegExp]";
-  }
-  function isDate(d) {
-    return isObject(d) && objectToString(d) === "[object Date]";
-  }
-  function isNullOrUndefined(arg) {
-    return arg === null || arg === void 0;
-  }
-  var util = {
-    isObject,
-    isRegExp,
-    isDate,
-    isNullOrUndefined,
-    isBuffer
-  };
-  var pSlice = Array.prototype.slice;
-  var isArguments;
-  var objEquiv;
-  function deepEqual(actual, expected) {
-    if (actual === expected) {
-      return true;
-    } else if (util.isBuffer(actual) && util.isBuffer(expected)) {
-      if (actual.length !== expected.length) {
-        return false;
-      }
-      for (let i = 0; i < actual.length; i++) {
-        if (actual[i] !== expected[i]) {
-          return false;
-        }
-      }
-      return true;
-    } else if (util.isDate(actual) && util.isDate(expected)) {
-      return actual.getTime() === expected.getTime();
-    } else if (util.isRegExp(actual) && util.isRegExp(expected)) {
-      return actual.source === expected.source && actual.global === expected.global && actual.multiline === expected.multiline && actual.lastIndex === expected.lastIndex && actual.ignoreCase === expected.ignoreCase;
-    } else if (!util.isObject(actual) && !util.isObject(expected)) {
-      return actual == expected;
-    } else {
-      return objEquiv(actual, expected);
-    }
-  }
-  isArguments = function(object) {
-    return Object.prototype.toString.call(object) === "[object Arguments]";
-  };
-  objEquiv = function(a, b) {
-    if (util.isNullOrUndefined(a) || util.isNullOrUndefined(b)) {
-      return false;
-    }
-    if (a.prototype !== b.prototype) {
-      return false;
-    }
-    const aIsArgs = isArguments(a), bIsArgs = isArguments(b);
-    if (aIsArgs && !bIsArgs || !aIsArgs && bIsArgs) {
-      return false;
-    }
-    if (aIsArgs) {
-      a = pSlice.call(a);
-      b = pSlice.call(b);
-      return deepEqual(a, b);
-    }
-    let ka, kb, key, i;
-    try {
-      ka = Object.keys(a);
-      kb = Object.keys(b);
-    } catch {
-      return false;
-    }
-    if (ka.length !== kb.length) {
-      return false;
-    }
-    ka.sort();
-    kb.sort();
-    for (i = ka.length - 1; i >= 0; i--) {
-      if (ka[i] !== kb[i]) {
-        return false;
-      }
-    }
-    for (i = ka.length - 1; i >= 0; i--) {
-      key = ka[i];
-      if (!deepEqual(a[key], b[key])) {
-        return false;
-      }
-    }
-    return true;
-  };
-
-  // src/libraries/list.js
-  function combine() {
-    let i, l, result = [];
-    for (i = 0; i < arguments.length; i++) {
-      l = arguments[i];
-      if (l) {
-        result = result.concat(l);
-      }
-    }
-    return result;
-  }
-  function contains(l, value) {
-    if (!l) {
-      return false;
-    }
-    for (let i = 0; i < l.length; i += 1) {
-      if (deepEqual.deepEqual(l[i], value)) {
-        return true;
-      }
-    }
-    return false;
-  }
-  function cycle(l, length2) {
-    if (!l || length2 <= 0) {
-      return [];
-    }
-    const newList = [];
-    const ll = l.length;
-    for (let i = 0; i < length2; i += 1) {
-      newList.push(l[i % ll]);
-    }
-    return newList;
-  }
-  function equals(o1, o2) {
-    return deepEqual.deepEqual(o1, o2);
-  }
-  function count(l) {
-    if (l && l.length) {
-      return l.length;
-    } else {
-      return 0;
-    }
-  }
-  function cull(l, booleans) {
-    if (!l) {
-      return [];
-    }
-    if (!booleans) {
-      return l;
-    }
-    let i, keep, results = [];
-    for (i = 0; i < l.length; i++) {
-      keep = booleans[i % booleans.length];
-      if (keep) {
-        results.push(l[i]);
-      }
-    }
-    return results;
-  }
-  function distinct(l) {
-    if (!l) {
-      return [];
-    }
-    let i, length2, value, result = [], seen = [];
-    for (i = 0, length2 = l.length; i < length2; i += 1) {
-      value = l[i];
-      if (!contains(seen, value)) {
-        seen.push(value);
-        result.push(l[i]);
-      }
-    }
-    return result;
-  }
-  function first(l) {
-    if (!l || l.length === 0) {
-      return null;
-    }
-    return l[0];
-  }
-  function get(l, i) {
-    if (!l || l.length === 0) {
-      return null;
-    }
-    return l[i];
-  }
-  function interleave() {
-    const args = Array.from(arguments).filter((l) => !!l);
-    if (args.length === 0) {
-      return [];
-    }
-    const results = [];
-    let elIndex = 0;
-    while (true) {
-      for (let i = 0; i < args.length; i++) {
-        const arg = args[i];
-        if (arg.length > elIndex) {
-          results.push(arg[elIndex]);
-        } else {
-          return results;
-        }
-      }
-      elIndex += 1;
-    }
-  }
-  function last(l) {
-    if (!l || l.length === 0) {
-      return null;
-    }
-    return l[l.length - 1];
-  }
-  function pick(l, amount, seed) {
-    if (!l || l.length === 0 || amount <= 0) {
-      return [];
-    }
-    if (!seed && seed !== 0) {
-      seed = Math.random();
-    }
-    const rand = generator(seed || 0);
-    const results = [];
-    for (let i = 0; i < amount; i += 1) {
-      results.push(l[Math.floor(rand(0, l.length))]);
-    }
-    return results;
-  }
-  function randomSample(l, amount, seed) {
-    if (!l || l.length === 0 || amount <= 0) {
-      return [];
-    }
-    if (!seed && seed !== 0) {
-      seed = Math.random();
-    }
-    const shuffledlist = shuffle(l, seed);
-    if (!amount) {
-      return shuffledlist;
-    }
-    return slice(shuffledlist, 0, amount);
-  }
-  function repeat(l, amount, perItem) {
-    if (!l) {
-      return [];
-    }
-    if (!Array.isArray(l)) {
-      l = [l];
-    }
-    if (amount <= 0) {
-      return [];
-    }
-    let i, j, v, newList = [];
-    if (!perItem) {
-      for (i = 0; i < amount; i += 1) {
-        newList.push.apply(newList, l);
-      }
-    } else {
-      for (i = 0; i < l.length; i += 1) {
-        v = l[i];
-        for (j = 0; j < amount; j += 1) {
-          newList.push(v);
-        }
-      }
-    }
-    return newList;
-  }
-  function rest(l) {
-    if (!l) {
-      return [];
-    }
-    return l.slice(1);
-  }
-  function reverse2(l) {
-    if (!l) {
-      return [];
-    }
-    return l.slice().reverse();
-  }
-  function second(l) {
-    if (!l || l.length < 2) {
-      return null;
-    }
-    return l[1];
-  }
-  function shift(l, amount) {
-    if (!l) {
-      return [];
-    }
-    amount = amount % l.length;
-    const head = l.slice(0, amount), result = l.slice(amount);
-    result.push.apply(result, head);
-    return result;
-  }
-  function shuffle(l, seed) {
-    let i, j, tmp, r;
-    if (!seed && seed !== 0) {
-      seed = Math.random();
-    }
-    r = generator(seed || 0);
-    l = l.slice();
-    for (i = l.length - 1; i > 0; i--) {
-      j = Math.floor(r(0, i + 1));
-      tmp = l[i];
-      l[i] = l[j];
-      l[j] = tmp;
-    }
-    return l;
-  }
-  function slice(l, start, size, invert2) {
-    if (!l) {
-      return [];
-    }
-    let firstList, secondList;
-    if (!invert2) {
-      return l.slice(start, start + size);
-    } else {
-      firstList = l.slice(0, start);
-      secondList = l.slice(start + size);
-      firstList.push.apply(firstList, secondList);
-      return firstList;
-    }
-  }
-  function sort(l, key) {
-    if (!l) {
-      return [];
-    }
-    if (key) {
-      if (typeof key === "string") {
-        return l.slice().sort(function(a, b) {
-          if (a[key] > b[key]) {
-            return 1;
-          } else if (a[key] === b[key]) {
-            return 0;
-          } else {
-            return -1;
-          }
-        });
-      } else if (typeof key === "function") {
-        return l.slice().sort(key);
-      }
-    }
-    if (l && l[0] !== void 0 && l[0] !== null && typeof l[0] === "number") {
-      return l.slice().sort(function(a, b) {
-        return a - b;
-      });
-    }
-    return l.slice().sort();
-  }
-  function switch_(index2) {
-    const nLists = arguments.length - 1;
-    index2 = index2 % nLists;
-    if (index2 < 0) {
-      index2 += nLists;
-    }
-    return arguments[index2 + 1];
-  }
-  function takeEvery(l, n, offset) {
-    if (!l) {
-      return [];
-    }
-    let i, results = [];
-    offset = offset || 0;
-    for (i = 0; i < l.length; i += 1) {
-      if (i % n === offset) {
-        results.push(l[i]);
-      }
-    }
-    return results;
-  }
-  function zipMap(keys2, vals) {
-    let i, k, v, m = {}, minLength = Math.min(keys2.length, vals.length);
-    for (i = 0; i < minLength; i += 1) {
-      k = keys2[i];
-      v = vals[i];
-      m[k] = v;
-    }
-    return m;
-  }
-
-  // src/libraries/data.js
-  var data_exports = {};
-  __export(data_exports, {
-    convert: () => convert,
-    dataScale: () => dataScale,
-    filterData: () => filterData,
-    groupBy: () => groupBy,
-    keys: () => keys,
-    lookup: () => lookup,
-    ticks: () => ticks
-  });
-  function convert(v, inMin, inMax, outMin, outMax) {
-    const argLength = arguments.length;
-    if (argLength === 2) {
-      const d = arguments[1];
-      inMin = d.inMin;
-      inMax = d.inMax;
-      outMin = d.outMin;
-      outMax = d.outMax;
-    } else if (argLength === 3) {
-      inMin = arguments[1][0];
-      inMax = arguments[1][1];
-      outMin = arguments[2][0];
-      outMax = arguments[2][1];
-    }
-    try {
-      v = (v - inMin) / (inMax - inMin);
-    } catch {
-      v = inMin;
-    }
-    return outMin + v * (outMax - outMin);
-  }
-  function filterData(data, key, op, value) {
-    if (!data) {
-      return [];
-    }
-    let i, l, row, obj;
-    if (value === null || value === void 0) {
-      return data;
-    }
-    const results = [];
-    if (op === "==") {
-      for (i = 0, l = data.length; i < l; i++) {
-        row = data[i];
-        obj = row[key];
-        if (obj == value) {
-          results.push(row);
-        }
-      }
-    } else if (op === "!=") {
-      for (i = 0, l = data.length; i < l; i++) {
-        row = data[i];
-        obj = row[key];
-        if (obj != value) {
-          results.push(row);
-        }
-      }
-    } else if (op === ">") {
-      for (i = 0, l = data.length; i < l; i++) {
-        row = data[i];
-        obj = row[key];
-        if (obj > value) {
-          results.push(row);
-        }
-      }
-    } else if (op === ">=") {
-      for (i = 0, l = data.length; i < l; i++) {
-        row = data[i];
-        obj = row[key];
-        if (obj >= value) {
-          results.push(row);
-        }
-      }
-    } else if (op === "<") {
-      for (i = 0, l = data.length; i < l; i++) {
-        row = data[i];
-        obj = row[key];
-        if (obj < value) {
-          results.push(row);
-        }
-      }
-    } else if (op === "<=") {
-      for (i = 0, l = data.length; i < l; i++) {
-        row = data[i];
-        obj = row[key];
-        if (obj <= value) {
-          results.push(row);
-        }
-      }
-    } else {
-      throw new Error("Invalid op " + op);
-    }
-    return results;
-  }
-  function groupBy(data, key) {
-    const iteratee = typeof key === "function" ? key : (row) => row[key];
-    const groups = /* @__PURE__ */ new Map();
-    for (const item of data) {
-      const k = iteratee(item);
-      const group2 = groups.get(k);
-      if (group2) {
-        group2.push(item);
-      } else {
-        groups.set(k, [item]);
-      }
-    }
-    return Array.from(groups.values());
-  }
-  function keys(data) {
-    let allKeys = [];
-    for (let i = 0; i < data.length; i++) {
-      allKeys = allKeys.concat(Object.keys(data[i]));
-    }
-    return distinct(allKeys);
-  }
-  function lookup(table, key) {
-    let obj, v;
-    obj = table;
-    v = obj[key];
-    if (v !== void 0) {
-      if (typeof v === "function") {
-        v = v.call(obj);
-      }
-      return v;
-    }
-    let token, tokens = key.split(".");
-    for (let i = 0; i < tokens.length; i += 1) {
-      token = tokens[i];
-      if (!obj) {
-        continue;
-      }
-      if (typeof obj[token] === "function") {
-        v = obj[token];
-        obj = v.call(obj);
-      } else {
-        obj = obj[token];
-      }
-    }
-    return obj;
-  }
-  function dataScale(domain, outMin, outMax) {
-    return { domain, outMin, outMax };
-  }
-  function ticks(min2, max2, n) {
-    n = n !== void 0 ? n : 10;
-    let span = max2 - min2, step = Math.pow(10, Math.floor(Math.log(span / n) / Math.LN10)), err = n / span * step, ticks2 = [], i;
-    if (err <= 0.15) {
-      step *= 10;
-    } else if (err <= 0.35) {
-      step *= 5;
-    } else if (err <= 0.75) {
-      step *= 2;
-    }
-    min2 = Math.ceil(min2 / step) * step;
-    max2 = Math.floor(max2 / step) * step + step * 0.5;
-    for (i = min2; i < max2; i += step) {
-      ticks2.push(i);
-    }
-    return ticks2;
-  }
-
-  // src/libraries/graphics.js
-  var graphics_exports = {};
-  __export(graphics_exports, {
-    BOTH: () => BOTH,
-    BOTTOM: () => BOTTOM,
-    CENTER: () => CENTER,
-    HORIZONTAL: () => HORIZONTAL2,
-    LEFT: () => LEFT,
-    MIDDLE: () => MIDDLE,
-    RIGHT: () => RIGHT,
-    TOP: () => TOP,
-    VERTICAL: () => VERTICAL2,
-    align: () => align2,
-    angle: () => angle2,
-    colorize: () => colorize2,
-    coordinates: () => coordinates2,
-    copy: () => copy2,
-    desaturate: () => desaturate,
-    distance: () => distance3,
-    fit: () => fit2,
-    fitTo: () => fitTo2,
-    flip: () => flip,
-    grayColor: () => grayColor,
-    hexColor: () => hexColor,
-    hslAdjust: () => hslAdjust,
-    hslColor: () => hslColor,
-    invert: () => invert,
-    rgbAdjust: () => rgbAdjust,
-    rgbColor: () => rgbColor,
-    stack: () => stack
+  // src/libraries/img/index.js
+  var img_exports = {};
+  __export(img_exports, {
+    ImageCanvas: () => ImageCanvas,
+    Img: () => Img,
+    Layer: () => Layer,
+    Pixels: () => Pixels,
+    loadImage: () => loadImage,
+    loadImages: () => loadImages,
+    merge: () => merge2
   });
 
   // node_modules/async/dist/async.mjs
@@ -19647,7 +18883,7 @@ var g = (() => {
     });
   }
   var groupByLimit$1 = awaitify(groupByLimit, 4);
-  function groupBy2(coll, iteratee, callback) {
+  function groupBy(coll, iteratee, callback) {
     return groupByLimit$1(coll, Infinity, iteratee, callback);
   }
   function groupBySeries(coll, iteratee, callback) {
@@ -20175,7 +19411,7 @@ var g = (() => {
     filterLimit: filterLimit$1,
     filterSeries: filterSeries$1,
     forever: forever$1,
-    groupBy: groupBy2,
+    groupBy,
     groupByLimit: groupByLimit$1,
     groupBySeries,
     log: log2,
@@ -20442,74 +19678,74 @@ var g = (() => {
     const R = 0.2126;
     const G = 0.7152;
     const B = 0.0722;
-    function rgbToHsy(r, g2, b) {
+    function rgbToHsy(r, g3, b) {
       r /= 255;
-      g2 /= 255;
+      g3 /= 255;
       b /= 255;
       let h, s, y;
-      if (r === g2 && g2 === b) {
+      if (r === g3 && g3 === b) {
         s = 0;
         h = 0;
-      } else if (r >= g2 && g2 >= b) {
+      } else if (r >= g3 && g3 >= b) {
         s = r - b;
-        h = 60 * (g2 - b) / s;
-      } else if (g2 > r && r >= b) {
-        s = g2 - b;
-        h = 60 * (g2 - r) / s + 60;
-      } else if (g2 >= b && b > r) {
-        s = g2 - r;
+        h = 60 * (g3 - b) / s;
+      } else if (g3 > r && r >= b) {
+        s = g3 - b;
+        h = 60 * (g3 - r) / s + 60;
+      } else if (g3 >= b && b > r) {
+        s = g3 - r;
         h = 60 * (b - r) / s + 120;
-      } else if (b > g2 && g2 > r) {
+      } else if (b > g3 && g3 > r) {
         s = b - r;
-        h = 60 * (b - g2) / s + 180;
-      } else if (b > r && r >= g2) {
-        s = b - g2;
-        h = 60 * (r - g2) / s + 240;
+        h = 60 * (b - g3) / s + 180;
+      } else if (b > r && r >= g3) {
+        s = b - g3;
+        h = 60 * (r - g3) / s + 240;
       } else {
-        s = r - g2;
+        s = r - g3;
         h = 60 * (r - b) / s + 300;
       }
-      y = R * r + G * g2 + B * b;
+      y = R * r + G * g3 + B * b;
       return [h % 360, min2(max2(s, 0), 1), min2(max2(y, 0), 1)];
     }
     function hsyToRgb(h, s, y) {
       h = h % 360;
-      let r, g2, b, k;
+      let r, g3, b, k;
       if (h >= 0 && h < 60) {
         k = s * h / 60;
         b = y - R * s - G * k;
         r = b + s;
-        g2 = b + k;
+        g3 = b + k;
       } else if (h >= 60 && h < 120) {
         k = s * (h - 60) / 60;
-        g2 = y + B * s + R * k;
-        b = g2 - s;
-        r = g2 - k;
+        g3 = y + B * s + R * k;
+        b = g3 - s;
+        r = g3 - k;
       } else if (h >= 120 && h < 180) {
         k = s * (h - 120) / 60;
         r = y - G * s - B * k;
-        g2 = r + s;
+        g3 = r + s;
         b = r + k;
       } else if (h >= 180 && h < 240) {
         k = s * (h - 180) / 60;
         b = y + R * s + G * k;
         r = b - s;
-        g2 = b - k;
+        g3 = b - k;
       } else if (h >= 240 && h < 300) {
         k = s * (h - 240) / 60;
-        g2 = y - B * s - R * k;
-        b = g2 + s;
-        r = g2 + k;
+        g3 = y - B * s - R * k;
+        b = g3 + s;
+        r = g3 + k;
       } else {
         k = s * (h - 300) / 60;
         r = y + G * s + B * k;
-        g2 = r - s;
+        g3 = r - s;
         b = r - k;
       }
       r = min2(max2(r, 0), 1) * 255;
-      g2 = min2(max2(g2, 0), 1) * 255;
+      g3 = min2(max2(g3, 0), 1) * 255;
       b = min2(max2(b, 0), 1) * 255;
-      return [r, g2, b];
+      return [r, g3, b];
     }
     function _svg_sourceover() {
       or2 = sr + dr - dr * sa;
@@ -21049,7 +20285,7 @@ var g = (() => {
     return x * x * (3 - 2 * x);
   }
   function convolve3x3(inData, outData, width, height, kernel, alpha, invert2, mono) {
-    let x, y, idx, r, g2, b, a, pyc, pyp, pyn, pxc, pxp, pxn, k00 = kernel[0][0], k01 = kernel[0][1], k02 = kernel[0][2], k10 = kernel[1][0], k11 = kernel[1][1], k12 = kernel[1][2], k20 = kernel[2][0], k21 = kernel[2][1], k22 = kernel[2][2], p00, p01, p02, p10, p11, p12, p20, p21, p22;
+    let x, y, idx, r, g3, b, a, pyc, pyp, pyn, pxc, pxp, pxn, k00 = kernel[0][0], k01 = kernel[0][1], k02 = kernel[0][2], k10 = kernel[1][0], k11 = kernel[1][1], k12 = kernel[1][2], k20 = kernel[2][0], k21 = kernel[2][1], k22 = kernel[2][2], p00, p01, p02, p10, p11, p12, p20, p21, p22;
     for (y = 0; y < height; y += 1) {
       pyc = y * width * 4;
       pyp = pyc - width * 4;
@@ -21081,7 +20317,7 @@ var g = (() => {
         p21 = pyn + pxc;
         p22 = pyn + pxn;
         r = inData[p00] * k00 + inData[p01] * k01 + inData[p02] * k02 + inData[p10] * k10 + inData[p11] * k11 + inData[p12] * k12 + inData[p20] * k20 + inData[p21] * k21 + inData[p22] * k22;
-        g2 = inData[p00 + 1] * k00 + inData[p01 + 1] * k01 + inData[p02 + 1] * k02 + inData[p10 + 1] * k10 + inData[p11 + 1] * k11 + inData[p12 + 1] * k12 + inData[p20 + 1] * k20 + inData[p21 + 1] * k21 + inData[p22 + 1] * k22;
+        g3 = inData[p00 + 1] * k00 + inData[p01 + 1] * k01 + inData[p02 + 1] * k02 + inData[p10 + 1] * k10 + inData[p11 + 1] * k11 + inData[p12 + 1] * k12 + inData[p20 + 1] * k20 + inData[p21 + 1] * k21 + inData[p22 + 1] * k22;
         b = inData[p00 + 2] * k00 + inData[p01 + 2] * k01 + inData[p02 + 2] * k02 + inData[p10 + 2] * k10 + inData[p11 + 2] * k11 + inData[p12 + 2] * k12 + inData[p20 + 2] * k20 + inData[p21 + 2] * k21 + inData[p22 + 2] * k22;
         if (alpha) {
           a = inData[p00 + 3] * k00 + inData[p01 + 3] * k01 + inData[p02 + 3] * k02 + inData[p10 + 3] * k10 + inData[p11 + 3] * k11 + inData[p12 + 3] * k12 + inData[p20 + 3] * k20 + inData[p21 + 3] * k21 + inData[p22 + 3] * k22;
@@ -21089,22 +20325,22 @@ var g = (() => {
           a = inData[idx + 3];
         }
         if (mono) {
-          r = g2 = b = (r + g2 + b) / 3;
+          r = g3 = b = (r + g3 + b) / 3;
         }
         if (invert2) {
           r = 255 - r;
-          g2 = 255 - g2;
+          g3 = 255 - g3;
           b = 255 - b;
         }
         outData[idx] = r;
-        outData[idx + 1] = g2;
+        outData[idx + 1] = g3;
         outData[idx + 2] = b;
         outData[idx + 3] = a;
       }
     }
   }
   function convolve5x5(inData, outData, width, height, kernel, alpha, invert2, mono) {
-    let x, y, idx, r, g2, b, a, pyc, pyp, pyn, pypp, pynn, pxc, pxp, pxn, pxpp, pxnn, k00 = kernel[0][0], k01 = kernel[0][1], k02 = kernel[0][2], k03 = kernel[0][3], k04 = kernel[0][4], k10 = kernel[1][0], k11 = kernel[1][1], k12 = kernel[1][2], k13 = kernel[1][3], k14 = kernel[1][4], k20 = kernel[2][0], k21 = kernel[2][1], k22 = kernel[2][2], k23 = kernel[2][3], k24 = kernel[2][4], k30 = kernel[3][0], k31 = kernel[3][1], k32 = kernel[3][2], k33 = kernel[3][3], k34 = kernel[3][4], k40 = kernel[4][0], k41 = kernel[4][1], k42 = kernel[4][2], k43 = kernel[4][3], k44 = kernel[4][4], p00, p01, p02, p03, p04, p10, p11, p12, p13, p14, p20, p21, p22, p23, p24, p30, p31, p32, p33, p34, p40, p41, p42, p43, p44;
+    let x, y, idx, r, g3, b, a, pyc, pyp, pyn, pypp, pynn, pxc, pxp, pxn, pxpp, pxnn, k00 = kernel[0][0], k01 = kernel[0][1], k02 = kernel[0][2], k03 = kernel[0][3], k04 = kernel[0][4], k10 = kernel[1][0], k11 = kernel[1][1], k12 = kernel[1][2], k13 = kernel[1][3], k14 = kernel[1][4], k20 = kernel[2][0], k21 = kernel[2][1], k22 = kernel[2][2], k23 = kernel[2][3], k24 = kernel[2][4], k30 = kernel[3][0], k31 = kernel[3][1], k32 = kernel[3][2], k33 = kernel[3][3], k34 = kernel[3][4], k40 = kernel[4][0], k41 = kernel[4][1], k42 = kernel[4][2], k43 = kernel[4][3], k44 = kernel[4][4], p00, p01, p02, p03, p04, p10, p11, p12, p13, p14, p20, p21, p22, p23, p24, p30, p31, p32, p33, p34, p40, p41, p42, p43, p44;
     for (y = 0; y < height; y += 1) {
       pyc = y * width * 4;
       pyp = pyc - width * 4;
@@ -21168,7 +20404,7 @@ var g = (() => {
         p43 = pynn + pxn;
         p44 = pynn + pxnn;
         r = inData[p00] * k00 + inData[p01] * k01 + inData[p02] * k02 + inData[p03] * k03 + inData[p04] * k04 + inData[p10] * k10 + inData[p11] * k11 + inData[p12] * k12 + inData[p13] * k13 + inData[p14] * k14 + inData[p20] * k20 + inData[p21] * k21 + inData[p22] * k22 + inData[p23] * k23 + inData[p24] * k24 + inData[p30] * k30 + inData[p31] * k31 + inData[p32] * k32 + inData[p33] * k33 + inData[p34] * k34 + inData[p40] * k40 + inData[p41] * k41 + inData[p42] * k42 + inData[p43] * k43 + inData[p44] * k44;
-        g2 = inData[p00 + 1] * k00 + inData[p01 + 1] * k01 + inData[p02 + 1] * k02 + inData[p03 + 1] * k03 + inData[p04 + 1] * k04 + inData[p10 + 1] * k10 + inData[p11 + 1] * k11 + inData[p12 + 1] * k12 + inData[p13 + 1] * k13 + inData[p14 + 1] * k14 + inData[p20 + 1] * k20 + inData[p21 + 1] * k21 + inData[p22 + 1] * k22 + inData[p23 + 1] * k23 + inData[p24 + 1] * k24 + inData[p30 + 1] * k30 + inData[p31 + 1] * k31 + inData[p32 + 1] * k32 + inData[p33 + 1] * k33 + inData[p34 + 1] * k34 + inData[p40 + 1] * k40 + inData[p41 + 1] * k41 + inData[p42 + 1] * k42 + inData[p43 + 1] * k43 + inData[p44 + 1] * k44;
+        g3 = inData[p00 + 1] * k00 + inData[p01 + 1] * k01 + inData[p02 + 1] * k02 + inData[p03 + 1] * k03 + inData[p04 + 1] * k04 + inData[p10 + 1] * k10 + inData[p11 + 1] * k11 + inData[p12 + 1] * k12 + inData[p13 + 1] * k13 + inData[p14 + 1] * k14 + inData[p20 + 1] * k20 + inData[p21 + 1] * k21 + inData[p22 + 1] * k22 + inData[p23 + 1] * k23 + inData[p24 + 1] * k24 + inData[p30 + 1] * k30 + inData[p31 + 1] * k31 + inData[p32 + 1] * k32 + inData[p33 + 1] * k33 + inData[p34 + 1] * k34 + inData[p40 + 1] * k40 + inData[p41 + 1] * k41 + inData[p42 + 1] * k42 + inData[p43 + 1] * k43 + inData[p44 + 1] * k44;
         b = inData[p00 + 2] * k00 + inData[p01 + 2] * k01 + inData[p02 + 2] * k02 + inData[p03 + 2] * k03 + inData[p04 + 2] * k04 + inData[p10 + 2] * k10 + inData[p11 + 2] * k11 + inData[p12 + 2] * k12 + inData[p13 + 2] * k13 + inData[p14 + 2] * k14 + inData[p20 + 2] * k20 + inData[p21 + 2] * k21 + inData[p22 + 2] * k22 + inData[p23 + 2] * k23 + inData[p24 + 2] * k24 + inData[p30 + 2] * k30 + inData[p31 + 2] * k31 + inData[p32 + 2] * k32 + inData[p33 + 2] * k33 + inData[p34 + 2] * k34 + inData[p40 + 2] * k40 + inData[p41 + 2] * k41 + inData[p42 + 2] * k42 + inData[p43 + 2] * k43 + inData[p44 + 2] * k44;
         if (alpha) {
           a = inData[p00 + 3] * k00 + inData[p01 + 3] * k01 + inData[p02 + 3] * k02 + inData[p03 + 3] * k03 + inData[p04 + 3] * k04 + inData[p10 + 3] * k10 + inData[p11 + 3] * k11 + inData[p12 + 3] * k12 + inData[p13 + 3] * k13 + inData[p14 + 3] * k14 + inData[p20 + 3] * k20 + inData[p21 + 3] * k21 + inData[p22 + 3] * k22 + inData[p23 + 3] * k23 + inData[p24 + 3] * k24 + inData[p30 + 3] * k30 + inData[p31 + 3] * k31 + inData[p32 + 3] * k32 + inData[p33 + 3] * k33 + inData[p34 + 3] * k34 + inData[p40 + 3] * k40 + inData[p41 + 3] * k41 + inData[p42 + 3] * k42 + inData[p43 + 3] * k43 + inData[p44 + 3] * k44;
@@ -21176,22 +20412,22 @@ var g = (() => {
           a = inData[idx + 3];
         }
         if (mono) {
-          r = g2 = b = (r + g2 + b) / 3;
+          r = g3 = b = (r + g3 + b) / 3;
         }
         if (invert2) {
           r = 255 - r;
-          g2 = 255 - g2;
+          g3 = 255 - g3;
           b = 255 - b;
         }
         outData[idx] = r;
-        outData[idx + 1] = g2;
+        outData[idx + 1] = g3;
         outData[idx + 2] = b;
         outData[idx + 3] = a;
       }
     }
   }
   function gaussian(inData, outData, width, height, kernelSize) {
-    let x, y, i, j, r, g2, b, a, idx, inx, iny, w, tmpData = [], maxKernelSize = 13, k1, k2, weights, kernels = [[1]];
+    let x, y, i, j, r, g3, b, a, idx, inx, iny, w, tmpData = [], maxKernelSize = 13, k1, k2, weights, kernels = [[1]];
     kernelSize = clamp3(kernelSize, 3, maxKernelSize);
     k1 = -kernelSize / 2 + (kernelSize % 2 ? 0.5 : 0);
     k2 = kernelSize + k1;
@@ -21213,7 +20449,7 @@ var g = (() => {
     }
     for (y = 0; y < height; y += 1) {
       for (x = 0; x < width; x += 1) {
-        r = g2 = b = a = 0;
+        r = g3 = b = a = 0;
         for (i = k1; i < k2; i += 1) {
           inx = x + i;
           iny = y;
@@ -21226,20 +20462,20 @@ var g = (() => {
           }
           idx = (iny * width + inx) * 4;
           r += inData[idx] * w;
-          g2 += inData[idx + 1] * w;
+          g3 += inData[idx + 1] * w;
           b += inData[idx + 2] * w;
           a += inData[idx + 3] * w;
         }
         idx = (y * width + x) * 4;
         tmpData[idx] = r;
-        tmpData[idx + 1] = g2;
+        tmpData[idx + 1] = g3;
         tmpData[idx + 2] = b;
         tmpData[idx + 3] = a;
       }
     }
     for (y = 0; y < height; y += 1) {
       for (x = 0; x < width; x += 1) {
-        r = g2 = b = a = 0;
+        r = g3 = b = a = 0;
         for (i = k1; i < k2; i += 1) {
           inx = x;
           iny = y + i;
@@ -21252,13 +20488,13 @@ var g = (() => {
           }
           idx = (iny * width + inx) * 4;
           r += tmpData[idx] * w;
-          g2 += tmpData[idx + 1] * w;
+          g3 += tmpData[idx + 1] * w;
           b += tmpData[idx + 2] * w;
           a += tmpData[idx + 3] * w;
         }
         idx = (y * width + x) * 4;
         outData[idx] = r;
-        outData[idx + 1] = g2;
+        outData[idx + 1] = g3;
         outData[idx + 2] = b;
         outData[idx + 3] = a;
       }
@@ -21310,25 +20546,25 @@ var g = (() => {
       }
     },
     sepia: function(inData, outData, width, height) {
-      let i, n = width * height * 4, r, g2, b;
+      let i, n = width * height * 4, r, g3, b;
       for (i = 0; i < n; i += 4) {
         r = inData[i];
-        g2 = inData[i + 1];
+        g3 = inData[i + 1];
         b = inData[i + 2];
-        outData[i] = r * 0.393 + g2 * 0.769 + b * 0.189;
-        outData[i + 1] = r * 0.349 + g2 * 0.686 + b * 0.168;
-        outData[i + 2] = r * 0.272 + g2 * 0.534 + b * 0.131;
+        outData[i] = r * 0.393 + g3 * 0.769 + b * 0.189;
+        outData[i + 1] = r * 0.349 + g3 * 0.686 + b * 0.168;
+        outData[i + 2] = r * 0.272 + g3 * 0.534 + b * 0.131;
         outData[i + 3] = inData[i + 3];
       }
     },
     solarize: function(inData, outData, width, height) {
-      let i, n = width * height * 4, r, g2, b;
+      let i, n = width * height * 4, r, g3, b;
       for (i = 0; i < n; i += 4) {
         r = inData[i];
-        g2 = inData[i + 1];
+        g3 = inData[i + 1];
         b = inData[i + 2];
         outData[i] = r > 127 ? 255 - r : r;
-        outData[i + 1] = g2 > 127 ? 255 - g2 : g2;
+        outData[i + 1] = g3 > 127 ? 255 - g3 : g3;
         outData[i + 2] = b > 127 ? 255 - b : b;
         outData[i + 3] = inData[i + 3];
       }
@@ -21338,18 +20574,18 @@ var g = (() => {
         brightness: 1,
         contrast: 0
       });
-      let i, n = width * height * 4, r, g2, b, contrast = clamp3(options.contrast, -1, 1) / 2, brightness = 1 + clamp3(options.brightness, -1, 1), brightMul = brightness < 0 ? -brightness : brightness, brightAdd = brightness < 0 ? 0 : brightness, contrastAdd;
+      let i, n = width * height * 4, r, g3, b, contrast = clamp3(options.contrast, -1, 1) / 2, brightness = 1 + clamp3(options.brightness, -1, 1), brightMul = brightness < 0 ? -brightness : brightness, brightAdd = brightness < 0 ? 0 : brightness, contrastAdd;
       contrast = 0.5 * Math.tan((contrast + 1) * Math.PI / 4);
       contrastAdd = -(contrast - 0.5) * 255;
       for (i = 0; i < n; i += 4) {
         r = inData[i];
-        g2 = inData[i + 1];
+        g3 = inData[i + 1];
         b = inData[i + 2];
         r = (r + r * brightMul + brightAdd) * contrast + contrastAdd;
-        g2 = (g2 + g2 * brightMul + brightAdd) * contrast + contrastAdd;
+        g3 = (g3 + g3 * brightMul + brightAdd) * contrast + contrastAdd;
         b = (b + b * brightMul + brightAdd) * contrast + contrastAdd;
         outData[i] = r;
-        outData[i + 1] = g2;
+        outData[i + 1] = g3;
         outData[i + 2] = b;
         outData[i + 3] = inData[i + 3];
       }
@@ -21390,26 +20626,26 @@ var g = (() => {
         strength: 0.5,
         mono: false
       });
-      let i, n = width * height * 4, rnd, r, g2, b, amount = clamp3(options.amount, 0, 1), strength = clamp3(options.strength, 0, 1), mono = !!options.mono, random = Math.random;
+      let i, n = width * height * 4, rnd, r, g3, b, amount = clamp3(options.amount, 0, 1), strength = clamp3(options.strength, 0, 1), mono = !!options.mono, random = Math.random;
       for (i = 0; i < n; i += 4) {
         r = inData[i];
-        g2 = inData[i + 1];
+        g3 = inData[i + 1];
         b = inData[i + 2];
         rnd = random();
         if (rnd < amount) {
           if (mono) {
             rnd = strength * (rnd / amount * 2 - 1) * 255;
             r += rnd;
-            g2 += rnd;
+            g3 += rnd;
             b += rnd;
           } else {
             r += strength * random() * 255;
-            g2 += strength * random() * 255;
+            g3 += strength * random() * 255;
             b += strength * random() * 255;
           }
         }
         outData[i] = r;
-        outData[i + 1] = g2;
+        outData[i + 1] = g3;
         outData[i + 2] = b;
         outData[i + 3] = inData[i + 3];
       }
@@ -21450,23 +20686,23 @@ var g = (() => {
     },
     glow: function(inData, outData, width, height, options) {
       options = defaultOptions(options, { amount: 0.75, kernelSize: 5 });
-      let i, n = width * height * 4, r, g2, b, amount = options.amount, tmpData = [];
+      let i, n = width * height * 4, r, g3, b, amount = options.amount, tmpData = [];
       gaussian(inData, tmpData, width, height, options.kernelSize);
       for (i = 0; i < n; i += 4) {
         r = inData[i] + tmpData[i] * amount;
-        g2 = inData[i + 1] + tmpData[i + 1] * amount;
+        g3 = inData[i + 1] + tmpData[i + 1] * amount;
         b = inData[i + 2] + tmpData[i + 2] * amount;
         if (r > 255) {
           r = 255;
         }
-        if (g2 > 255) {
-          g2 = 255;
+        if (g3 > 255) {
+          g3 = 255;
         }
         if (b > 255) {
           b = 255;
         }
         outData[i] = r;
-        outData[i + 1] = g2;
+        outData[i + 1] = g3;
         outData[i + 2] = b;
         outData[i + 3] = inData[i + 3];
       }
@@ -21655,17 +20891,17 @@ var g = (() => {
     },
     rgbAdjust: function(inData, outData, width, height, options) {
       options = defaultOptions(options, { r: 0, g: 0, b: 0, a: 0 });
-      let i, n = width * height * 4, r, g2, b, a, ar = clamp3(options.r, -1, 1) * 255, ag = clamp3(options.g, -1, 1) * 255, ab = clamp3(options.b, -1, 1) * 255, aa = clamp3(options.a, -1, 1) * 255;
+      let i, n = width * height * 4, r, g3, b, a, ar = clamp3(options.r, -1, 1) * 255, ag = clamp3(options.g, -1, 1) * 255, ab = clamp3(options.b, -1, 1) * 255, aa = clamp3(options.a, -1, 1) * 255;
       for (i = 0; i < n; i += 4) {
         r = inData[i] + ar;
-        g2 = inData[i + 1] + ag;
+        g3 = inData[i + 1] + ag;
         b = inData[i + 2] + ab;
         a = inData[i + 3] + aa;
         if (r < 0) {
           r = 0;
         }
-        if (g2 < 0) {
-          g2 = 0;
+        if (g3 < 0) {
+          g3 = 0;
         }
         if (b < 0) {
           b = 0;
@@ -21676,8 +20912,8 @@ var g = (() => {
         if (r > 255) {
           r = 255;
         }
-        if (g2 > 255) {
-          g2 = 255;
+        if (g3 > 255) {
+          g3 = 255;
         }
         if (b > 255) {
           b = 255;
@@ -21686,7 +20922,7 @@ var g = (() => {
           a = 255;
         }
         outData[i] = r;
-        outData[i + 1] = g2;
+        outData[i + 1] = g3;
         outData[i + 2] = b;
         outData[i + 3] = a;
       }
@@ -21698,51 +20934,51 @@ var g = (() => {
         g: 0.5,
         b: 0
       });
-      let i, n = width * height * 4, r, g2, b, luminosity = !!options.luminosity, min2, max2, h, l, h1, chroma, tmp, ar = clamp3(options.r, 0, 1), ag = clamp3(options.g, 0, 1), ab = clamp3(options.b, 0, 1);
+      let i, n = width * height * 4, r, g3, b, luminosity = !!options.luminosity, min2, max2, h, l, h1, chroma, tmp, ar = clamp3(options.r, 0, 1), ag = clamp3(options.g, 0, 1), ab = clamp3(options.b, 0, 1);
       for (i = 0; i < n; i += 4) {
         r = inData[i] / 255;
-        g2 = inData[i + 1] / 255;
+        g3 = inData[i + 1] / 255;
         b = inData[i + 2] / 255;
-        l = r * 0.3 + g2 * 0.59 + b * 0.11;
+        l = r * 0.3 + g3 * 0.59 + b * 0.11;
         r = (r + r * ar) / 2;
-        g2 = (g2 + g2 * ag) / 2;
+        g3 = (g3 + g3 * ag) / 2;
         b = (b + b * ab) / 2;
         if (luminosity) {
           min2 = max2 = r;
-          if (g2 > max2) {
-            max2 = g2;
+          if (g3 > max2) {
+            max2 = g3;
           }
           if (b > max2) {
             max2 = b;
           }
-          if (g2 < min2) {
-            min2 = g2;
+          if (g3 < min2) {
+            min2 = g3;
           }
           if (b < min2) {
             min2 = b;
           }
           chroma = max2 - min2;
           if (r === max2) {
-            h = (g2 - b) / chroma % 6;
-          } else if (g2 === max2) {
+            h = (g3 - b) / chroma % 6;
+          } else if (g3 === max2) {
             h = (b - r) / chroma + 2;
           } else {
-            h = (r - g2) / chroma + 4;
+            h = (r - g3) / chroma + 4;
           }
           h1 = h >> 0;
           tmp = chroma * (h - h1);
-          r = g2 = b = l - (r * 0.3 + g2 * 0.59 + b * 0.11);
+          r = g3 = b = l - (r * 0.3 + g3 * 0.59 + b * 0.11);
           if (h1 === 0) {
             r += chroma;
-            g2 += tmp;
+            g3 += tmp;
           } else if (h1 === 1) {
             r += chroma - tmp;
-            g2 += chroma;
+            g3 += chroma;
           } else if (h1 === 2) {
-            g2 += chroma;
+            g3 += chroma;
             b += tmp;
           } else if (h1 === 3) {
-            g2 += chroma - tmp;
+            g3 += chroma - tmp;
             b += chroma;
           } else if (h1 === 4) {
             r += tmp;
@@ -21753,31 +20989,31 @@ var g = (() => {
           }
         }
         outData[i] = r * 255;
-        outData[i + 1] = g2 * 255;
+        outData[i + 1] = g3 * 255;
         outData[i + 2] = b * 255;
         outData[i + 3] = inData[i + 3];
       }
     },
     hslAdjust: function(inData, outData, width, height, options) {
       options = defaultOptions(options, { h: 0.5, s: 0.3, l: 0.1, a: 0 });
-      let i, n = width * height * 4, r, g2, b, a, hue = clamp3(options.h, -1, 1), saturation = clamp3(options.s, -1, 1), lightness = clamp3(options.l, -1, 1), aa = clamp3(options.a, -1, 1) * 255, satMul = 1 + saturation * (saturation < 0 ? 1 : 2), lightMul = lightness < 0 ? 1 + lightness : 1 - lightness, lightAdd = lightness < 0 ? 0 : lightness * 255, vs, ms, vm, h, s, l, v, m, vmh, sextant;
+      let i, n = width * height * 4, r, g3, b, a, hue = clamp3(options.h, -1, 1), saturation = clamp3(options.s, -1, 1), lightness = clamp3(options.l, -1, 1), aa = clamp3(options.a, -1, 1) * 255, satMul = 1 + saturation * (saturation < 0 ? 1 : 2), lightMul = lightness < 0 ? 1 + lightness : 1 - lightness, lightAdd = lightness < 0 ? 0 : lightness * 255, vs, ms, vm, h, s, l, v, m, vmh, sextant;
       hue = hue * 6 % 6;
       for (i = 0; i < n; i += 4) {
         r = inData[i];
-        g2 = inData[i + 1];
+        g3 = inData[i + 1];
         b = inData[i + 2];
         a = inData[i + 3] + aa;
         if (hue !== 0 || saturation !== 0) {
           vs = r;
-          if (g2 > vs) {
-            vs = g2;
+          if (g3 > vs) {
+            vs = g3;
           }
           if (b > vs) {
             vs = b;
           }
           ms = r;
-          if (g2 < ms) {
-            ms = g2;
+          if (g3 < ms) {
+            ms = g3;
           }
           if (b < ms) {
             ms = b;
@@ -21799,12 +21035,12 @@ var g = (() => {
               v = l + s - l * s;
             }
             if (r === vs) {
-              if (g2 === ms) {
+              if (g3 === ms) {
                 h = 5 + (vs - b) / vm + hue;
               } else {
-                h = 1 - (vs - g2) / vm + hue;
+                h = 1 - (vs - g3) / vm + hue;
               }
-            } else if (g2 === vs) {
+            } else if (g3 === vs) {
               if (b === ms) {
                 h = 1 + (vs - r) / vm + hue;
               } else {
@@ -21812,7 +21048,7 @@ var g = (() => {
               }
             } else {
               if (r === ms) {
-                h = 3 + (vs - g2) / vm + hue;
+                h = 3 + (vs - g3) / vm + hue;
               } else {
                 h = 5 - (vs - r) / vm + hue;
               }
@@ -21828,42 +21064,42 @@ var g = (() => {
             vmh = (v - m) * (h - sextant);
             if (sextant === 0) {
               r = v;
-              g2 = m + vmh;
+              g3 = m + vmh;
               b = m;
             } else if (sextant === 1) {
               r = v - vmh;
-              g2 = v;
+              g3 = v;
               b = m;
             } else if (sextant === 2) {
               r = m;
-              g2 = v;
+              g3 = v;
               b = m + vmh;
             } else if (sextant === 3) {
               r = m;
-              g2 = v - vmh;
+              g3 = v - vmh;
               b = v;
             } else if (sextant === 4) {
               r = m + vmh;
-              g2 = m;
+              g3 = m;
               b = v;
             } else if (sextant === 5) {
               r = v;
-              g2 = m;
+              g3 = m;
               b = v - vmh;
             }
             r *= 255;
-            g2 *= 255;
+            g3 *= 255;
             b *= 255;
           }
         }
         r = r * lightMul + lightAdd;
-        g2 = g2 * lightMul + lightAdd;
+        g3 = g3 * lightMul + lightAdd;
         b = b * lightMul + lightAdd;
         if (r < 0) {
           r = 0;
         }
-        if (g2 < 0) {
-          g2 = 0;
+        if (g3 < 0) {
+          g3 = 0;
         }
         if (b < 0) {
           b = 0;
@@ -21874,8 +21110,8 @@ var g = (() => {
         if (r > 255) {
           r = 255;
         }
-        if (g2 > 255) {
-          g2 = 255;
+        if (g3 > 255) {
+          g3 = 255;
         }
         if (b > 255) {
           b = 255;
@@ -21884,7 +21120,7 @@ var g = (() => {
           a = 255;
         }
         outData[i] = r;
-        outData[i + 1] = g2;
+        outData[i + 1] = g3;
         outData[i + 2] = b;
         outData[i + 3] = a;
       }
@@ -21900,7 +21136,7 @@ var g = (() => {
       }
     },
     removenoise: function(inData, outData, width, height) {
-      let x, y, r, g2, b, c, idx, pyc, pyp, pyn, pxc, pxp, pxn, minR, minG, minB, maxR, maxG, maxB;
+      let x, y, r, g3, b, c, idx, pyc, pyp, pyn, pxc, pxp, pxn, minR, minG, minB, maxR, maxG, maxB;
       for (y = 0; y < height; y += 1) {
         pyc = y * width * 4;
         pyp = pyc - width * 4;
@@ -21989,7 +21225,7 @@ var g = (() => {
             maxB = c;
           }
           r = inData[idx];
-          g2 = inData[idx + 1];
+          g3 = inData[idx + 1];
           b = inData[idx + 2];
           if (r < minR) {
             r = minR;
@@ -21997,11 +21233,11 @@ var g = (() => {
           if (r > maxR) {
             r = maxR;
           }
-          if (g2 < minG) {
-            g2 = minG;
+          if (g3 < minG) {
+            g3 = minG;
           }
-          if (g2 > maxG) {
-            g2 = maxG;
+          if (g3 > maxG) {
+            g3 = maxG;
           }
           if (b < minB) {
             b = minB;
@@ -22010,7 +21246,7 @@ var g = (() => {
             b = maxB;
           }
           outData[idx] = r;
-          outData[idx + 1] = g2;
+          outData[idx + 1] = g3;
           outData[idx + 2] = b;
           outData[idx + 3] = inData[idx + 3];
         }
@@ -22018,7 +21254,7 @@ var g = (() => {
     },
     mosaic: function(inData, outData, width, height, options) {
       options = defaultOptions(options, { blockSize: 8 });
-      let blockSize = clamp3(options.blockSize, 1, Math.max(width, height)), yBlocks = Math.ceil(height / blockSize), xBlocks = Math.ceil(width / blockSize), y0, y1, x0, x1, idx, pidx, i, j, r, g2, b, bi, bj;
+      let blockSize = clamp3(options.blockSize, 1, Math.max(width, height)), yBlocks = Math.ceil(height / blockSize), xBlocks = Math.ceil(width / blockSize), y0, y1, x0, x1, idx, pidx, i, j, r, g3, b, bi, bj;
       y0 = 0;
       for (i = 0; i < yBlocks; i += 1) {
         y1 = clamp3(y0 + blockSize, 0, height);
@@ -22027,13 +21263,13 @@ var g = (() => {
           x1 = clamp3(x0 + blockSize, 0, width);
           idx = y0 * width + x0 << 2;
           r = inData[idx];
-          g2 = inData[idx + 1];
+          g3 = inData[idx + 1];
           b = inData[idx + 2];
           for (bi = y0; bi < y1; bi += 1) {
             for (bj = x0; bj < x1; bj += 1) {
               pidx = bi * width + bj << 2;
               outData[pidx] = r;
-              outData[pidx + 1] = g2;
+              outData[pidx + 1] = g3;
               outData[pidx + 2] = b;
               outData[pidx + 3] = inData[pidx + 3];
             }
@@ -23608,6 +22844,27 @@ var g = (() => {
       return i;
     }
   };
+  function loadImage(image, callback) {
+    const img = new Image();
+    img.onload = function() {
+      callback(null, [image, this]);
+    };
+    img.src = image;
+  }
+  function loadImages(images, callback) {
+    index.map(images, loadImage, function(err, loadedImages) {
+      if (callback) {
+        let name, image;
+        const d = {};
+        for (let i = 0; i < loadedImages.length; i += 1) {
+          name = loadedImages[i][0];
+          image = loadedImages[i][1];
+          d[name] = image;
+        }
+        callback(d);
+      }
+    });
+  }
   function rectUnite(r1, r2) {
     const x = Math.min(r1.x, r2.x), y = Math.min(r1.y, r2.y), width = Math.max(r1.x + r1.width, r2.x + r2.width) - x, height = Math.max(r1.y + r1.height, r2.y + r2.height) - y;
     return { x, y, width, height };
@@ -23632,7 +22889,1034 @@ var g = (() => {
     return new Img(canvas.render(), dx, dy);
   }
 
+  // src/libraries/string.js
+  var string_exports = {};
+  __export(string_exports, {
+    characterAt: () => characterAt,
+    concatenate: () => concatenate,
+    endsWith: () => endsWith,
+    reverse: () => reverse,
+    startsWith: () => startsWith,
+    string: () => string,
+    stringContains: () => stringContains,
+    stringEquals: () => stringEquals,
+    stringLength: () => stringLength,
+    stringReplace: () => stringReplace,
+    stringSplit: () => stringSplit,
+    stringTrim: () => stringTrim,
+    substring: () => substring,
+    toCharacterCodes: () => toCharacterCodes,
+    toCharacters: () => toCharacters,
+    toLowerCase: () => toLowerCase,
+    toTitleCase: () => toTitleCase,
+    toUpperCase: () => toUpperCase,
+    toWords: () => toWords,
+    wordCount: () => wordCount
+  });
+  function characterAt(s, index2) {
+    if (!s || s.length === 0) {
+      return "";
+    }
+    s = String(s);
+    if (index2 < 0) {
+      index2 = s.length + index2;
+    }
+    return s.charAt(index2);
+  }
+  function concatenate() {
+    let result = "";
+    for (let i = 0; i < arguments.length; i++) {
+      let s = arguments[i];
+      s = s !== void 0 ? String(s) : "";
+      result += s;
+    }
+    return result;
+  }
+  function endsWith(s, value) {
+    if (!s || !value) {
+      return false;
+    }
+    s = String(s);
+    return s.indexOf(value, s.length - value.length) !== -1;
+  }
+  function reverse(l) {
+    return l.slice().reverse();
+  }
+  function startsWith(s, value) {
+    if (!s || !value) {
+      return false;
+    }
+    s = String(s);
+    return s.indexOf(value) === 0;
+  }
+  var string = String;
+  function stringContains(s, sub) {
+    if (!s || !sub) {
+      return false;
+    }
+    s = String(s);
+    return s.indexOf(sub) !== -1;
+  }
+  function stringEquals(string1, string2, ignoreCase) {
+    string1 = String(string1);
+    string2 = String(string2);
+    if (!string1 || !string2) {
+      return false;
+    }
+    if (ignoreCase) {
+      return string1.toLowerCase() === string2.toLowerCase();
+    } else {
+      return string1 === string2;
+    }
+  }
+  function stringLength(s) {
+    if (!s) {
+      return 0;
+    }
+    s = String(s);
+    return s.length;
+  }
+  function stringReplace(s, old, new_) {
+    s = String(s);
+    return s.replace(new RegExp(old, "g"), new_);
+  }
+  function stringSplit(s, separator) {
+    if (!s) {
+      return [];
+    }
+    if (!separator || separator.length === 0) {
+      separator = "";
+    }
+    s = String(s);
+    return s.split(separator);
+  }
+  function stringTrim(s) {
+    if (!s) {
+      return null;
+    }
+    s = String(s);
+    return s.trim();
+  }
+  function substring(s, start, end, endOffset) {
+    if (!s) {
+      return "";
+    }
+    if (end < start) {
+      return "";
+    }
+    s = String(s);
+    if (start < 0 && end < 0) {
+      start = s.length + start;
+      end = s.length + end;
+    }
+    if (end !== void 0) {
+      if (endOffset) {
+        end += 1;
+      }
+    }
+    return s.substring(start, end);
+  }
+  function toCharacterCodes(s) {
+    if (!s) {
+      return [];
+    }
+    const codes = [];
+    codes.length = s.length;
+    for (let i = 0; i < s.length; i += 1) {
+      codes[i] = s.charCodeAt(i);
+    }
+    return codes;
+  }
+  function toCharacters(s) {
+    if (!s) {
+      return [];
+    }
+    s = String(s);
+    return s.split("");
+  }
+  function toLowerCase(s) {
+    s = String(s);
+    return s.toLowerCase();
+  }
+  function toTitleCase(s) {
+    let c, result = "";
+    s = String(s);
+    for (let i = 0; i < s.length; i += 1) {
+      c = s[i];
+      if (result.length === 0 || result[result.length - 1] === " ") {
+        result += c.toUpperCase();
+      } else {
+        result += c;
+      }
+    }
+    return result;
+  }
+  function toUpperCase(s) {
+    s = String(s);
+    return s.toUpperCase();
+  }
+  function wordCount(s) {
+    if (!s) {
+      return 0;
+    }
+    s = String(s);
+    const split = s.split(new RegExp("\\w+"));
+    return split.length - 1;
+  }
+  function toWords(s) {
+    const l = s.split(/\W+/);
+    if (l[l.length - 1] === "") {
+      l.pop();
+    }
+    return l;
+  }
+
+  // src/libraries/list.js
+  var list_exports = {};
+  __export(list_exports, {
+    combine: () => combine,
+    contains: () => contains,
+    count: () => count,
+    cull: () => cull,
+    cycle: () => cycle,
+    distinct: () => distinct,
+    equals: () => equals,
+    first: () => first,
+    get: () => get,
+    interleave: () => interleave,
+    last: () => last,
+    pick: () => pick,
+    randomSample: () => randomSample,
+    repeat: () => repeat,
+    rest: () => rest,
+    reverse: () => reverse2,
+    second: () => second,
+    shift: () => shift,
+    shuffle: () => shuffle,
+    slice: () => slice,
+    sort: () => sort,
+    switch_: () => switch_,
+    takeEvery: () => takeEvery,
+    zipMap: () => zipMap
+  });
+
+  // src/libraries/deepequal.js
+  function isBuffer() {
+    return false;
+  }
+  function isObject(arg) {
+    return typeof arg === "object" && arg !== null;
+  }
+  function objectToString(o) {
+    return Object.prototype.toString.call(o);
+  }
+  function isRegExp(re) {
+    return isObject(re) && objectToString(re) === "[object RegExp]";
+  }
+  function isDate(d) {
+    return isObject(d) && objectToString(d) === "[object Date]";
+  }
+  function isNullOrUndefined(arg) {
+    return arg === null || arg === void 0;
+  }
+  var util = {
+    isObject,
+    isRegExp,
+    isDate,
+    isNullOrUndefined,
+    isBuffer
+  };
+  var pSlice = Array.prototype.slice;
+  var isArguments;
+  var objEquiv;
+  function deepEqual(actual, expected) {
+    if (actual === expected) {
+      return true;
+    } else if (util.isBuffer(actual) && util.isBuffer(expected)) {
+      if (actual.length !== expected.length) {
+        return false;
+      }
+      for (let i = 0; i < actual.length; i++) {
+        if (actual[i] !== expected[i]) {
+          return false;
+        }
+      }
+      return true;
+    } else if (util.isDate(actual) && util.isDate(expected)) {
+      return actual.getTime() === expected.getTime();
+    } else if (util.isRegExp(actual) && util.isRegExp(expected)) {
+      return actual.source === expected.source && actual.global === expected.global && actual.multiline === expected.multiline && actual.lastIndex === expected.lastIndex && actual.ignoreCase === expected.ignoreCase;
+    } else if (!util.isObject(actual) && !util.isObject(expected)) {
+      return actual == expected;
+    } else {
+      return objEquiv(actual, expected);
+    }
+  }
+  isArguments = function(object) {
+    return Object.prototype.toString.call(object) === "[object Arguments]";
+  };
+  objEquiv = function(a, b) {
+    if (util.isNullOrUndefined(a) || util.isNullOrUndefined(b)) {
+      return false;
+    }
+    if (a.prototype !== b.prototype) {
+      return false;
+    }
+    const aIsArgs = isArguments(a), bIsArgs = isArguments(b);
+    if (aIsArgs && !bIsArgs || !aIsArgs && bIsArgs) {
+      return false;
+    }
+    if (aIsArgs) {
+      a = pSlice.call(a);
+      b = pSlice.call(b);
+      return deepEqual(a, b);
+    }
+    let ka, kb, key, i;
+    try {
+      ka = Object.keys(a);
+      kb = Object.keys(b);
+    } catch {
+      return false;
+    }
+    if (ka.length !== kb.length) {
+      return false;
+    }
+    ka.sort();
+    kb.sort();
+    for (i = ka.length - 1; i >= 0; i--) {
+      if (ka[i] !== kb[i]) {
+        return false;
+      }
+    }
+    for (i = ka.length - 1; i >= 0; i--) {
+      key = ka[i];
+      if (!deepEqual(a[key], b[key])) {
+        return false;
+      }
+    }
+    return true;
+  };
+
+  // src/libraries/list.js
+  function combine() {
+    let i, l, result = [];
+    for (i = 0; i < arguments.length; i++) {
+      l = arguments[i];
+      if (l) {
+        result = result.concat(l);
+      }
+    }
+    return result;
+  }
+  function contains(l, value) {
+    if (!l) {
+      return false;
+    }
+    for (let i = 0; i < l.length; i += 1) {
+      if (deepEqual.deepEqual(l[i], value)) {
+        return true;
+      }
+    }
+    return false;
+  }
+  function cycle(l, length2) {
+    if (!l || length2 <= 0) {
+      return [];
+    }
+    const newList = [];
+    const ll = l.length;
+    for (let i = 0; i < length2; i += 1) {
+      newList.push(l[i % ll]);
+    }
+    return newList;
+  }
+  function equals(o1, o2) {
+    return deepEqual.deepEqual(o1, o2);
+  }
+  function count(l) {
+    if (l && l.length) {
+      return l.length;
+    } else {
+      return 0;
+    }
+  }
+  function cull(l, booleans) {
+    if (!l) {
+      return [];
+    }
+    if (!booleans) {
+      return l;
+    }
+    let i, keep, results = [];
+    for (i = 0; i < l.length; i++) {
+      keep = booleans[i % booleans.length];
+      if (keep) {
+        results.push(l[i]);
+      }
+    }
+    return results;
+  }
+  function distinct(l) {
+    if (!l) {
+      return [];
+    }
+    let i, length2, value, result = [], seen = [];
+    for (i = 0, length2 = l.length; i < length2; i += 1) {
+      value = l[i];
+      if (!contains(seen, value)) {
+        seen.push(value);
+        result.push(l[i]);
+      }
+    }
+    return result;
+  }
+  function first(l) {
+    if (!l || l.length === 0) {
+      return null;
+    }
+    return l[0];
+  }
+  function get(l, i) {
+    if (!l || l.length === 0) {
+      return null;
+    }
+    return l[i];
+  }
+  function interleave() {
+    const args = Array.from(arguments).filter((l) => !!l);
+    if (args.length === 0) {
+      return [];
+    }
+    const results = [];
+    let elIndex = 0;
+    while (true) {
+      for (let i = 0; i < args.length; i++) {
+        const arg = args[i];
+        if (arg.length > elIndex) {
+          results.push(arg[elIndex]);
+        } else {
+          return results;
+        }
+      }
+      elIndex += 1;
+    }
+  }
+  function last(l) {
+    if (!l || l.length === 0) {
+      return null;
+    }
+    return l[l.length - 1];
+  }
+  function pick(l, amount, seed) {
+    if (!l || l.length === 0 || amount <= 0) {
+      return [];
+    }
+    if (!seed && seed !== 0) {
+      seed = Math.random();
+    }
+    const rand = generator(seed || 0);
+    const results = [];
+    for (let i = 0; i < amount; i += 1) {
+      results.push(l[Math.floor(rand(0, l.length))]);
+    }
+    return results;
+  }
+  function randomSample(l, amount, seed) {
+    if (!l || l.length === 0 || amount <= 0) {
+      return [];
+    }
+    if (!seed && seed !== 0) {
+      seed = Math.random();
+    }
+    const shuffledlist = shuffle(l, seed);
+    if (!amount) {
+      return shuffledlist;
+    }
+    return slice(shuffledlist, 0, amount);
+  }
+  function repeat(l, amount, perItem) {
+    if (!l) {
+      return [];
+    }
+    if (!Array.isArray(l)) {
+      l = [l];
+    }
+    if (amount <= 0) {
+      return [];
+    }
+    let i, j, v, newList = [];
+    if (!perItem) {
+      for (i = 0; i < amount; i += 1) {
+        newList.push.apply(newList, l);
+      }
+    } else {
+      for (i = 0; i < l.length; i += 1) {
+        v = l[i];
+        for (j = 0; j < amount; j += 1) {
+          newList.push(v);
+        }
+      }
+    }
+    return newList;
+  }
+  function rest(l) {
+    if (!l) {
+      return [];
+    }
+    return l.slice(1);
+  }
+  function reverse2(l) {
+    if (!l) {
+      return [];
+    }
+    return l.slice().reverse();
+  }
+  function second(l) {
+    if (!l || l.length < 2) {
+      return null;
+    }
+    return l[1];
+  }
+  function shift(l, amount) {
+    if (!l) {
+      return [];
+    }
+    amount = amount % l.length;
+    const head = l.slice(0, amount), result = l.slice(amount);
+    result.push.apply(result, head);
+    return result;
+  }
+  function shuffle(l, seed) {
+    let i, j, tmp, r;
+    if (!seed && seed !== 0) {
+      seed = Math.random();
+    }
+    r = generator(seed || 0);
+    l = l.slice();
+    for (i = l.length - 1; i > 0; i--) {
+      j = Math.floor(r(0, i + 1));
+      tmp = l[i];
+      l[i] = l[j];
+      l[j] = tmp;
+    }
+    return l;
+  }
+  function slice(l, start, size, invert2) {
+    if (!l) {
+      return [];
+    }
+    let firstList, secondList;
+    if (!invert2) {
+      return l.slice(start, start + size);
+    } else {
+      firstList = l.slice(0, start);
+      secondList = l.slice(start + size);
+      firstList.push.apply(firstList, secondList);
+      return firstList;
+    }
+  }
+  function sort(l, key) {
+    if (!l) {
+      return [];
+    }
+    if (key) {
+      if (typeof key === "string") {
+        return l.slice().sort(function(a, b) {
+          if (a[key] > b[key]) {
+            return 1;
+          } else if (a[key] === b[key]) {
+            return 0;
+          } else {
+            return -1;
+          }
+        });
+      } else if (typeof key === "function") {
+        return l.slice().sort(key);
+      }
+    }
+    if (l && l[0] !== void 0 && l[0] !== null && typeof l[0] === "number") {
+      return l.slice().sort(function(a, b) {
+        return a - b;
+      });
+    }
+    return l.slice().sort();
+  }
+  function switch_(index2) {
+    const nLists = arguments.length - 1;
+    index2 = index2 % nLists;
+    if (index2 < 0) {
+      index2 += nLists;
+    }
+    return arguments[index2 + 1];
+  }
+  function takeEvery(l, n, offset) {
+    if (!l) {
+      return [];
+    }
+    let i, results = [];
+    offset = offset || 0;
+    for (i = 0; i < l.length; i += 1) {
+      if (i % n === offset) {
+        results.push(l[i]);
+      }
+    }
+    return results;
+  }
+  function zipMap(keys2, vals) {
+    let i, k, v, m = {}, minLength = Math.min(keys2.length, vals.length);
+    for (i = 0; i < minLength; i += 1) {
+      k = keys2[i];
+      v = vals[i];
+      m[k] = v;
+    }
+    return m;
+  }
+
+  // src/libraries/data.js
+  var data_exports = {};
+  __export(data_exports, {
+    convert: () => convert,
+    dataScale: () => dataScale,
+    filterData: () => filterData,
+    groupBy: () => groupBy2,
+    keys: () => keys,
+    lookup: () => lookup,
+    ticks: () => ticks
+  });
+  function convert(v, inMin, inMax, outMin, outMax) {
+    const argLength = arguments.length;
+    if (argLength === 2) {
+      const d = arguments[1];
+      inMin = d.inMin;
+      inMax = d.inMax;
+      outMin = d.outMin;
+      outMax = d.outMax;
+    } else if (argLength === 3) {
+      inMin = arguments[1][0];
+      inMax = arguments[1][1];
+      outMin = arguments[2][0];
+      outMax = arguments[2][1];
+    }
+    try {
+      v = (v - inMin) / (inMax - inMin);
+    } catch {
+      v = inMin;
+    }
+    return outMin + v * (outMax - outMin);
+  }
+  function filterData(data, key, op, value) {
+    if (!data) {
+      return [];
+    }
+    let i, l, row, obj;
+    if (value === null || value === void 0) {
+      return data;
+    }
+    const results = [];
+    if (op === "==") {
+      for (i = 0, l = data.length; i < l; i++) {
+        row = data[i];
+        obj = row[key];
+        if (obj == value) {
+          results.push(row);
+        }
+      }
+    } else if (op === "!=") {
+      for (i = 0, l = data.length; i < l; i++) {
+        row = data[i];
+        obj = row[key];
+        if (obj != value) {
+          results.push(row);
+        }
+      }
+    } else if (op === ">") {
+      for (i = 0, l = data.length; i < l; i++) {
+        row = data[i];
+        obj = row[key];
+        if (obj > value) {
+          results.push(row);
+        }
+      }
+    } else if (op === ">=") {
+      for (i = 0, l = data.length; i < l; i++) {
+        row = data[i];
+        obj = row[key];
+        if (obj >= value) {
+          results.push(row);
+        }
+      }
+    } else if (op === "<") {
+      for (i = 0, l = data.length; i < l; i++) {
+        row = data[i];
+        obj = row[key];
+        if (obj < value) {
+          results.push(row);
+        }
+      }
+    } else if (op === "<=") {
+      for (i = 0, l = data.length; i < l; i++) {
+        row = data[i];
+        obj = row[key];
+        if (obj <= value) {
+          results.push(row);
+        }
+      }
+    } else {
+      throw new Error("Invalid op " + op);
+    }
+    return results;
+  }
+  function groupBy2(data, key) {
+    const iteratee = typeof key === "function" ? key : (row) => row[key];
+    const groups = /* @__PURE__ */ new Map();
+    for (const item of data) {
+      const k = iteratee(item);
+      const group2 = groups.get(k);
+      if (group2) {
+        group2.push(item);
+      } else {
+        groups.set(k, [item]);
+      }
+    }
+    return Array.from(groups.values());
+  }
+  function keys(data) {
+    let allKeys = [];
+    for (let i = 0; i < data.length; i++) {
+      allKeys = allKeys.concat(Object.keys(data[i]));
+    }
+    return distinct(allKeys);
+  }
+  function lookup(table, key) {
+    let obj, v;
+    obj = table;
+    v = obj[key];
+    if (v !== void 0) {
+      if (typeof v === "function") {
+        v = v.call(obj);
+      }
+      return v;
+    }
+    let token, tokens = key.split(".");
+    for (let i = 0; i < tokens.length; i += 1) {
+      token = tokens[i];
+      if (!obj) {
+        continue;
+      }
+      if (typeof obj[token] === "function") {
+        v = obj[token];
+        obj = v.call(obj);
+      } else {
+        obj = obj[token];
+      }
+    }
+    return obj;
+  }
+  function dataScale(domain, outMin, outMax) {
+    return { domain, outMin, outMax };
+  }
+  function ticks(min2, max2, n) {
+    n = n !== void 0 ? n : 10;
+    let span = max2 - min2, step = Math.pow(10, Math.floor(Math.log(span / n) / Math.LN10)), err = n / span * step, ticks2 = [], i;
+    if (err <= 0.15) {
+      step *= 10;
+    } else if (err <= 0.35) {
+      step *= 5;
+    } else if (err <= 0.75) {
+      step *= 2;
+    }
+    min2 = Math.ceil(min2 / step) * step;
+    max2 = Math.floor(max2 / step) * step + step * 0.5;
+    for (i = min2; i < max2; i += step) {
+      ticks2.push(i);
+    }
+    return ticks2;
+  }
+
+  // src/libraries/image.js
+  var g = {};
+  g.blend = function(image1, image2, mode) {
+    const b1 = image1.bounds();
+    const b2 = image2.bounds();
+    const b = new Rect(b1.x, b1.y, b1.width, b1.height).unite(b2);
+    const width = Math.ceil(b.width);
+    const height = Math.ceil(b.height);
+    const dx = width / 2 + b.x;
+    const dy = height / 2 + b.y;
+    const canvas = new ImageCanvas(width, height);
+    const l1 = canvas.addLayer(image1.toLayer());
+    l1.translate(-dx, -dy);
+    const l2 = canvas.addLayer(image2.toLayer());
+    l2.translate(-dx, -dy);
+    l2.blendmode = mode;
+    return new Img(canvas.render(), dx, dy);
+  };
+  g.blur = function(image, radius) {
+    const layer = image.toLayer(false);
+    layer.addFilter("blur", { radius });
+    return image.withCanvas(layer.toCanvas());
+  };
+  g.brighten = function(image, brightness, contrast) {
+    const layer = image.toLayer(false);
+    layer.addFilter("brightness", {
+      brightness: brightness / 100,
+      contrast: contrast / 100
+    });
+    return image.withCanvas(layer.toCanvas());
+  };
+  g.bump = function(image, position, radius, zoom) {
+    const layer = image.toLayer(false);
+    layer.addFilter("bump", {
+      dx: position.x,
+      dy: position.y,
+      radius,
+      zoom: zoom / 100
+    });
+    return image.withCanvas(layer.toCanvas());
+  };
+  g.colorImage = function(width, height, color) {
+    const layer = Layer.fromColor(color);
+    layer.width = width;
+    layer.height = height;
+    return new Img(layer.toCanvas());
+  };
+  g.crop = function(image, bounding) {
+    return image.crop(bounding);
+  };
+  g.crossEdges = function(image, strength) {
+    const layer = image.toLayer(false);
+    layer.addFilter("crossedges", { strength: strength / 100 });
+    return image.withCanvas(layer.toCanvas());
+  };
+  g.dent = function(image, position, radius, zoom) {
+    const layer = image.toLayer(false);
+    layer.addFilter("dent", {
+      dx: position.x,
+      dy: position.y,
+      radius,
+      zoom: zoom / 100
+    });
+    return image.withCanvas(layer.toCanvas());
+  };
+  g.emboss = function(image, amount, angle3) {
+    const layer = image.toLayer(false);
+    layer.addFilter("emboss", { amount: amount / 100, angle: angle3 });
+    return image.withCanvas(layer.toCanvas());
+  };
+  g.equalize = function(image) {
+    const layer = image.toLayer(false);
+    layer.addFilter("equalize");
+    return image.withCanvas(layer.toCanvas());
+  };
+  g.findEdges = function(image) {
+    const layer = image.toLayer(false);
+    layer.addFilter("findedges");
+    return image.withCanvas(layer.toCanvas());
+  };
+  g.glow = function(image, amount, kernelSize) {
+    const layer = image.toLayer(false);
+    layer.addFilter("glow", { amount: amount / 100, kernelSize });
+    return image.withCanvas(layer.toCanvas());
+  };
+  g.gradientImage = function(width, height, startColor, endColor, type, angle3, spread) {
+    const layer = Layer.fromGradient(
+      startColor,
+      endColor,
+      type,
+      angle3,
+      spread / 100
+    );
+    layer.width = width;
+    layer.height = height;
+    return new Img(layer.toCanvas());
+  };
+  g.histogram = function(image, channel, relative) {
+    const pixels = image.getPixels();
+    const vals = new Array(256);
+    let i, c, pixel, comp;
+    for (i = 0; i < vals.length; i += 1) {
+      vals[i] = 0;
+    }
+    if (channel === "lum") {
+      for (i = 0; i < pixels.width * pixels.height; i += 1) {
+        pixel = pixels.get(i);
+        comp = pixel[0] * 0.2125 + pixel[1] * 0.7154 + pixel[2] * 0.0721;
+        vals[Math.round(comp)] += 1;
+      }
+    } else {
+      if (channel === "red") {
+        c = 0;
+      }
+      if (channel === "green") {
+        c = 1;
+      }
+      if (channel === "blue") {
+        c = 2;
+      }
+      if (channel === "alpha") {
+        c = 3;
+      }
+      for (i = 0; i < pixels.width * pixels.height; i += 1) {
+        pixel = pixels.get(i);
+        comp = pixel[c];
+        vals[comp] += 1;
+      }
+    }
+    if (relative) {
+      for (i = 0; i < vals.length; i += 1) {
+        vals[i] /= pixels.width * pixels.height;
+      }
+    }
+    return vals;
+  };
+  g.lightTunnel = function(image, position, radius) {
+    const layer = image.toLayer(false);
+    layer.addFilter("splash", { dx: position.x, dy: position.y, radius });
+    return image.withCanvas(layer.toCanvas());
+  };
+  g.luminanceBW = function(image) {
+    const layer = image.toLayer(false);
+    layer.addFilter("luminancebw");
+    return image.withCanvas(layer.toCanvas());
+  };
+  g.mask = function(image, mask) {
+    image = image.transformed();
+    mask = mask.transformed();
+    const layer = image.toLayer(false);
+    const maskLayer = mask.toLayer();
+    const b1 = image.bounds();
+    const b2 = mask.bounds();
+    const b = new Rect(b1.x, b1.y, b1.width, b1.height).unite(b2);
+    const width = Math.ceil(b.width);
+    const height = Math.ceil(b.height);
+    const dx = width / 2 + b.x;
+    const dy = height / 2 + b.y;
+    maskLayer.translate(-dx, -dy);
+    const l = layer.mask.addLayer("white");
+    l.width = layer.width;
+    l.height = layer.height;
+    layer.mask.addLayer(maskLayer);
+    return image.withCanvas(layer.toCanvas());
+  };
+  g.mosaic = function(image, blockSize) {
+    const layer = image.toLayer(false);
+    layer.addFilter("mosaic", { blockSize });
+    return image.withCanvas(layer.toCanvas());
+  };
+  g.pinch = function(image, position, zoom) {
+    const layer = image.toLayer(false);
+    layer.addFilter("pinch", {
+      dx: position.x,
+      dy: position.y,
+      zoom: zoom / 100
+    });
+    return image.withCanvas(layer.toCanvas());
+  };
+  g.posterize = function(image, levels) {
+    const layer = image.toLayer(false);
+    layer.addFilter("posterize", { levels });
+    return image.withCanvas(layer.toCanvas());
+  };
+  g.removeNoise = function(image) {
+    const layer = image.toLayer(false);
+    layer.addFilter("removenoise");
+    return image.withCanvas(layer.toCanvas());
+  };
+  g.solarize = function(image) {
+    const layer = image.toLayer(false);
+    layer.addFilter("solarize");
+    return image.withCanvas(layer.toCanvas());
+  };
+  g.toBitmap = function(shape, bounding) {
+    const canvas = document.createElement("canvas");
+    let bounds2;
+    if (bounding) {
+      bounds2 = bounding.bounds();
+    } else {
+      bounds2 = shape.bounds();
+    }
+    const x = bounds2.x;
+    const y = bounds2.y;
+    const width = canvas.width = Math.ceil(bounds2.width);
+    const height = canvas.height = Math.ceil(bounds2.height);
+    const ctx = canvas.getContext("2d");
+    ctx.translate(-x, -y);
+    shape.draw(ctx);
+    return new Img(canvas, width / 2 + x, height / 2 + y);
+  };
+  g.toPixels = function(image, step) {
+    step = step > 1 ? step : 1;
+    const canvas = image.canvas;
+    const imgWidth = canvas.width;
+    const imgHeight = canvas.height;
+    const ctx = canvas.getContext("2d");
+    const data = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const pixels = data.data;
+    const stride = canvas.width * 4;
+    const outPixels = [];
+    for (let y = 0; y < imgHeight; y += step) {
+      for (let x = 0; x < imgWidth; x += step) {
+        const offset = y * stride + x * 4;
+        const pr = pixels[offset];
+        const pg = pixels[offset + 1];
+        const pb = pixels[offset + 2];
+        const pa = pixels[offset + 3];
+        outPixels.push({
+          x: x - imgWidth / 2,
+          y: y - imgHeight / 2,
+          r: pr,
+          g: pg,
+          b: pb,
+          a: pa,
+          color: new Color(pr / 255, pg / 255, pb / 255, pa / 255)
+        });
+      }
+    }
+    return outPixels;
+  };
+  g.twirl = function(image, position, radius, angle3) {
+    const layer = image.toLayer(false);
+    layer.addFilter("twirl", {
+      dx: position.x,
+      dy: position.y,
+      radius,
+      angle: angle3
+    });
+    return image.withCanvas(layer.toCanvas());
+  };
+  var image_default = g;
+
   // src/libraries/graphics.js
+  var graphics_exports = {};
+  __export(graphics_exports, {
+    BOTH: () => BOTH,
+    BOTTOM: () => BOTTOM,
+    CENTER: () => CENTER,
+    HORIZONTAL: () => HORIZONTAL2,
+    LEFT: () => LEFT,
+    MIDDLE: () => MIDDLE,
+    RIGHT: () => RIGHT,
+    TOP: () => TOP,
+    VERTICAL: () => VERTICAL2,
+    align: () => align2,
+    angle: () => angle2,
+    colorize: () => colorize2,
+    coordinates: () => coordinates2,
+    copy: () => copy2,
+    desaturate: () => desaturate,
+    distance: () => distance3,
+    fit: () => fit2,
+    fitTo: () => fitTo2,
+    flip: () => flip,
+    grayColor: () => grayColor,
+    hexColor: () => hexColor,
+    hslAdjust: () => hslAdjust,
+    hslColor: () => hslColor,
+    invert: () => invert,
+    rgbAdjust: () => rgbAdjust,
+    rgbColor: () => rgbColor,
+    stack: () => stack
+  });
   var HORIZONTAL2 = "horizontal";
   var VERTICAL2 = "vertical";
   var BOTH = "both";
@@ -23826,7 +24110,7 @@ var g = (() => {
     const satMul = 1 + saturation * (saturation < 0 ? 1 : 2);
     const lightMul = lightness < 0 ? 1 + lightness : 1 - lightness;
     const lightAdd = lightness < 0 ? 0 : lightness;
-    let r, g2, b, vs, ms, vm, h, s, l, m, vmh, sextant;
+    let r, g3, b, vs, ms, vm, h, s, l, m, vmh, sextant;
     hue = hue * 6 % 6;
     function hslAdjust2(v1) {
       if (v1 instanceof Group) {
@@ -23846,19 +24130,19 @@ var g = (() => {
         c = Color.parse(c);
       }
       r = c.r;
-      g2 = c.g;
+      g3 = c.g;
       b = c.b;
       if (hue !== 0 || saturation !== 0) {
         vs = r;
-        if (g2 > vs) {
-          vs = g2;
+        if (g3 > vs) {
+          vs = g3;
         }
         if (b > vs) {
           vs = b;
         }
         ms = r;
-        if (g2 < ms) {
-          ms = g2;
+        if (g3 < ms) {
+          ms = g3;
         }
         if (b < ms) {
           ms = b;
@@ -23880,12 +24164,12 @@ var g = (() => {
             v = l + s - l * s;
           }
           if (r === vs) {
-            if (g2 === ms) {
+            if (g3 === ms) {
               h = 5 + (vs - b) / vm + hue;
             } else {
-              h = 1 - (vs - g2) / vm + hue;
+              h = 1 - (vs - g3) / vm + hue;
             }
-          } else if (g2 === vs) {
+          } else if (g3 === vs) {
             if (b === ms) {
               h = 1 + (vs - r) / vm + hue;
             } else {
@@ -23893,7 +24177,7 @@ var g = (() => {
             }
           } else {
             if (r === ms) {
-              h = 3 + (vs - g2) / vm + hue;
+              h = 3 + (vs - g3) / vm + hue;
             } else {
               h = 5 - (vs - r) / vm + hue;
             }
@@ -23909,39 +24193,39 @@ var g = (() => {
           vmh = (v - m) * (h - sextant);
           if (sextant === 0) {
             r = v;
-            g2 = m + vmh;
+            g3 = m + vmh;
             b = m;
           } else if (sextant === 1) {
             r = v - vmh;
-            g2 = v;
+            g3 = v;
             b = m;
           } else if (sextant === 2) {
             r = m;
-            g2 = v;
+            g3 = v;
             b = m + vmh;
           } else if (sextant === 3) {
             r = m;
-            g2 = v - vmh;
+            g3 = v - vmh;
             b = v;
           } else if (sextant === 4) {
             r = m + vmh;
-            g2 = m;
+            g3 = m;
             b = v;
           } else if (sextant === 5) {
             r = v;
-            g2 = m;
+            g3 = m;
             b = v - vmh;
           }
         }
       }
       r = r * lightMul + lightAdd;
-      g2 = g2 * lightMul + lightAdd;
+      g3 = g3 * lightMul + lightAdd;
       b = b * lightMul + lightAdd;
       if (r < 0) {
         r = 0;
       }
-      if (g2 < 0) {
-        g2 = 0;
+      if (g3 < 0) {
+        g3 = 0;
       }
       if (b < 0) {
         b = 0;
@@ -23949,13 +24233,13 @@ var g = (() => {
       if (r > 1) {
         r = 1;
       }
-      if (g2 > 1) {
-        g2 = 1;
+      if (g3 > 1) {
+        g3 = 1;
       }
       if (b > 1) {
         b = 1;
       }
-      return new Color(r, g2, b, c.a + alpha);
+      return new Color(r, g3, b, c.a + alpha);
     }
     return hslAdjust2(v);
   }
@@ -24363,11 +24647,11 @@ var g = (() => {
 
   // src/g.js
   function importSVG(svgString) {
-    return g.svg.parseString(svgString);
+    return g2.svg.parseString(svgString);
   }
   function importImage(image) {
-    const layer = g.Layer.fromImage(image);
-    return new g.Img(layer.toCanvas());
+    const layer = g2.Layer.fromImage(image);
+    return new g2.Img(layer.toCanvas());
   }
   function importText(string2) {
     return string2 ? String(string2) : "";
@@ -24445,12 +24729,12 @@ var g = (() => {
     t = t !== void 0 ? t : 0.5;
     if (typeof a === "number") {
       return a * (1 - t) + b * t;
-    } else if (a instanceof g.Color && b instanceof g.Color) {
-      return new g.Color(
-        g.mix(a.r, b.r, t),
-        g.mix(a.g, b.g, t),
-        g.mix(a.b, b.b, t),
-        g.mix(a.a, b.a, t)
+    } else if (a instanceof g2.Color && b instanceof g2.Color) {
+      return new g2.Color(
+        g2.mix(a.r, b.r, t),
+        g2.mix(a.g, b.g, t),
+        g2.mix(a.b, b.b, t),
+        g2.mix(a.a, b.a, t)
       );
     } else if (typeof a === "object") {
       const result = {};
@@ -24460,7 +24744,7 @@ var g = (() => {
         const va = a[k];
         const vb = b[k];
         if (va !== void 0 && vb !== void 0) {
-          result[k] = g.mix(va, vb, t);
+          result[k] = g2.mix(va, vb, t);
         }
       }
       return result;
@@ -24468,8 +24752,10 @@ var g = (() => {
       return 0;
     }
   }
-  var g = {
+  var g2 = {
     ...vg_exports,
+    ...img_exports,
+    ...image_default,
     ...util_exports,
     ...math_exports2,
     ...string_exports,
@@ -24484,7 +24770,7 @@ var g = (() => {
     merge: merge3,
     mix: mix2
   };
-  var g_default = g;
+  var g_default = g2;
   return __toCommonJS(g_exports);
 })();
 /*!

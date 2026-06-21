@@ -1,14 +1,14 @@
 'use strict';
 
 import * as vg from './libraries/vg/index.js';
-// import * as img from "./libraries/img/index.js";
+import * as img from './libraries/img/index.js';
 import * as util from './libraries/util.js';
 
 import * as mathCommands from './libraries/math.js';
 import * as stringCommands from './libraries/string.js';
 import * as listCommands from './libraries/list.js';
 import * as dataCommands from './libraries/data.js';
-// import * as imageCommands from "./libraries/image.js";
+import imageCommands from './libraries/image.js';
 import * as graphicsCommands from './libraries/graphics.js';
 import * as easingCommands from './libraries/easing.js';
 
@@ -133,6 +133,8 @@ function mix(a, b, t) {
 
 const g = {
     ...vg,
+    ...img,
+    ...imageCommands,
     ...util,
     ...mathCommands,
     ...stringCommands,
