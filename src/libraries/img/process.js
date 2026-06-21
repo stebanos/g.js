@@ -14,14 +14,14 @@
 import stackblur from "stackblur";
 import { radians, distance, transform, clamp } from "./util";
 
-var LUMINOSITY_ITU_R_BT601 = "ITU-R BT.601";
-var LUMINOSITY_ITU_R_BT709 = "ITU-R BT.709";
+const LUMINOSITY_ITU_R_BT601 = "ITU-R BT.601";
+const LUMINOSITY_ITU_R_BT709 = "ITU-R BT.709";
 
 function defaultOptions(options, defaults) {
   if (!options) {
     return defaults;
   }
-  var opt,
+  let opt,
     o = {};
   for (opt in defaults) {
     if (defaults.hasOwnProperty(opt)) {
@@ -68,7 +68,7 @@ function convolve3x3(
   invert,
   mono
 ) {
-  var x,
+  let x,
     y,
     n = width * height * 4,
     idx,
@@ -212,7 +212,7 @@ function convolve5x5(
   invert,
   mono
 ) {
-  var x,
+  let x,
     y,
     n = width * height * 4,
     idx,
@@ -480,7 +480,7 @@ function convolve5x5(
 }
 
 function gaussian(inData, outData, width, height, kernelSize) {
-  var x,
+  let x,
     y,
     i,
     j,
@@ -616,7 +616,7 @@ function polar(inData, outData, x0, y0, width, height, callback) {
    */
   x0 = width / 2 + (x0 || 0);
   y0 = height / 2 + (y0 || 0);
-  var y1, x1, x, y, d, a, v;
+  let y1, x1, x, y, d, a, v;
   for (y1 = 0; y1 < height; y1 += 1) {
     for (x1 = 0; x1 < width; x1 += 1) {
       x = x1 - x0;
@@ -641,7 +641,7 @@ function polar(inData, outData, x0, y0, width, height, callback) {
 
 const process = {
   invert: function (inData, outData, width, height) {
-    var i,
+    let i,
       n = width * height * 4;
 
     for (i = 0; i < n; i += 4) {
@@ -653,7 +653,7 @@ const process = {
   },
 
   sepia: function (inData, outData, width, height) {
-    var i,
+    let i,
       n = width * height * 4,
       r,
       g,
@@ -671,7 +671,7 @@ const process = {
   },
 
   solarize: function (inData, outData, width, height) {
-    var i,
+    let i,
       n = width * height * 4,
       r,
       g,
@@ -695,7 +695,7 @@ const process = {
       contrast: 0,
     });
 
-    var i,
+    let i,
       n = width * height * 4,
       r,
       g,
@@ -727,7 +727,7 @@ const process = {
 
   desaturate: function (inData, outData, width, height, options) {
     options = defaultOptions(options, { method: LUMINOSITY_ITU_R_BT601 });
-    var i,
+    let i,
       n = width * height * 4,
       level,
       rCoeff,
@@ -756,7 +756,7 @@ const process = {
 
   lighten: function (inData, outData, width, height, options) {
     options = defaultOptions(options, { amount: 0.25 });
-    var i,
+    let i,
       n = width * height * 4,
       mul = 1 + clamp(options.amount, 0, 1);
 
@@ -774,7 +774,7 @@ const process = {
       strength: 0.5,
       mono: false,
     });
-    var i,
+    let i,
       n = width * height * 4,
       rnd,
       r,
@@ -813,7 +813,7 @@ const process = {
   },
 
   flipv: function (inData, outData, width, height) {
-    var x,
+    let x,
       y,
       n = width * height * 4,
       inPix,
@@ -833,7 +833,7 @@ const process = {
   },
 
   fliph: function (inData, outData, width, height) {
-    var x,
+    let x,
       y,
       n = width * height * 4,
       inPix,
@@ -855,7 +855,7 @@ const process = {
   // Uses fast stackblur algorithm from http://www.quasimondo.com/StackBlurForCanvas
   blur: function (inData, outData, width, height, options) {
     options = defaultOptions(options, { radius: 10 });
-    for (var i = 0; i < inData.length; i += 1) {
+    for (let i = 0; i < inData.length; i += 1) {
       outData[i] = inData[i];
     }
     stackblur(outData, width, height, options.radius);
@@ -863,7 +863,7 @@ const process = {
 
   glow: function (inData, outData, width, height, options) {
     options = defaultOptions(options, { amount: 0.75, kernelSize: 5 });
-    var i,
+    let i,
       n = width * height * 4,
       r,
       g,
@@ -904,7 +904,7 @@ const process = {
   // A 3x3 high-pass filter
   sharpen3x3: function (inData, outData, width, height, options) {
     options = defaultOptions(options, { strength: 1 });
-    var a = -clamp(options.strength, 0, 1);
+    const a = -clamp(options.strength, 0, 1);
     convolve3x3(inData, outData, width, height, [
       [a, a, a],
       [a, 1 - a * 8, a],
@@ -915,7 +915,7 @@ const process = {
   // A 5x5 high-pass filter
   sharpen5x5: function (inData, outData, width, height, options) {
     options = defaultOptions(options, { strength: 1 });
-    var a = -clamp(options.strength, 0, 1);
+    const a = -clamp(options.strength, 0, 1);
     convolve5x5(inData, outData, width, height, [
       [a, a, a, a, a],
       [a, a, a, a, a],
@@ -927,7 +927,7 @@ const process = {
 
   // A 3x3 low-pass mean filter
   soften3x3: function (inData, outData, width, height) {
-    var c = 1 / 9;
+    const c = 1 / 9;
     convolve3x3(inData, outData, width, height, [
       [c, c, c],
       [c, c, c],
@@ -937,7 +937,7 @@ const process = {
 
   // A 5x5 low-pass mean filter
   soften5x5: function (inData, outData, width, height) {
-    var c = 1 / 25;
+    const c = 1 / 25;
     convolve5x5(inData, outData, width, height, [
       [c, c, c, c, c],
       [c, c, c, c, c],
@@ -950,7 +950,7 @@ const process = {
   // A 3x3 Cross edge-detect
   crossedges: function (inData, outData, width, height, options) {
     options = defaultOptions(options, { strength: 1 });
-    var a = clamp(options.strength, 0, 1) * 5;
+    const a = clamp(options.strength, 0, 1) * 5;
     convolve3x3(
       inData,
       outData,
@@ -969,7 +969,7 @@ const process = {
   // 3x3 directional emboss
   emboss: function (inData, outData, width, height, options) {
     options = defaultOptions(options, { amount: 1, angle: 0 });
-    var i,
+    let i,
       n = width * height * 4,
       amount = options.amount,
       angle = options.angle,
@@ -1001,7 +1001,7 @@ const process = {
 
   // A 3x3 Sobel edge detect (similar to Photoshop's)
   findedges: function (inData, outData, width, height) {
-    var i,
+    let i,
       n = width * height * 4,
       gr1,
       gr2,
@@ -1060,7 +1060,7 @@ const process = {
 
   // A 3x3 edge enhance
   edgeenhance3x3: function (inData, outData, width, height) {
-    var c = -1 / 9;
+    const c = -1 / 9;
     convolve3x3(inData, outData, width, height, [
       [c, c, c],
       [c, 17 / 9, c],
@@ -1070,7 +1070,7 @@ const process = {
 
   // A 5x5 edge enhance
   edgeenhance5x5: function (inData, outData, width, height) {
-    var c = -1 / 25;
+    const c = -1 / 25;
     convolve5x5(inData, outData, width, height, [
       [c, c, c, c, c],
       [c, c, c, c, c],
@@ -1120,7 +1120,7 @@ const process = {
 
   rgbAdjust: function (inData, outData, width, height, options) {
     options = defaultOptions(options, { r: 0, g: 0, b: 0, a: 0 });
-    var i,
+    let i,
       n = width * height * 4,
       r,
       g,
@@ -1174,7 +1174,7 @@ const process = {
       g: 0.5,
       b: 0,
     });
-    var i,
+    let i,
       n = width * height * 4,
       r,
       g,
@@ -1261,7 +1261,7 @@ const process = {
 
   hslAdjust: function (inData, outData, width, height, options) {
     options = defaultOptions(options, { h: 0.5, s: 0.3, l: 0.1, a: 0 });
-    var i,
+    let i,
       n = width * height * 4,
       r,
       g,
@@ -1426,7 +1426,7 @@ const process = {
 
   posterize: function (inData, outData, width, height, options) {
     options = defaultOptions(options, { levels: 5 });
-    var i,
+    let i,
       n = width * height * 4,
       r,
       g,
@@ -1444,7 +1444,7 @@ const process = {
   },
 
   removenoise: function (inData, outData, width, height) {
-    var x,
+    let x,
       y,
       n = width * height * 4,
       r,
@@ -1575,7 +1575,7 @@ const process = {
 
   mosaic: function (inData, outData, width, height, options) {
     options = defaultOptions(options, { blockSize: 8 });
-    var blockSize = clamp(options.blockSize, 1, Math.max(width, height)),
+    let blockSize = clamp(options.blockSize, 1, Math.max(width, height)),
       yBlocks = Math.ceil(height / blockSize),
       xBlocks = Math.ceil(width / blockSize),
       y0,
@@ -1626,16 +1626,16 @@ const process = {
   },
 
   equalize: function (inData, outData, width, height, options) {
-    var n = width * height,
+    let n = width * height,
       p,
       i,
       level,
       ratio,
       prog,
       lastProg;
-    var round = Math.round;
+    const round = Math.round;
     // build histogram
-    var pdf = new Array(256);
+    const pdf = new Array(256);
     for (i = 0; i < 256; i += 1) {
       pdf[i] = 0;
     }
@@ -1652,7 +1652,7 @@ const process = {
     }
 
     // build cdf
-    var cdf = new Array(256);
+    const cdf = new Array(256);
     cdf[0] = pdf[0];
     for (i = 1; i < 256; i += 1) {
       cdf[i] = cdf[i - 1] + pdf[i];
@@ -1676,7 +1676,7 @@ const process = {
   },
 
   mask: function (inData, outData, width, height, options) {
-    var i,
+    let i,
       n = width * height * 4,
       data = options.data;
 
@@ -1700,8 +1700,8 @@ const process = {
      *  - zoom: the amount of bulge (0.0-1.0).
      */
     options = defaultOptions(options, { dx: 0, dy: 0, radius: 0, zoom: 0 });
-    var m1 = options.radius;
-    var m2 = clamp(options.zoom, 0, 1);
+    const m1 = options.radius;
+    const m2 = clamp(options.zoom, 0, 1);
     return polar(
       inData,
       outData,
@@ -1723,8 +1723,8 @@ const process = {
      *  - zoom: the amount of pinch (0.0-1.0).
      */
     options = defaultOptions(options, { dx: 0, dy: 0, radius: 0, zoom: 0 });
-    var m1 = options.radius;
-    var m2 = clamp(options.zoom, 0, 1);
+    const m1 = options.radius;
+    const m2 = clamp(options.zoom, 0, 1);
     return polar(
       inData,
       outData,
@@ -1745,8 +1745,8 @@ const process = {
      *  - zoom: the amount of bulge or pinch (-1.0-1.0):
      */
     options = defaultOptions(options, { dx: 0, dy: 0, zoom: 0 });
-    var m1 = distance(0, 0, width, height);
-    var m2 = clamp(options.zoom * 0.75, -0.75, 0.75);
+    const m1 = distance(0, 0, width, height);
+    const m2 = clamp(options.zoom * 0.75, -0.75, 0.75);
     return polar(
       inData,
       outData,
@@ -1767,7 +1767,7 @@ const process = {
      *  - radius: the radius of the unaffected area in pixels.
      */
     options = defaultOptions(options, { dx: 0, dy: 0, radius: 0 });
-    var m = options.radius;
+    const m = options.radius;
     return polar(
       inData,
       outData,
@@ -1789,8 +1789,8 @@ const process = {
      *  - angle: the amount of rotation in degrees.
      */
     options = defaultOptions(options, { dx: 0, dy: 0, radius: 0, angle: 0 });
-    var m1 = radians(options.angle);
-    var m2 = options.radius;
+    const m1 = radians(options.angle);
+    const m2 = options.radius;
     return polar(
       inData,
       outData,

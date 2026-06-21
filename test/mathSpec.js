@@ -112,25 +112,25 @@ describe('The odd function', function () {
 describe('The range function', function () {
 
     it('returns linear values', function () {
-        var s1 = g.range(4, 14, 2);
+        const s1 = g.range(4, 14, 2);
         assert.deepEqual(s1, [4, 6, 8, 10, 12]);
-        var s2 = g.range(4, 14, 2, true);
+        const s2 = g.range(4, 14, 2, true);
         assert.deepEqual(s2, [4, 6, 8, 10, 12, 14]);
-        var s3 = g.range(3, 14, 2);
+        const s3 = g.range(3, 14, 2);
         assert.deepEqual(s3, [3, 5, 7, 9, 11, 13]);
-        var s4 = g.range(3, 14, 2, true);
+        const s4 = g.range(3, 14, 2, true);
         assert.deepEqual(s4, [3, 5, 7, 9, 11, 13]);
-        var s5 = g.range(10, 15);
+        const s5 = g.range(10, 15);
         assert.deepEqual(s5, [10, 11, 12, 13, 14]);
-        var s6 = g.range(10, 15, -1);
+        const s6 = g.range(10, 15, -1);
         assert.equal(s6.length, 0);
-        var s7 = g.range(15, 10, 1);
+        const s7 = g.range(15, 10, 1);
         assert.equal(s7.length, 0);
-        var s8 = g.range(14, 4, -2);
+        const s8 = g.range(14, 4, -2);
         assert.deepEqual(s8, [14, 12, 10, 8, 6]);
-        var s9 = g.range(14, 4, -2, true);
+        const s9 = g.range(14, 4, -2, true);
         assert.deepEqual(s9, [14, 12, 10, 8, 6, 4]);
-        var s10 = g.range(15, 10);
+        const s10 = g.range(15, 10);
         assert.deepEqual(s10, [15, 14, 13, 12, 11]);
 
     });
@@ -140,8 +140,8 @@ describe('The range function', function () {
 describe('The randomNumbers function', function () {
 
     function numbersAllInRange(numbers, min, max) {
-        var v;
-        for (var i = 0; i < numbers.length; i += 1) {
+        let v;
+        for (let i = 0; i < numbers.length; i += 1) {
             v = numbers[i];
             if (v < min || v > max) { return false; }
         }
@@ -149,17 +149,17 @@ describe('The randomNumbers function', function () {
     }
 
     it('returns numbers within the given range', function () {
-        var s1 = g.randomNumbers(10, 0, 1);
+        const s1 = g.randomNumbers(10, 0, 1);
         assert.equal(s1.length, 10);
         assert.ok(numbersAllInRange(s1, 0, 1));
-        var s2 = g.randomNumbers(7, 20);
+        const s2 = g.randomNumbers(7, 20);
         assert.equal(s2.length, 7);
         assert.ok(numbersAllInRange(s2, 0, 20));
-        var s3 = g.randomNumbers(10, -20);
+        const s3 = g.randomNumbers(10, -20);
         assert.ok(numbersAllInRange(s3, -20, 0));
-        var s4 = g.randomNumbers(10, -15, 15);
+        const s4 = g.randomNumbers(10, -15, 15);
         assert.ok(numbersAllInRange(s4, -15, 15));
-        var s5 = g.randomNumbers(10, 15, -15);
+        const s5 = g.randomNumbers(10, 15, -15);
         assert.ok(numbersAllInRange(s5, -15, 15));
     });
 
@@ -173,12 +173,12 @@ describe('The randomNumbers function', function () {
 describe('The sample function', function () {
 
     it('returns linear values', function () {
-        var s1 = g.sample(5, 0, 8);
+        const s1 = g.sample(5, 0, 8);
         assert.deepEqual(s1, [0, 2, 4, 6, 8]);
     });
 
     it('returns circular values', function () {
-        var s1 = g.sample(5, 0, 10, true);
+        const s1 = g.sample(5, 0, 10, true);
         assert.deepEqual(s1, [0, 2, 4, 6, 8]);
     });
 

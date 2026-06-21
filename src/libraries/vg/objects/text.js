@@ -4,7 +4,7 @@ import Color from "../objects/color";
 import Rect from "../objects/rect";
 import Transform from "../objects/transform";
 
-var _dummyContext = null;
+let _dummyContext = null;
 
 // Generates a Text object.
 // The function can take many possible argument forms, either by listing them in order
@@ -18,7 +18,7 @@ var _dummyContext = null;
 //     new g.Text('Hello', {fontFamily: 'Helvetica', fontSize: 12}); // the position defaults to 0,0.
 export default class Text {
   constructor(text) {
-    var args = Array.prototype.slice.call(arguments, 1),
+    let args = Array.prototype.slice.call(arguments, 1),
       secondArg = arguments[1],
       thirdArg = arguments[2],
       lastArg = arguments[arguments.length - 1],
@@ -93,7 +93,7 @@ export default class Text {
         _dummyContext = {
           font: "10px sans-serif",
           measureText: function (text) {
-            var fontSize = parseFloat(this.font);
+            const fontSize = parseFloat(this.font);
             // The 0.6 is the average width / fontSize ratio across all characters and font sizes.
             return { width: text.length * fontSize * 0.6 };
           },
@@ -103,7 +103,7 @@ export default class Text {
     return _dummyContext;
   }
   clone() {
-    var t = new Text();
+    const t = new Text();
     t.text = this.text;
     t._x = this._x;
     t._y = this._y;
@@ -118,7 +118,7 @@ export default class Text {
     return this.fontSize + "px " + this.fontFamily;
   }
   colorize(fill) {
-    var t = this.clone();
+    const t = this.clone();
     t.fill = Color.clone(fill);
     return t;
   }
@@ -126,14 +126,14 @@ export default class Text {
     ctx.save();
     ctx.font = this._getFont();
     ctx.textAlign = this.textAlign;
-    var m = this.transform.m;
+    const m = this.transform.m;
     ctx.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
     ctx.fillStyle = Color.toCSS(this.fill);
     ctx.fillText(this.text, this._x, this._y);
     ctx.restore();
   }
   bounds() {
-    var ctx = Text._getDummyContext(),
+    let ctx = Text._getDummyContext(),
       metrics,
       x = this._x;
     ctx.font = this._getFont();
@@ -152,12 +152,12 @@ export default class Text {
     );
   }
   toSVG() {
-    var svg = "<text";
+    let svg = "<text";
     svg += ' x="' + this._x + '"';
     svg += ' y="' + this._y + '"';
     svg += ' font-family="' + this.fontFamily + '"';
     svg += ' font-size="' + this.fontSize + '"';
-    var textAnchor;
+    let textAnchor;
     if (this.textAlign === "left") {
       textAnchor = "start";
     } else if (this.textAlign === "center") {
@@ -167,7 +167,7 @@ export default class Text {
     }
     svg += ' text-anchor="' + textAnchor + '"';
     if (this.fill !== "black") {
-      var fill = Color.parse(this.fill);
+      const fill = Color.parse(this.fill);
       svg += ' fill="' + fill.toHex(true) + '"';
       if (fill.a < 1) {
         svg += ' opacity="' + fill.a + '"';

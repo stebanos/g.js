@@ -45,8 +45,8 @@ function transform(shape, t) {
   ) {
     return transformShape(shape, t);
   } else if (Array.isArray(shape)) {
-    var l = [];
-    for (var i = 0; i < shape.length; i += 1) {
+    const l = [];
+    for (let i = 0; i < shape.length; i += 1) {
       l.push(transform(shape[i], t));
     }
     return l;
@@ -59,7 +59,7 @@ export function align(shape, position, hAlign, vAlign) {
   if (!shape) {
     return;
   }
-  var dx,
+  let dx,
     dy,
     t,
     x = position.x,
@@ -89,7 +89,7 @@ export function align(shape, position, hAlign, vAlign) {
 }
 
 export function colorize(shape, options) {
-  var args = arguments;
+  const args = arguments;
   if (typeof options !== "object" || options instanceof Color) {
     options = {};
     if (args[1] !== undefined) {
@@ -115,7 +115,7 @@ export function colorize(shape, options) {
 
 export function copy(shape, copies, order, translate, rotate, scale) {
   if (!shape) return [];
-  var i,
+  let i,
     t,
     j,
     op,
@@ -186,12 +186,12 @@ export function flip(shape, axis) {
       shape[0].x !== undefined &&
       shape[0].y !== undefined)
   ) {
-    var x = axis === g.HORIZONTAL || axis === g.BOTH ? -1 : 1;
-    var y = axis === g.VERTICAL || axis === g.BOTH ? -1 : 1;
+    const x = axis === g.HORIZONTAL || axis === g.BOTH ? -1 : 1;
+    const y = axis === g.VERTICAL || axis === g.BOTH ? -1 : 1;
     return scale(shape, new Point(x, y), centerPoint(shape));
   } else if (shape instanceof Img) {
-    var image = shape;
-    var layer = image.toLayer(false);
+    const image = shape;
+    const layer = image.toLayer(false);
     if (axis === g.HORIZONTAL || axis === g.BOTH) {
       layer.flipHorizontal();
     }
@@ -207,7 +207,7 @@ export function fit(shape, position, width, height, stretch) {
     return;
   }
   stretch = stretch !== undefined ? stretch : false;
-  var t,
+  let t,
     sx,
     sy,
     bnds = bounds(shape),
@@ -247,7 +247,7 @@ export function fitTo(shape, bounding, stretch) {
     return shape;
   }
 
-  var bnds = bounds(bounding),
+  const bnds = bounds(bounding),
     bx = bnds.x,
     by = bnds.y,
     bw = bnds.width,
@@ -263,8 +263,8 @@ export function hslAdjust(v, hue, saturation, lightness, alpha) {
 
   // First, handle the image case.
   if (v instanceof Img) {
-    var image = v;
-    var layer = image.toLayer(false);
+    const image = v;
+    const layer = image.toLayer(false);
     layer.addFilter("hslAdjust", {
       h: hue,
       s: saturation,
@@ -278,26 +278,26 @@ export function hslAdjust(v, hue, saturation, lightness, alpha) {
   saturation = clamp(saturation, -1, 1);
   lightness = clamp(lightness, -1, 1);
   alpha = clamp(alpha, -1, 1);
-  var satMul = 1 + saturation * (saturation < 0 ? 1 : 2);
-  var lightMul = lightness < 0 ? 1 + lightness : 1 - lightness;
-  var lightAdd = lightness < 0 ? 0 : lightness;
-  var r, g, b, vs, ms, vm, h, s, l, m, vmh, sextant;
+  const satMul = 1 + saturation * (saturation < 0 ? 1 : 2);
+  const lightMul = lightness < 0 ? 1 + lightness : 1 - lightness;
+  const lightAdd = lightness < 0 ? 0 : lightness;
+  let r, g, b, vs, ms, vm, h, s, l, m, vmh, sextant;
   hue = (hue * 6) % 6;
 
   function hslAdjust(v1) {
     if (v1 instanceof Group) {
-      var newShapes = [];
-      for (var i = 0; i < v1.shapes.length; i += 1) {
+      const newShapes = [];
+      for (let i = 0; i < v1.shapes.length; i += 1) {
         newShapes.push(hslAdjust(v1.shapes[i]));
       }
       return new Group(newShapes);
     } else if (v1 instanceof Path) {
-      var p = v1.clone();
+      const p = v1.clone();
       p.fill = hslAdjust(p.fill);
       p.stroke = hslAdjust(p.stroke);
       return p;
     }
-    var c = v1;
+    let c = v1;
     if (!(c instanceof Color)) {
       c = Color.parse(c);
     }
@@ -436,23 +436,23 @@ export function rgbAdjust(v, red, green, blue, alpha) {
 
   function rgbAdjust(v) {
     if (v instanceof Img) {
-      var image = v;
-      var layer = image.toLayer(false);
+      const image = v;
+      const layer = image.toLayer(false);
       layer.addFilter("rgbAdjust", { r: red, g: green, b: blue, a: alpha });
       return image.withCanvas(layer.toCanvas());
     } else if (v instanceof Group) {
-      var newShapes = [];
-      for (var i = 0; i < v.shapes.length; i += 1) {
+      const newShapes = [];
+      for (let i = 0; i < v.shapes.length; i += 1) {
         newShapes.push(rgbAdjust(v.shapes[i]));
       }
       return new Group(newShapes);
     } else if (v instanceof Path) {
-      var p = v.clone();
+      const p = v.clone();
       p.fill = rgbAdjust(p.fill);
       p.stroke = rgbAdjust(p.stroke);
       return p;
     }
-    var c = v;
+    let c = v;
     if (!(c instanceof Color)) {
       c = Color.parse(c);
     }
@@ -469,7 +469,7 @@ export function stack(shapes, direction, margin) {
     return shapes;
   }
 
-  var i,
+  let i,
     shape,
     tx,
     ty,
@@ -519,7 +519,7 @@ export function stack(shapes, direction, margin) {
 }
 
 export function angle(point1, point2) {
-  var args = arguments;
+  const args = arguments;
   if (args.length === 4) {
     point1 = Point.read(args[0], args[1]);
     point2 = Point.read(args[2], args[3]);
@@ -531,7 +531,7 @@ export function angle(point1, point2) {
 }
 
 export function coordinates(point, angle, distance) {
-  var args = arguments;
+  const args = arguments;
   if (args.length === 4) {
     point = Point.read(args[0], args[1]);
     angle = args[2];
@@ -543,7 +543,7 @@ export function coordinates(point, angle, distance) {
 }
 
 export function distance(point1, point2) {
-  var args = arguments;
+  const args = arguments;
   if (args.length === 4) {
     point1 = Point.read(args[0], args[1]);
     point2 = Point.read(args[2], args[3]);
@@ -604,8 +604,8 @@ export function invert(shape) {
     return null;
   }
   if (shape instanceof Img) {
-    var image = shape;
-    var layer = image.toLayer(false);
+    const image = shape;
+    const layer = image.toLayer(false);
     layer.addFilter("invert");
     return image.withCanvas(layer.toCanvas());
   }

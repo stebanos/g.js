@@ -10,9 +10,9 @@ export function characterAt(s, index) {
 }
 
 export function concatenate() {
-  var result = "";
-  for (var i = 0; i < arguments.length; i++) {
-    var s = arguments[i];
+  let result = "";
+  for (let i = 0; i < arguments.length; i++) {
+    let s = arguments[i];
     s = s !== undefined ? String(s) : "";
     result += s;
   }
@@ -118,9 +118,9 @@ export function substring(s, start, end, endOffset) {
 
 export function toCharacterCodes(s) {
   if (!s) return [];
-  var codes = [];
+  const codes = [];
   codes.length = s.length;
-  for (var i = 0; i < s.length; i += 1) {
+  for (let i = 0; i < s.length; i += 1) {
     codes[i] = s.charCodeAt(i);
   }
   return codes;
@@ -140,10 +140,10 @@ export function toLowerCase(s) {
 }
 
 export function toTitleCase(s) {
-  var c,
+  let c,
     result = "";
   s = String(s);
-  for (var i = 0; i < s.length; i += 1) {
+  for (let i = 0; i < s.length; i += 1) {
     c = s[i];
     if (result.length === 0 || result[result.length - 1] === " ") {
       result += c.toUpperCase();
@@ -164,12 +164,12 @@ export function wordCount(s) {
     return 0;
   }
   s = String(s);
-  var split = s.split(new RegExp("\\w+"));
+  const split = s.split(new RegExp("\\w+"));
   return split.length - 1;
 }
 
 export function toWords(s) {
-  var l = s.split(/\W+/);
+  const l = s.split(/\W+/);
   if (l[l.length - 1] === "") {
     l.pop();
   }

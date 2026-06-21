@@ -14,14 +14,14 @@ describe('The library', function () {
 describe('The import function', function () {
 
     it('can import an empty SVG', function () {
-        var group = g.importSVG('<svg></svg>');
+        const group = g.importSVG('<svg></svg>');
         assert.equal(group.shapes.length, 0);
     });
 
     it('can import a simple path', function () {
-        var group = g.importSVG('<svg><path d="M0,0L10,20L30,40Z"/></svg>');
+        const group = g.importSVG('<svg><path d="M0,0L10,20L30,40Z"/></svg>');
         assert.equal(group.shapes.length, 1);
-        var path = group.shapes[0];
+        const path = group.shapes[0];
         assert.equal(path.commands.length, 4);
     });
 
@@ -33,12 +33,12 @@ describe('The import function', function () {
 
         }
 
-        var csv = 'name,age\nAlice,42\nBob,33';
-        var table1 = g.importCSV(csv);
+        const csv = 'name,age\nAlice,42\nBob,33';
+        const table1 = g.importCSV(csv);
         assertTable(table1);
 
-        var tsv = 'name\tage\nAlice\t42\nBob\t33';
-        var table2 = g.importCSV(tsv, '\t');
+        const tsv = 'name\tage\nAlice\t42\nBob\t33';
+        const table2 = g.importCSV(tsv, '\t');
         assertTable(table2);
     });
 

@@ -15,14 +15,14 @@ export const CLOSE = "Z";
 
 // Returns coordinates for the point at t (0.0-1.0) on the line.
 export function linePoint(t, x0, y0, x1, y1) {
-  var x = x0 + t * (x1 - x0),
+  const x = x0 + t * (x1 - x0),
     y = y0 + t * (y1 - y0);
   return { type: LINETO, x: x, y: y };
 }
 
 // Returns the length of the line.
 export function lineLength(x0, y0, x1, y1) {
-  var a = Math.pow(Math.abs(x0 - x1), 2),
+  const a = Math.pow(Math.abs(x0 - x1), 2),
     b = Math.pow(Math.abs(y0 - y1), 2);
   return Math.sqrt(a + b);
 }
@@ -30,7 +30,7 @@ export function lineLength(x0, y0, x1, y1) {
 // Returns coordinates for the point at t (0.0-1.0) on the curve
 // (de Casteljau interpolation algorithm).
 export function curvePoint(t, x0, y0, x1, y1, x2, y2, x3, y3) {
-  var dt = 1 - t,
+  const dt = 1 - t,
     x01 = x0 * dt + x1 * t,
     y01 = y0 * dt + y1 * t,
     x12 = x1 * dt + x2 * t,
@@ -53,7 +53,7 @@ export function curveLength(x0, y0, x1, y1, x2, y2, x3, y3, n) {
   if (n === undefined) {
     n = 20;
   }
-  var i,
+  let i,
     t,
     cmd,
     length = 0,
@@ -80,7 +80,7 @@ export function segmentLengths(commands, relative, n) {
   if (n === undefined) {
     n = 20;
   }
-  var i, cmd, type, closeX, closeY, x0, y0, s, lengths, ll;
+  let i, cmd, type, closeX, closeY, x0, y0, s, lengths, ll;
   lengths = [];
   for (i = 0; i < commands.length; i += 1) {
     cmd = commands[i];
@@ -139,7 +139,7 @@ export function length(path, n) {
 // the last MOVETO or any subsequent CLOSE commands after i.
 // Note: during iteration, supplying segment lengths yourself is 30x faster.
 export function _locate(path, t, segmentLengths) {
-  var i, cmd, closeTo;
+  let i, cmd, closeTo;
   if (segmentLengths === undefined) {
     segmentLengths = segmentLengths(path.commands, true);
   }
@@ -166,7 +166,7 @@ export function _locate(path, t, segmentLengths) {
 // Note: in PathElement, ctrl1 is how the curve started, and ctrl2 how it arrives in this point.
 // Here, ctrl1 is how the curve arrives, and ctrl2 how it continues to the next point.
 export function point(path, t, segmentLengths) {
-  var loc, i, closeTo, x0, y0, cmd;
+  let loc, i, closeTo, x0, y0, cmd;
   loc = _locate(path, t, segmentLengths);
   i = loc[0];
   t = loc[1];
@@ -192,7 +192,7 @@ function fuzzyCompare(p1, p2) {
 }
 
 function coefficients(t) {
-  var mT, a, b, c, d;
+  let mT, a, b, c, d;
   mT = 1 - t;
   b = mT * mT;
   c = t * t;
@@ -204,7 +204,7 @@ function coefficients(t) {
 }
 
 function pointAt(x1, y1, x2, y2, x3, y3, x4, y4, t) {
-  var a, b, c, d, coeff;
+  let a, b, c, d, coeff;
   coeff = coefficients(t);
   a = coeff[0];
   b = coeff[1];
@@ -217,11 +217,11 @@ function pointAt(x1, y1, x2, y2, x3, y3, x4, y4, t) {
 }
 
 export function extrema(x1, y1, x2, y2, x3, y3, x4, y4) {
-  var minX, maxX, minY, maxY, ax, bx, cx, ay, by, cy, temp, rcp, tx, ty;
+  let minX, maxX, minY, maxY, ax, bx, cx, ay, by, cy, temp, rcp, tx, ty;
 
   function bezierCheck(t) {
     if (t >= 0 && t <= 1) {
-      var p = pointAt(x1, y1, x2, y2, x3, y3, x4, y4, t);
+      const p = pointAt(x1, y1, x2, y2, x3, y3, x4, y4, t);
       if (p.x < minX) {
         minX = p.x;
       } else if (p.x > maxX) {

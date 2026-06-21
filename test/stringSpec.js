@@ -5,8 +5,8 @@ import g from '../src/g.js';
 describe('The string module', function () {
 
     it('has concatenate', function () {
-        var s1 = 'foo';
-        var s2 = 'bar';
+        const s1 = 'foo';
+        const s2 = 'bar';
         assert.equal(g.concatenate(), '');
         assert.equal(g.concatenate(s1), 'foo');
         assert.equal(g.concatenate(s1, s2), 'foobar');

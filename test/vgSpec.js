@@ -86,12 +86,12 @@ describe('The bezier module', function () {
     });
 
     it('can calculate segment lengths', function () {
-        var p = new vg.Path();
+        const p = new vg.Path();
         p.moveTo(0, 0);
         p.lineTo(100, 0);
         p.lineTo(100, 50);
         p.close();
-        var segmentLengths = vg.bezier.segmentLengths(p.commands);
+        const segmentLengths = vg.bezier.segmentLengths(p.commands);
         assert.equal(segmentLengths.length, p.commands.length - 1);
         assert.equal(segmentLengths[0], 100);
         assert.equal(segmentLengths[1], 50);
@@ -112,7 +112,7 @@ describe('A point', function () {
 describe('A path', function () {
 
     it('can render itself to SVG', function () {
-        var p;
+        let p;
         p = new vg.Path();
         p.moveTo(10, 20);
         p.lineTo(30, 40);
@@ -121,7 +121,7 @@ describe('A path', function () {
     });
 
     it('can round coordinates', function () {
-        var p;
+        let p;
         p = new vg.Path();
         p.moveTo(Math.PI, Math.E);
         p.lineTo(100 / 3, 200 / 3);
@@ -129,7 +129,7 @@ describe('A path', function () {
     });
 
     it('can clone itself', function () {
-        var p, newP;
+        let p, newP;
         p = new vg.Path();
         p.fill = 'red';
         p.stroke = 'green';
@@ -144,7 +144,7 @@ describe('A path', function () {
     });
 
     it('has bounds', function () {
-        var p = new vg.Path();
+        const p = new vg.Path();
         assert.deepEqual(p.bounds(), new vg.Rect(0, 0, 0, 0));
         p.addRect(10, 20, 30, 40);
         assert.deepEqual(p.bounds(), new vg.Rect(10, 20, 30, 40));
@@ -153,20 +153,20 @@ describe('A path', function () {
     });
 
     it('has a length', function () {
-        var p1 = new vg.Path();
+        const p1 = new vg.Path();
         assert.equal(p1.length(), 0);
         p1.addLine(50, -15, 50, 80);
         assertAlmostEqual(p1.length(), 95);
-        var p2 = new vg.Path();
+        const p2 = new vg.Path();
         p2.addLine(0, 0, 50, 50);
         assertAlmostEqual(p2.length(), 70.7107);
-        var p3 = new vg.Path();
+        const p3 = new vg.Path();
         p3.addEllipse(0, 0, 100, 100);
         assertAlmostEqual(p3.length(), 314.159, 0.05);
     });
 
     it('can be resampled', function () {
-        var p = new vg.Path(),
+        let p = new vg.Path(),
             newPath;
         p.addRect(10, 20, 30, 40);
         newPath = p.resampleByAmount(100);
@@ -178,9 +178,9 @@ describe('A path', function () {
     });
 
     it('can resample open shapes', function () {
-        var p = new vg.Path();
+        const p = new vg.Path();
         p.addLine(10, 20, 30, 40);
-        var newPath = p.resampleByAmount(100);
+        let newPath = p.resampleByAmount(100);
         assert.equal(newPath.commands.length, 100);
         newPath = p.resampleByLength(1);
         assert.equal(newPath.commands.length, 29);
@@ -194,7 +194,7 @@ describe('A path', function () {
             assert.equal(p.stroke, stroke);
             assert.equal(p.strokeWidth, strokeWidth);
         }
-        var p = new vg.Path();
+        let p = new vg.Path();
         f(p, 'black', null, 1);
         p = p.colorize('red');
         f(p, 'red', null, 1);
@@ -208,7 +208,7 @@ describe('A path', function () {
 describe('A group', function () {
 
     it('can render itself to SVG', function () {
-        var group, p;
+        let group, p;
         group = new vg.Group();
         assert.equal(group.toSVG(), '<g></g>');
         p = new vg.Path();
@@ -220,7 +220,7 @@ describe('A group', function () {
     });
 
     it('can clone itself', function () {
-        var group, newGroup;
+        let group, newGroup;
         group = new vg.Group();
         group.add(vg.demoRect());
         newGroup = group.clone();
@@ -228,7 +228,7 @@ describe('A group', function () {
     });
 
     it('has bounds', function () {
-        var group, p1, p2;
+        let group, p1, p2;
         group = new vg.Group();
         assert.deepEqual(group.bounds(), new vg.Rect(0, 0, 0, 0));
         p1 = new vg.Path();
@@ -242,7 +242,7 @@ describe('A group', function () {
     });
 
     it('has a length', function () {
-        var group, p1, p2;
+        let group, p1, p2;
         group = new vg.Group();
         assert.equal(group.length(), 0);
         p1 = new vg.Path();
@@ -256,7 +256,7 @@ describe('A group', function () {
     });
 
     it('can merge shapes together', function () {
-        var group;
+        let group;
 
         group = vg.merge(vg.demoRect());
         assert.equal(group.shapes.length, 1);
@@ -276,11 +276,11 @@ describe('A group', function () {
             assert.equal(p.stroke, stroke);
             assert.equal(p.strokeWidth, strokeWidth);
         }
-        var p1 = new vg.Path();
+        let p1 = new vg.Path();
         p1 = p1.colorize('red', 'yellow', 1);
-        var p2 = new vg.Path();
+        let p2 = new vg.Path();
         p2 = p2.colorize('brown', 'purple', 2);
-        var group = new vg.Group([p1, p2]);
+        let group = new vg.Group([p1, p2]);
         f(group.shapes[0], 'red', 'yellow', 1);
         f(group.shapes[1], 'brown', 'purple', 2);
         group = group.colorize('pink');
@@ -343,19 +343,19 @@ describe('A text object', function () {
 
     it('can take options', function () {
         // `font` and `fontName` are aliases of `fontFamily`.
-        var t = new vg.Text('Hello', 20, 20, {fontSize: 18, font: 'Arial'});
+        const t = new vg.Text('Hello', 20, 20, {fontSize: 18, font: 'Arial'});
         assert.equal(t.fontSize, 18);
         assert.equal(t.fontFamily, 'Arial');
     });
 
     it('is drawable', function () {
-        var t = new vg.Text('Hello', 20, 20);
+        const t = new vg.Text('Hello', 20, 20);
         assert(vg.isDrawable(t));
         t.bounds();
     });
 
     it('has bounds', function () {
-        var text = 'Hello',
+        const text = 'Hello',
             fontSize = 24,
             t = new vg.Text('Hello', 20, 20, {fontSize: fontSize}),
             bounds = vg.bounds(t);
@@ -371,7 +371,7 @@ describe('A text object', function () {
     });
 
     it('supports alignment', function () {
-        var tLeft = new vg.Text('Hello', 0, 0, {textAlign: 'left'}),
+        const tLeft = new vg.Text('Hello', 0, 0, {textAlign: 'left'}),
             tRight = new vg.Text('Hello', 0, 0, {textAlign: 'right'}),
             tCenter = new vg.Text('Hello', 0, 0, {textAlign: 'center'});
         assert.equal(tLeft.bounds().x, 0);
@@ -384,12 +384,12 @@ describe('A text object', function () {
 describe('A color', function () {
 
     it('has a default constructor', function () {
-        var c = new vg.Color();
+        const c = new vg.Color();
         assert.deepEqual(c.rgba, [0, 0, 0, 1]);
     });
 
     it('can be constructed using numbers', function () {
-        var c;
+        let c;
         c = new vg.Color(0.1, 0.2, 0.3);
         assert.deepEqual(c.rgba, [0.1, 0.2, 0.3, 1]);
         c = new vg.Color(0.1, 0.2, 0.3, 0.4);
@@ -397,7 +397,7 @@ describe('A color', function () {
     });
 
     it('can take a value range', function () {
-        var c;
+        let c;
         c = new vg.Color(10, 20, 30, {range: 100});
         assert.deepEqual(c.rgba, [0.1, 0.2, 0.3, 1]);
         c = new vg.Color(10, 20, 30, 40, {range: 100});
@@ -405,7 +405,7 @@ describe('A color', function () {
     });
 
     it('can be constructed using an array', function () {
-        var c;
+        let c;
         c = new vg.Color([0.1, 0.2, 0.3, 0.4]);
         assert.deepEqual(c.rgba, [0.1, 0.2, 0.3, 0.4]);
         c = new vg.Color([0, 0, 0, 0]);
@@ -417,7 +417,7 @@ describe('A color', function () {
     });
 
     it('can be constructed using a Color object', function () {
-        var c;
+        let c;
         c = new vg.Color({r: 0.1, g: 0.2, b: 0.3});
         assert.deepEqual(c.rgba, [0.1, 0.2, 0.3, 1.0]);
         c = new vg.Color({r: 0.1, g: 0.2, b: 0.3, a: 0.4});
@@ -425,13 +425,13 @@ describe('A color', function () {
     });
 
     it('can be constructed using a string', function () {
-        var c;
+        let c;
         c = new vg.Color('#ff3366');
         assert.deepEqual(c.rgba, [1, 0.2, 0.4, 1]);
     });
 
     it('can be constructed using a grayscale value', function () {
-        var c;
+        let c;
         c = new vg.Color(0.3);
         assert.deepEqual(c.rgba, [0.3, 0.3, 0.3, 1]);
         c = new vg.Color(30, {range: 100});
@@ -461,7 +461,7 @@ describe('A color', function () {
     });
 
     it('has aliased properties', function () {
-        var c = new vg.Color(0.1, 0.2, 0.3, 0.4);
+        const c = new vg.Color(0.1, 0.2, 0.3, 0.4);
         assert.equal(c.red, c.r);
         assert.equal(c.green, c.g);
         assert.equal(c.blue, c.b);
@@ -469,7 +469,7 @@ describe('A color', function () {
         assert.deepEqual(c.rgb, [c.r, c.g, c.b]);
         assert.deepEqual(c.rgba, [c.r, c.g, c.b, c.a]);
 
-        var hsl = vg.color.rgb2hsl(c.r, c.g, c.b);
+        const hsl = vg.color.rgb2hsl(c.r, c.g, c.b);
         assert.equal(c.h, hsl[0]);
         assert.equal(c.hue, hsl[0]);
         assert.equal(c.s, hsl[1]);
@@ -479,7 +479,7 @@ describe('A color', function () {
     });
 
     it('can be converted to CSS', function () {
-        var c = new vg.Color(0.1, 0.2, 0.3, 0.4);
+        const c = new vg.Color(0.1, 0.2, 0.3, 0.4);
         assert.equal(vg.Color.toCSS(), 'black', 'Empty color is black');
         assert.equal(vg.Color.toCSS(null), 'none', 'null is none, meaning no color');
         assert.equal(vg.Color.toCSS('red'), 'red', 'strings are kept as-is');
@@ -529,7 +529,7 @@ describe('Drawables', function () {
 describe('The grid generator', function () {
 
     it('generates grids', function () {
-        var grid = vg.grid(3, 3, 100, 100);
+        const grid = vg.grid(3, 3, 100, 100);
         assert.equal(grid.length, 3 * 3);
         assert.deepEqual(vg.bounds(grid), {x: -100, y: -100, width: 200, height: 200});
     });
@@ -539,9 +539,9 @@ describe('The grid generator', function () {
 describe('The polygon command', function () {
 
     it('generates polygons', function () {
-        var p3 = vg.polygon(vg.Point.ZERO, 100, 3);
+        const p3 = vg.polygon(vg.Point.ZERO, 100, 3);
         assert.equal(p3.commands.length, 3 + 1); // Extra close command
-        var p5 = vg.polygon(vg.Point.ZERO, 100, 5);
+        const p5 = vg.polygon(vg.Point.ZERO, 100, 5);
         assert.equal(p5.commands.length, 5 + 1);
     });
 
@@ -550,7 +550,7 @@ describe('The polygon command', function () {
 describe('The colorize filter', function () {
 
     it('works on paths', function () {
-        var p = new vg.Path(),
+        let p = new vg.Path(),
             p2;
         p.addRect(10, 20, 30, 40);
         p2 = vg.colorize(p, 'blue', 'red', 5);
@@ -560,7 +560,7 @@ describe('The colorize filter', function () {
     });
 
     it('works on groups', function () {
-        var g1 = vg.group(vg.demoRect()),
+        let g1 = vg.group(vg.demoRect()),
             g2,
             p1,
             p2;
@@ -579,25 +579,25 @@ describe('The colorize filter', function () {
 
 describe('The centerPoint filter', function () {
     it ('works on paths', function () {
-        var r = vg.rect(vg.Point.ZERO, 100, 100);
+        const r = vg.rect(vg.Point.ZERO, 100, 100);
         assert.deepEqual(vg.centerPoint(r).xy, [0, 0]);
-        var e = vg.ellipse(vg.Point.ZERO, 100, 100);
+        const e = vg.ellipse(vg.Point.ZERO, 100, 100);
         assert.deepEqual(vg.centerPoint(e).xy, [0, 0]);
     });
 });
 
 describe('The mirror filter', function () {
     it('works on paths', function () {
-        var r = vg.rect(50, 0, 100, 100);
-        var rr = vg.mirror(r, 90, vg.Point.ZERO);
+        const r = vg.rect(50, 0, 100, 100);
+        const rr = vg.mirror(r, 90, vg.Point.ZERO);
         assertRectsAlmostEqual(rr.bounds(), new vg.Rect(-100, -50, 100, 100));
     });
 });
 
 describe('The snap filter', function () {
     it('works on paths', function () {
-        var p1 = vg.ellipse(0, 0, 100, 100);
-        var p2 = vg.snap(p1, 50);
+        const p1 = vg.ellipse(0, 0, 100, 100);
+        const p2 = vg.snap(p1, 50);
         assert.equal(p2.commands.length, p1.commands.length);
         assertXYEqual(p2.commands[0], -50, 0);
         assertXYEqual(p2.commands[1], 0, -50);
@@ -609,30 +609,30 @@ describe('The snap filter', function () {
 
 describe('The clipper', function () {
     it('can clip simple paths', function () {
-        var p1 = vg.rect(50, 50, 100, 100);
-        var p2 = vg.rect(100, 80, 100, 100);
-        var p3 = vg.compound(p1, p2, 'intersection');
+        const p1 = vg.rect(50, 50, 100, 100);
+        const p2 = vg.rect(100, 80, 100, 100);
+        const p3 = vg.compound(p1, p2, 'intersection');
         assertRectsAlmostEqual(p3.bounds(), new vg.Rect(50, 30, 50, 70));
     });
 });
 
 describe('The SVG module', function () {
     it('can parse rects', function () {
-        var r = vg.svg.parseString('<rect x="10" y="20" width="30" height="40" fill="blue"/>');
+        const r = vg.svg.parseString('<rect x="10" y="20" width="30" height="40" fill="blue"/>');
         assert.deepEqual(r.bounds().xywh, [10, 20, 30, 40]);
         assert.deepEqual(r.fill.rgba, [0, 0, 1, 1]);
         assert.equal(r.commands.length, 5);
     });
 
     it('can parse rounded rects', function () {
-        var r = vg.svg.parseString('<rect x="10" y="20" width="30" height="40" rx="15" ry="15" fill="blue"/>');
+        const r = vg.svg.parseString('<rect x="10" y="20" width="30" height="40" rx="15" ry="15" fill="blue"/>');
         assert.deepEqual(r.bounds().xywh, [10, 20, 30, 40]);
         assert.deepEqual(r.fill.rgba, [0, 0, 1, 1]);
         assert.equal(r.commands.length, 8);
     });
 
     it('can parse paths', function () {
-        var p = vg.svg.parseString('<path d="M10,20 L30,40 L100,0 Z" fill="red"/>');
+        const p = vg.svg.parseString('<path d="M10,20 L30,40 L100,0 Z" fill="red"/>');
         assert.deepEqual(p.commands[0], {type: vg.bezier.MOVETO, x: 10, y: 20});
         assert.deepEqual(p.commands[1], {type: vg.bezier.LINETO, x: 30, y: 40});
         assert.deepEqual(p.commands[2], {type: vg.bezier.LINETO, x: 100, y: 0});
@@ -641,14 +641,14 @@ describe('The SVG module', function () {
     });
 
     it('can parse groups', function () {
-        var g = vg.svg.parseString('<g><rect x="10" y="20" width="30" height="40" fill="blue"/></g>');
+        const g = vg.svg.parseString('<g><rect x="10" y="20" width="30" height="40" fill="blue"/></g>');
         assert.equal(g.shapes.length, 1);
-        var r = g.shapes[0];
+        const r = g.shapes[0];
         assert.deepEqual(r.fill.rgba, [0, 0, 1, 1]);
     });
 
     it('can parse colors and widths', function () {
-        var p = vg.svg.parseString('<path d="Z" fill="red" stroke="blue" stroke-width="1.234"/>');
+        const p = vg.svg.parseString('<path d="Z" fill="red" stroke="blue" stroke-width="1.234"/>');
         assert.equal(p.commands.length, 1);
         assert.deepEqual(p.fill.rgba, [1, 0, 0, 1]);
         assert.deepEqual(p.stroke.rgba, [0, 0, 1, 1]);
@@ -656,36 +656,36 @@ describe('The SVG module', function () {
     });
 
     it('can parse fill and stroke opacity', function () {
-        var r = vg.svg.parseString('<rect x="10" y="20" width="30" height="40" fill="blue" stroke="red" fill-opacity="0.5" stroke-opacity="0.6"/>');
+        const r = vg.svg.parseString('<rect x="10" y="20" width="30" height="40" fill="blue" stroke="red" fill-opacity="0.5" stroke-opacity="0.6"/>');
         assert.deepEqual(r.fill.rgba, [0, 0, 1, 0.5]);
         assert.deepEqual(r.stroke.rgba, [1, 0, 0, 0.6]);
     });
 
     it('can parse inline styles', function () {
-        var p = vg.svg.parseString('<path d="M10,20 L30,40 L100,0 Z" style="fill:orange;stroke:blue;stroke-width:2.5;fill-opacity:0.7;stroke-opacity:0.2"/>');
+        const p = vg.svg.parseString('<path d="M10,20 L30,40 L100,0 Z" style="fill:orange;stroke:blue;stroke-width:2.5;fill-opacity:0.7;stroke-opacity:0.2"/>');
         assert.deepEqual(p.fill.rgba, [1, 0.65, 0, 0.7]);
         assert.deepEqual(p.stroke.rgba, [0, 0, 1, 0.2]);
         assert.equal(p.strokeWidth, 2.5);
     });
 
     it('does correct inheritance of style properties', function () {
-        var g = vg.svg.parseString('<g stroke-width="2.5" fill="#00FF00"><g style="fill:orange;stroke-width:1.5" fill-opacity="0.6"><path d="M10,20 L30,40 L100,0 Z"/><path d="M50,20 L30,80 L100,0 Z" style="fill-opacity:0.3"/></g><path d="M80,20 L30,100 L100,0 Z"/></g>');
-        var p1 = g.shapes[0].shapes[0];
+        const g = vg.svg.parseString('<g stroke-width="2.5" fill="#00FF00"><g style="fill:orange;stroke-width:1.5" fill-opacity="0.6"><path d="M10,20 L30,40 L100,0 Z"/><path d="M50,20 L30,80 L100,0 Z" style="fill-opacity:0.3"/></g><path d="M80,20 L30,100 L100,0 Z"/></g>');
+        const p1 = g.shapes[0].shapes[0];
         assert.deepEqual(p1.fill.rgba, [1, 0.65, 0, 0.6]);
         assert.equal(p1.strokeWidth, 1.5);
-        var p2 = g.shapes[0].shapes[1];
+        const p2 = g.shapes[0].shapes[1];
         assert.deepEqual(p2.fill.rgba, [1, 0.65, 0, 0.3]);
         assert.equal(p2.strokeWidth, 1.5);
-        var p3 = g.shapes[1];
+        const p3 = g.shapes[1];
         assert.deepEqual(p3.fill.rgba, [0, 1, 0, 1]);
         assert.equal(p3.strokeWidth, 2.5);
     });
 
     it('can handle the currentColor value', function () {
-        var g = vg.svg.parseString('<g color="orange"><rect x="10" y="20" width="30" height="40" fill="currentColor"/><rect x="10" y="20" width="30" height="40" style="fill:currentColor;color:blue"/></g>');
+        const g = vg.svg.parseString('<g color="orange"><rect x="10" y="20" width="30" height="40" fill="currentColor"/><rect x="10" y="20" width="30" height="40" style="fill:currentColor;color:blue"/></g>');
         assert.deepEqual(g.shapes[0].fill.rgba, [1, 0.65, 0, 1]);
         assert.deepEqual(g.shapes[1].fill.rgba, [0, 0, 1, 1]);
-        var r = vg.svg.parseString('<rect x="10" y="20" width="30" height="40" fill="currentColor" stroke="currentColor" stroke-opacity="0.5"/>');
+        let r = vg.svg.parseString('<rect x="10" y="20" width="30" height="40" fill="currentColor" stroke="currentColor" stroke-opacity="0.5"/>');
         assert.deepEqual(r.fill.rgba, [0, 0, 0, 1]);
         assert.deepEqual(r.stroke.rgba, [0, 0, 0, 0.5]);
         r = vg.svg.parseString('<rect x="10" y="20" width="30" height="40" fill="currentColor" style="color:yellow"/>');

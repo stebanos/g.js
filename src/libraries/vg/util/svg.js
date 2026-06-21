@@ -36,7 +36,7 @@ function compressSpaces(s) {
 }
 
 function toNumberArray(s) {
-  var i,
+  let i,
     a = trim(compressSpaces((s || "").replace(/,/g, " "))).split(" ");
   for (i = 0; i < a.length; i += 1) {
     a[i] = parseFloat(a[i]);
@@ -45,7 +45,7 @@ function toNumberArray(s) {
 }
 
 function readSvgAttributes(node, parentAttributes) {
-  var fill,
+  let fill,
     fillOpacity,
     stroke,
     strokeOpacity,
@@ -68,21 +68,21 @@ function readSvgAttributes(node, parentAttributes) {
   types = {};
 
   types.translate = function (s) {
-    var a = toNumberArray(s),
+    const a = toNumberArray(s),
       tx = a[0],
       ty = a[1] || 0;
     return new Transform().translate(tx, ty);
   };
 
   types.scale = function (s) {
-    var a = toNumberArray(s),
+    const a = toNumberArray(s),
       sx = a[0],
       sy = a[1] || sx;
     return new Transform().scale(sx, sy);
   };
 
   types.rotate = function (s) {
-    var t,
+    let t,
       a = toNumberArray(s),
       r = a[0],
       tx = a[1] || 0,
@@ -95,12 +95,12 @@ function readSvgAttributes(node, parentAttributes) {
   };
 
   types.matrix = function (s) {
-    var m = toNumberArray(s);
+    const m = toNumberArray(s);
     return new Transform([m[0], m[1], 0, m[2], m[3], 0, m[4], m[5], 1]);
   };
 
-  var v, data, type, s, d, elems, el;
-  for (var j = 0; j < node.attributes.length; j += 1) {
+  let v, data, type, s, d, elems, el;
+  for (let j = 0; j < node.attributes.length; j += 1) {
     v = node.attributes[j];
     switch (v.nodeName) {
       case "transform":
@@ -217,17 +217,17 @@ function readSvgAttributes(node, parentAttributes) {
 }
 
 function applySvgAttributes(shape, attributes) {
-  var fill = attributes.fill;
+  let fill = attributes.fill;
   if (shape.commands && shape.commands.length > 0 && fill === undefined) {
     fill = "black";
   }
-  var fillOpacity = attributes.fillOpacity;
-  var stroke = attributes.stroke;
-  var strokeOpacity = attributes.strokeOpacity;
-  var opacity = attributes.opacity;
-  var strokeWidth = attributes.strokeWidth;
-  var transform = attributes.transform;
-  var color = attributes.color;
+  const fillOpacity = attributes.fillOpacity;
+  let stroke = attributes.stroke;
+  const strokeOpacity = attributes.strokeOpacity;
+  const opacity = attributes.opacity;
+  const strokeWidth = attributes.strokeWidth;
+  const transform = attributes.transform;
+  const color = attributes.color;
 
   if (fill === "currentColor") {
     fill = color === undefined ? "black" : color;
@@ -255,13 +255,13 @@ function applySvgAttributes(shape, attributes) {
     }
   }
 
-  var commands;
+  let commands;
   if (transform) {
     commands = transform.transformShape(shape).commands;
   } else {
     commands = shape.commands;
   }
-  var f = fill === undefined ? shape.fill : fill,
+  let f = fill === undefined ? shape.fill : fill,
     s = stroke === undefined ? shape.stroke : stroke,
     sw = strokeWidth === undefined ? shape.strokeWidth : strokeWidth;
   if (sw !== undefined && transform !== undefined) {
@@ -275,7 +275,7 @@ function arcToSegments(x, y, rx, ry, large, sweep, rotateX, ox, oy) {
     if (arcToSegmentsCache[argsString]) {
       return arcToSegmentsCache[argsString];
     } */
-  var th,
+  let th,
     sinTh,
     cosTh,
     px,
@@ -366,7 +366,7 @@ function segmentToBezier(cx, cy, th0, th1, rx, ry, sinTh, cosTh) {
   //      return segmentToBezierCache[argsString];
   //    }
 
-  var a00 = cosTh * rx,
+  const a00 = cosTh * rx,
     a01 = -sinTh * ry,
     a10 = sinTh * rx,
     a11 = cosTh * ry,
@@ -400,10 +400,10 @@ const read = {
   },
 
   g: function (node, parentAttributes) {
-    var shapes = [];
-    var attributes = readSvgAttributes(node, parentAttributes);
-    var n, tag, tagName, o;
-    for (var i = 0; i < node.childNodes.length; i += 1) {
+    const shapes = [];
+    const attributes = readSvgAttributes(node, parentAttributes);
+    let n, tag, tagName, o;
+    for (let i = 0; i < node.childNodes.length; i += 1) {
       n = node.childNodes[i];
       tag = n.nodeName;
       if (!tag) {
@@ -419,11 +419,11 @@ const read = {
   },
 
   _polyline: function (node) {
-    var points = node.getAttribute("points");
-    var p = new Path();
+    const points = node.getAttribute("points");
+    const p = new Path();
     points.replace(/([\d\.?]+),([\d\.?]+)/g, function (match, p1, p2) {
-      var x = parseFloat(p1);
-      var y = parseFloat(p2);
+      const x = parseFloat(p1);
+      const y = parseFloat(p2);
       if (p.commands.length === 0) {
         p.moveTo(x, y);
       } else {
@@ -434,30 +434,30 @@ const read = {
   },
 
   polygon: function (node, parentAttributes) {
-    var attributes = readSvgAttributes(node, parentAttributes);
-    var p = read._polyline(node);
+    const attributes = readSvgAttributes(node, parentAttributes);
+    const p = read._polyline(node);
     p.close();
     return applySvgAttributes(p, attributes);
   },
 
   polyline: function (node, parentAttributes) {
-    var attributes = readSvgAttributes(node, parentAttributes);
-    var p = read._polyline(node);
+    const attributes = readSvgAttributes(node, parentAttributes);
+    const p = read._polyline(node);
     return applySvgAttributes(p, attributes);
   },
 
   rect: function (node, parentAttributes) {
-    var attributes = readSvgAttributes(node, parentAttributes);
-    var x = parseFloat(node.getAttribute("x"));
-    var y = parseFloat(node.getAttribute("y"));
+    const attributes = readSvgAttributes(node, parentAttributes);
+    let x = parseFloat(node.getAttribute("x"));
+    let y = parseFloat(node.getAttribute("y"));
     if (!x) {
       x = 0;
     }
     if (!y) {
       y = 0;
     }
-    var width = parseFloat(node.getAttribute("width"));
-    var height = parseFloat(node.getAttribute("height"));
+    let width = parseFloat(node.getAttribute("width"));
+    let height = parseFloat(node.getAttribute("height"));
     if (!width) {
       width = 0;
     }
@@ -480,8 +480,8 @@ const read = {
       );
       height = 0;
     }
-    var rx = parseFloat(node.getAttribute("rx"));
-    var ry = parseFloat(node.getAttribute("ry"));
+    let rx = parseFloat(node.getAttribute("rx"));
+    let ry = parseFloat(node.getAttribute("ry"));
     if (!rx) {
       rx = 0;
     }
@@ -509,7 +509,7 @@ const read = {
     if (ry > height / 2) {
       ry = height / 2;
     }
-    var p = new Path();
+    const p = new Path();
     if (rx && ry) {
       p.addRoundedRect(x, y, width, height, rx, ry);
     } else {
@@ -519,17 +519,17 @@ const read = {
   },
 
   ellipse: function (node, parentAttributes) {
-    var attributes = readSvgAttributes(node, parentAttributes);
-    var cx = parseFloat(node.getAttribute("cx"));
-    var cy = parseFloat(node.getAttribute("cy"));
+    const attributes = readSvgAttributes(node, parentAttributes);
+    let cx = parseFloat(node.getAttribute("cx"));
+    let cy = parseFloat(node.getAttribute("cy"));
     if (!cx) {
       cx = 0;
     }
     if (!cy) {
       cy = 0;
     }
-    var rx = parseFloat(node.getAttribute("rx"));
-    var ry = parseFloat(node.getAttribute("ry"));
+    let rx = parseFloat(node.getAttribute("rx"));
+    let ry = parseFloat(node.getAttribute("ry"));
     if (!rx) {
       rx = 0;
     }
@@ -548,22 +548,22 @@ const read = {
       );
       ry = 0;
     }
-    var p = new Path();
+    const p = new Path();
     p.addEllipse(cx - rx, cy - ry, rx * 2, ry * 2);
     return applySvgAttributes(p, attributes);
   },
 
   circle: function (node, parentAttributes) {
-    var attributes = readSvgAttributes(node, parentAttributes);
-    var cx = parseFloat(node.getAttribute("cx"));
-    var cy = parseFloat(node.getAttribute("cy"));
+    const attributes = readSvgAttributes(node, parentAttributes);
+    let cx = parseFloat(node.getAttribute("cx"));
+    let cy = parseFloat(node.getAttribute("cy"));
     if (!cx) {
       cx = 0;
     }
     if (!cy) {
       cy = 0;
     }
-    var r = parseFloat(node.getAttribute("r"));
+    let r = parseFloat(node.getAttribute("r"));
     if (!r) {
       r = 0;
     }
@@ -573,17 +573,17 @@ const read = {
       );
       r = 0;
     }
-    var p = new Path();
+    const p = new Path();
     p.addEllipse(cx - r, cy - r, r * 2, r * 2);
     return applySvgAttributes(p, attributes);
   },
 
   line: function (node, parentAttributes) {
-    var attributes = readSvgAttributes(node, parentAttributes);
-    var x1 = parseFloat(node.getAttribute("x1"));
-    var y1 = parseFloat(node.getAttribute("y1"));
-    var x2 = parseFloat(node.getAttribute("x2"));
-    var y2 = parseFloat(node.getAttribute("y2"));
+    const attributes = readSvgAttributes(node, parentAttributes);
+    let x1 = parseFloat(node.getAttribute("x1"));
+    let y1 = parseFloat(node.getAttribute("y1"));
+    let x2 = parseFloat(node.getAttribute("x2"));
+    let y2 = parseFloat(node.getAttribute("y2"));
     if (!x1) {
       x1 = 0;
     }
@@ -596,14 +596,14 @@ const read = {
     if (!y2) {
       y2 = 0;
     }
-    var p = new Path();
+    const p = new Path();
     p.addLine(x1, y1, x2, y2);
     return applySvgAttributes(p, attributes);
   },
 
   path: function (node, parentAttributes) {
-    var attributes = readSvgAttributes(node, parentAttributes);
-    var d,
+    const attributes = readSvgAttributes(node, parentAttributes);
+    let d,
       PathParser,
       pp,
       pt,
@@ -702,18 +702,18 @@ const read = {
       };
 
       this.getPoint = function () {
-        var pt = new Point(this.getScalar(), this.getScalar());
+        const pt = new Point(this.getScalar(), this.getScalar());
         return this.makeAbsolute(pt);
       };
 
       this.getAsControlPoint = function () {
-        var pt = this.getPoint();
+        const pt = this.getPoint();
         this.control = pt;
         return pt;
       };
 
       this.getAsCurrentPoint = function () {
-        var pt = this.getPoint();
+        const pt = this.getPoint();
         this.current = pt;
         return pt;
       };
@@ -729,7 +729,7 @@ const read = {
         }
 
         // reflect point
-        var pt = new Point(
+        const pt = new Point(
           2 * this.current.x - this.control.x,
           2 * this.current.y - this.control.y
         );
@@ -744,7 +744,7 @@ const read = {
       };
     };
 
-    var p = new Path();
+    const p = new Path();
 
     pp = new PathParser(d);
     pp.reset();
@@ -879,7 +879,7 @@ const read = {
 };
 
 export function interpret(svgNode) {
-  var node,
+  let node,
     tag = svgNode.tagName.toLowerCase();
   if (read[tag] === undefined) {
     return null;
@@ -890,7 +890,7 @@ export function interpret(svgNode) {
 }
 
 export function parseString(s) {
-  var doc = new DOMParser({
+  const doc = new DOMParser({
     errorHandler: function (key, msg) {
       throw new Error('Could not parse string "' + String(s) + '": ' + msg);
     },

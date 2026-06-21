@@ -29,8 +29,8 @@ export function isDrawable(o) {
 export function drawPoints(ctx, points) {
   ctx.fillStyle = "blue";
   ctx.beginPath();
-  var pt;
-  for (var i = 0; i < points.length; i += 1) {
+  let pt;
+  for (let i = 0; i < points.length; i += 1) {
     pt = points[i];
     ctx.moveTo(pt.x, pt.y);
     ctx.arc(pt.x, pt.y, 2, 0, Math.PI * 2, false);
@@ -39,8 +39,8 @@ export function drawPoints(ctx, points) {
 }
 
 export function drawColoredPoints(ctx, points) {
-  var pt;
-  for (var i = 0, n = points.length; i < n; i += 1) {
+  let pt;
+  for (let i = 0, n = points.length; i < n; i += 1) {
     pt = points[i];
     ctx.fillStyle = Color.toCSS(pt);
     ctx.fillRect(pt.x - 2, pt.y - 2, 4, 4);
@@ -49,8 +49,8 @@ export function drawColoredPoints(ctx, points) {
 
 export function drawRectangles(ctx, rectangles) {
   ctx.save();
-  var r;
-  for (var i = 0; i < rectangles.length; i += 1) {
+  let r;
+  for (let i = 0; i < rectangles.length; i += 1) {
     r = rectangles[i];
     ctx.strokeStyle = "black";
     ctx.strokeWidth = 1;
@@ -62,8 +62,8 @@ export function drawRectangles(ctx, rectangles) {
 
 export function drawColors(ctx, colors) {
   ctx.save();
-  var c;
-  for (var i = 0; i < colors.length; i += 1) {
+  let c;
+  for (let i = 0; i < colors.length; i += 1) {
     c = colors[i];
     ctx.fillStyle = Color.toCSS(c);
     ctx.fillRect(0, 0, 30, 30);
@@ -73,8 +73,8 @@ export function drawColors(ctx, colors) {
 }
 
 export function draw(ctx, o) {
-  var k = o;
-  var isArray = false;
+  let k = o;
+  let isArray = false;
   if (Array.isArray(o)) {
     k = o[0];
     isArray = true;
@@ -83,7 +83,7 @@ export function draw(ctx, o) {
   if (k) {
     if (typeof k.draw === "function") {
       if (isArray) {
-        for (var i = 0, n = o.length; i < n; i += 1) {
+        for (let i = 0, n = o.length; i < n; i += 1) {
           draw(ctx, o[i]);
         }
       } else {
@@ -113,18 +113,18 @@ export function draw(ctx, o) {
 
 export function toSVG(o, options) {
   options = options || {};
-  var includeHeader = options.header === true;
-  var x = options.x !== undefined ? options.x : 0;
-  var y = options.y !== undefined ? options.y : 0;
-  var width = options.width !== undefined ? options.width : 500;
-  var height = options.height !== undefined ? options.height : 500;
-  var svg = "";
+  const includeHeader = options.header === true;
+  const x = options.x !== undefined ? options.x : 0;
+  const y = options.y !== undefined ? options.y : 0;
+  const width = options.width !== undefined ? options.width : 500;
+  const height = options.height !== undefined ? options.height : 500;
+  let svg = "";
   if (o) {
     if (typeof o.toSVG === "function") {
       svg = o.toSVG();
     } else if (Array.isArray(o)) {
       svg = "<g>\n";
-      for (var i = 0, n = o.length; i < n; i += 1) {
+      for (let i = 0, n = o.length; i < n; i += 1) {
         svg += vg.toSVG(o[i]) + "\n";
       }
       svg += "</g>\n";

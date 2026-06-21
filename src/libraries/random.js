@@ -6,8 +6,8 @@ export default function generator(seed) {
   // transform our original seed into a new (positive) seed value with which we
   // create a new generator.
   if (seed < 0) {
-    var gen = generator(Math.abs(seed));
-    for (var i = 0; i < 23; i += 1) {
+    const gen = generator(Math.abs(seed));
+    for (let i = 0; i < 23; i += 1) {
       gen();
     }
     return generator(gen(0, 10000));
@@ -19,7 +19,7 @@ export default function generator(seed) {
     min = min || 0;
     max = max || 1;
     seed = (seed * 9301 + 49297) % 233280;
-    var v = seed / 233280;
+    const v = seed / 233280;
     return min + v * (max - min);
   };
 }

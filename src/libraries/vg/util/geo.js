@@ -15,7 +15,7 @@ export function distance(x0, y0, x1, y1) {
 
 // Returns the location of a point by rotating around origin (x0,y0).
 export function coordinates(x0, y0, angle, distance) {
-  var x = x0 + Math.cos(radians(angle)) * distance,
+  const x = x0 + Math.cos(radians(angle)) * distance,
     y = y0 + Math.sin(radians(angle)) * distance;
   return new Point(x, y);
 }
@@ -30,7 +30,7 @@ export function coordinates(x0, y0, angle, distance) {
 //
 // Based on: W. Randolph Franklin, 1970, http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
 export function pointInPolygon(points, x, y) {
-  var i,
+  let i,
     j,
     x0,
     y0,

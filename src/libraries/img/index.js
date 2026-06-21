@@ -6,24 +6,24 @@ import { clamp, transform } from "./util";
 import CanvasRenderer from "./canvasrenderer";
 import AsyncRenderer from "./asyncrenderer";
 
-var DEFAULT_WIDTH = 800;
-var DEFAULT_HEIGHT = 800;
+const DEFAULT_WIDTH = 800;
+const DEFAULT_HEIGHT = 800;
 
 // Different layer types.
-var TYPE_PATH = "path";
-var TYPE_IMAGE = "image";
-var TYPE_HTML_CANVAS = "htmlCanvas";
-var TYPE_IMAGE_CANVAS = "iCanvas";
-var TYPE_FILL = "fill";
-var TYPE_GRADIENT = "gradient";
+const TYPE_PATH = "path";
+const TYPE_IMAGE = "image";
+const TYPE_HTML_CANVAS = "htmlCanvas";
+const TYPE_IMAGE_CANVAS = "iCanvas";
+const TYPE_FILL = "fill";
+const TYPE_GRADIENT = "gradient";
 
-var IDENTITY_TRANSFORM = transform();
-var Transform = IDENTITY_TRANSFORM;
+const IDENTITY_TRANSFORM = transform();
+const Transform = IDENTITY_TRANSFORM;
 
 // Named colors supported by all browsers.
 // See: http://www.w3schools.com/html/html_colornames.asp
 // prettier-ignore
-var colors = [
+const colors = [
   "aliceblue", "antiquewhite", "aqua", "aquamarine", "azure", "beige", "bisque", "black", "blanchedalmond",
   "blue", "blueviolet", "brown", "burlywood", "cadetblue", "chartreuse", "chocolate", "coral", "cornflowerblue", 
   "cornsilk", "crimson", "cyan", "darkblue", "darkcyan", "darkgoldenrod", "darkgray", "darkgreen", "darkkhaki", 
@@ -46,7 +46,7 @@ var colors = [
 // Converts a number of arguments to a type of color argument that the html canvas context can understand:
 // a named color, a hex color or a string in the form of rgba(r, g, b, a)
 function toColor(v1, v2, v3, v4, v5) {
-  var _r, _g, _b, _a, R, G, B, rgb, options;
+  let _r, _g, _b, _a, R, G, B, rgb, options;
   if (v1 === undefined) {
     _r = _g = _b = 0;
     _a = 1;
@@ -147,8 +147,8 @@ function toColor(v1, v2, v3, v4, v5) {
 
 // Converts a number of arguments into a dictionary of gradient information that is understood by the renderer.
 function toGradientData(v1, v2, v3, v4, v5) {
-  var startColor, endColor, type, rotation, spread, d;
-  var data = {};
+  let startColor, endColor, type, rotation, spread, d;
+  const data = {};
 
   if (arguments.length === 1) {
     // The argument is a dictionary or undefined.
@@ -305,13 +305,13 @@ export class Layer {
   // Copies the layer object.
   clone() {
     function cloneFilter(filter) {
-      var key, value;
-      var f = {};
+      let key, value;
+      const f = {};
       f.name = filter.name;
       if (filter.options !== undefined) {
         f.options = {};
-        var optionsKeys = Object.keys(filter.options);
-        for (var i = 0; i < optionsKeys.length; i += 1) {
+        const optionsKeys = Object.keys(filter.options);
+        for (let i = 0; i < optionsKeys.length; i += 1) {
           key = optionsKeys[i];
           value = filter.options[key];
           if (Array.isArray(value)) {
@@ -324,7 +324,7 @@ export class Layer {
       return f;
     }
 
-    var d = Object.create(Layer.prototype);
+    const d = Object.create(Layer.prototype);
     d.data = this.data;
     d.type = this.type;
     d.width = this.width;
@@ -349,7 +349,7 @@ export class Layer {
       };
     }
 
-    for (var i = 0; i < this.filters.length; i += 1) {
+    for (let i = 0; i < this.filters.length; i += 1) {
       d.filters.push(cloneFilter(this.filters[i]));
     }
 
@@ -366,7 +366,7 @@ export class Layer {
   // Each successive call to the translate function performs an additional translation on top of the current transformation matrix.
   translate(tx, ty) {
     ty = ty === undefined ? 0 : ty;
-    var t = Transform.translate(tx, ty);
+    const t = Transform.translate(tx, ty);
     this.transform = this.transform.prepend(t);
   }
 
@@ -375,21 +375,21 @@ export class Layer {
   // If only one parameter is supplied, the layer is scaled proportionally.
   scale(sx, sy) {
     sy = sy === undefined ? sx : sy;
-    var t = Transform.scale(sx, sy);
+    const t = Transform.scale(sx, sy);
     this.transform = this.transform.prepend(t);
   }
 
   // The supplied parameter should be in degrees (not radians).
   // Each successive call to the rotation function performs an additional rotation on top of the current transformation matrix.
   rotate(rot) {
-    var t = Transform.rotate(rot);
+    const t = Transform.rotate(rot);
     this.transform = this.transform.prepend(t);
   }
 
   // Each successive call to the skew function performs an additional skewing operation on top of the current transformation matrix.
   skew(kx, ky) {
     ky = ky === undefined ? kx : ky;
-    var t = Transform.skew(kx, ky);
+    const t = Transform.skew(kx, ky);
     this.transform = this.transform.prepend(t);
   }
 
@@ -420,18 +420,18 @@ export class Layer {
 
   // Renders the layer to a new canvas.
   draw(ctx) {
-    var width = this.width === undefined ? DEFAULT_WIDTH : this.width;
-    var height = this.height === undefined ? DEFAULT_HEIGHT : this.height;
-    var canvas = new ImageCanvas(width, height);
+    const width = this.width === undefined ? DEFAULT_WIDTH : this.width;
+    const height = this.height === undefined ? DEFAULT_HEIGHT : this.height;
+    const canvas = new ImageCanvas(width, height);
     canvas.addLayer(this);
     canvas.draw(ctx);
   }
 
   toCanvas() {
-    var canvas = document.createElement("canvas");
+    const canvas = document.createElement("canvas");
     canvas.width = this.width;
     canvas.height = this.height;
-    var ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d");
     this.draw(ctx);
     return canvas;
   }
@@ -500,20 +500,20 @@ export class Pixels {
   constructor(canvas) {
     this.width = canvas.width;
     this.height = canvas.height;
-    var ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d");
     this._data = ctx.getImageData(0, 0, this.width, this.height);
     this.array = this._data.data;
   }
 
   get(i) {
     i *= 4;
-    var v = this.array;
+    const v = this.array;
     return [v[i + 0], v[i + 1], v[i + 2], v[i + 3]];
   }
 
   set(i, rgba) {
     i *= 4;
-    var v = this.array;
+    const v = this.array;
     v[i + 0] = rgba[0];
     v[i + 1] = rgba[1];
     v[i + 2] = rgba[2];
@@ -521,10 +521,10 @@ export class Pixels {
   }
 
   toCanvas() {
-    var canvas = document.createElement("canvas");
+    const canvas = document.createElement("canvas");
     canvas.width = this.width;
     canvas.height = this.height;
-    var ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d");
     ctx.putImageData(this._data, 0, 0);
     return canvas;
   }
@@ -548,8 +548,8 @@ export class ImageCanvas {
 
   // Copies the ImageCanvas.
   clone() {
-    var c = new ImageCanvas(this.width, this.height);
-    for (var i = 0; i < this.layers.length; i += 1) {
+    const c = new ImageCanvas(this.width, this.height);
+    for (let i = 0; i < this.layers.length; i += 1) {
       c.layers.push(this.layers[i].clone());
     }
     return c;
@@ -557,7 +557,7 @@ export class ImageCanvas {
 
   // Creates a new layer from figuring out the given argument(s) and adds it to the canvas.
   addLayer(arg0) {
-    var layer;
+    let layer;
 
     try {
       return this.addGradientLayer.apply(this, arguments);
@@ -591,23 +591,23 @@ export class ImageCanvas {
 
   // Adds a new color layer to the canvas.
   addColorLayer() {
-    var c = toColor.apply(null, arguments);
-    var layer = new Layer(c, TYPE_FILL);
+    const c = toColor.apply(null, arguments);
+    const layer = new Layer(c, TYPE_FILL);
     this.layers.push(layer);
     return layer;
   }
 
   // Adds a new gradient layer to the canvas.
   addGradientLayer() {
-    var c = toGradientData.apply(null, arguments);
-    var layer = new Layer(c, TYPE_GRADIENT);
+    const c = toGradientData.apply(null, arguments);
+    const layer = new Layer(c, TYPE_GRADIENT);
     this.layers.push(layer);
     return layer;
   }
 
   // Renders the canvas and passes the result (a html canvas) to the given callback function.
   render(callback) {
-    var renderer = callback ? AsyncRenderer : CanvasRenderer;
+    const renderer = callback ? AsyncRenderer : CanvasRenderer;
     return renderer.render(this, callback);
   }
 
@@ -618,7 +618,7 @@ export class ImageCanvas {
         ctx.drawImage(canvas, 0, 0, canvas.width, canvas.height);
       });
     } else {
-      var canvas = this.render();
+      const canvas = this.render();
       ctx.drawImage(canvas, 0, 0, canvas.width, canvas.height);
     }
   }
@@ -634,8 +634,8 @@ function isPoint(arg) {
 }
 
 function pointFromArray(arg) {
-  var x = arg[0];
-  var y = arg.length > 1 ? arg[1] : x;
+  const x = arg[0];
+  const y = arg.length > 1 ? arg[1] : x;
   return { x: x, y: y };
 }
 
@@ -667,7 +667,7 @@ export class Img {
   }
 
   clone() {
-    var n = new Img();
+    const n = new Img();
     n.canvas = this.canvas;
     n.originalWidth = this.originalWidth;
     n.originalHeight = this.originalHeight;
@@ -676,20 +676,20 @@ export class Img {
   }
 
   withCanvas(canvas) {
-    var n = this.clone();
+    const n = this.clone();
     n.canvas = canvas;
     return n;
   }
 
   _transform(t) {
-    var n = this.clone();
+    const n = this.clone();
     n.transform = n.transform.prepend(t);
     return n;
   }
 
   translate(position) {
-    var t = pointFromNumber(0);
-    var args = arguments;
+    let t = pointFromNumber(0);
+    const args = arguments;
     if (args.length === 1 && isValidArg(position)) {
       t = convertArg(position);
     } else if (args.length === 2) {
@@ -705,8 +705,8 @@ export class Img {
     if (!angle) {
       return this;
     }
-    var o = pointFromNumber(0);
-    var args = arguments;
+    let o = pointFromNumber(0);
+    const args = arguments;
     if (args.length === 2) {
       o = convertArg(args[1]);
     } else if (args.length === 3) {
@@ -718,9 +718,9 @@ export class Img {
   }
 
   scale(scale) {
-    var s = pointFromNumber(1);
-    var o = pointFromNumber(0);
-    var args = arguments;
+    let s = pointFromNumber(1);
+    let o = pointFromNumber(0);
+    const args = arguments;
     if (args.length === 1 && isValidArg(scale)) {
       s = convertArg(scale);
     } else if (args.length === 2) {
@@ -743,9 +743,9 @@ export class Img {
   }
 
   skew(skew) {
-    var k = pointFromNumber(0);
-    var o = pointFromNumber(0);
-    var args = arguments;
+    let k = pointFromNumber(0);
+    let o = pointFromNumber(0);
+    const args = arguments;
     if (args.length === 1 && isValidArg(skew)) {
       k = convertArg(skew);
     } else if (args.length === 2) {
@@ -772,18 +772,18 @@ export class Img {
   }
 
   bounds() {
-    var t = this.transform;
-    var x = this.originalWidth / 2;
-    var y = this.originalHeight / 2;
+    const t = this.transform;
+    const x = this.originalWidth / 2;
+    const y = this.originalHeight / 2;
 
-    var p1 = { x: -x, y: -y };
-    var p2 = { x: x, y: -y };
-    var p3 = { x: -x, y: y };
-    var p4 = { x: x, y: y };
-    var points = [p1, p2, p3, p4];
-    var pt, minx, miny, maxx, maxy;
+    const p1 = { x: -x, y: -y };
+    const p2 = { x: x, y: -y };
+    const p3 = { x: -x, y: y };
+    const p4 = { x: x, y: y };
+    const points = [p1, p2, p3, p4];
+    let pt, minx, miny, maxx, maxy;
 
-    for (var i = 0; i < 4; i += 1) {
+    for (let i = 0; i < 4; i += 1) {
       pt = t.transformPoint(points[i]);
       if (i === 0) {
         minx = maxx = pt.x;
@@ -807,16 +807,16 @@ export class Img {
   }
 
   colorize(color) {
-    var colorLayer = Layer.fromColor(color);
+    const colorLayer = Layer.fromColor(color);
     colorLayer.width = this.originalWidth;
     colorLayer.height = this.originalHeight;
-    var i = new Img(colorLayer.toCanvas());
+    let i = new Img(colorLayer.toCanvas());
     i = i._transform(this.transform.matrix());
     return img.merge([this, i]);
   }
 
   desaturate(options) {
-    var layer = this.toLayer(false);
+    const layer = this.toLayer(false);
     layer.addFilter("desaturate", options);
     return this.withCanvas(layer.toCanvas());
   }
@@ -824,7 +824,7 @@ export class Img {
   crop(bounding) {
     // Calculates the intersecting rectangle of two input rectangles.
     function rectIntersect(r1, r2) {
-      var right1 = r1.x + r1.width,
+      const right1 = r1.x + r1.width,
         bottom1 = r1.y + r1.height,
         right2 = r2.x + r2.width,
         bottom2 = r2.y + r2.height,
@@ -835,18 +835,18 @@ export class Img {
       return { x: x, y: y, width: w, height: h };
     }
 
-    var iBounds = this.bounds();
-    var bounds = bounding.bounds();
-    var ri = rectIntersect(iBounds, bounds);
-    var width = Math.ceil(ri.width);
-    var height = Math.ceil(ri.height);
+    const iBounds = this.bounds();
+    const bounds = bounding.bounds();
+    const ri = rectIntersect(iBounds, bounds);
+    const width = Math.ceil(ri.width);
+    const height = Math.ceil(ri.height);
 
     if (ri.width === 0 || ri.height === 0) {
       throw new Error("Resulting image has no dimensions");
     }
 
-    var canvas = new img.ImageCanvas(width, height);
-    var l1 = canvas.addLayer(this.toLayer());
+    const canvas = new img.ImageCanvas(width, height);
+    const l1 = canvas.addLayer(this.toLayer());
     l1.translate(
       width / 2 - bounds.width - bounds.x,
       height / 2 - bounds.height - bounds.y
@@ -863,7 +863,7 @@ export class Img {
 
   draw(ctx) {
     ctx.save();
-    var m = this.transform.matrix();
+    const m = this.transform.matrix();
     ctx.transform(m[0], m[1], m[3], m[4], m[6], m[7]);
     ctx.translate(-this.originalWidth / 2, -this.originalHeight / 2);
     ctx.drawImage(this.canvas, 0, 0);
@@ -871,12 +871,12 @@ export class Img {
   }
 
   toLayer(copyTransformations) {
-    var canvas = document.createElement("canvas");
+    const canvas = document.createElement("canvas");
     canvas.width = this.canvas.width;
     canvas.height = this.canvas.height;
-    var ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d");
     ctx.drawImage(this.canvas, 0, 0);
-    var layer = img.Layer.fromHtmlCanvas(canvas);
+    const layer = img.Layer.fromHtmlCanvas(canvas);
     if (copyTransformations === undefined) {
       copyTransformations = true;
     }
@@ -891,13 +891,13 @@ export class Img {
   }
 
   toImage() {
-    var b = this.bounds();
-    var cropped = this.crop({
+    const b = this.bounds();
+    const cropped = this.crop({
       bounds: function () {
         return b;
       },
     });
-    var i = new Image();
+    const i = new Image();
     i.width = cropped.canvas.width;
     i.height = cropped.canvas.height;
     i.src = cropped.canvas.toDataURL();
@@ -908,7 +908,7 @@ export class Img {
 // MODULE SUPPORT ///////////////////////////////////////////////////////
 
 export function loadImage(image, callback) {
-  var img = new Image();
+  const img = new Image();
   img.onload = function () {
     callback(null, [image, this]);
   };
@@ -918,9 +918,9 @@ export function loadImage(image, callback) {
 export function loadImages(images, callback) {
   async.map(images, loadImage, function (err, loadedImages) {
     if (callback) {
-      var name, image;
-      var d = {};
-      for (var i = 0; i < loadedImages.length; i += 1) {
+      let name, image;
+      const d = {};
+      for (let i = 0; i < loadedImages.length; i += 1) {
         name = loadedImages[i][0];
         image = loadedImages[i][1];
         d[name] = image;
@@ -931,7 +931,7 @@ export function loadImages(images, callback) {
 }
 
 function rectUnite(r1, r2) {
-  var x = Math.min(r1.x, r2.x),
+  const x = Math.min(r1.x, r2.x),
     y = Math.min(r1.y, r2.y),
     width = Math.max(r1.x + r1.width, r2.x + r2.width) - x,
     height = Math.max(r1.y + r1.height, r2.y + r2.height) - y;
@@ -939,7 +939,7 @@ function rectUnite(r1, r2) {
 }
 
 export function merge(images) {
-  var i, image, b, l;
+  let i, image, b, l;
   for (i = 0; i < images.length; i += 1) {
     image = images[i];
     if (i === 0) {
@@ -948,10 +948,10 @@ export function merge(images) {
       b = rectUnite(b, image.bounds());
     }
   }
-  var dx = b.width / 2 + b.x;
-  var dy = b.height / 2 + b.y;
+  const dx = b.width / 2 + b.x;
+  const dy = b.height / 2 + b.y;
 
-  var canvas = new ImageCanvas(b.width, b.height);
+  const canvas = new ImageCanvas(b.width, b.height);
   for (i = 0; i < images.length; i += 1) {
     l = canvas.addLayer(images[i].toLayer());
     l.translate(-dx, -dy);

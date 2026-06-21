@@ -1,7 +1,7 @@
 // Math Utility functions
 
 export function sum(values) {
-  var i,
+  let i,
     n = values.length,
     total = 0;
   for (i = 0; i < n; i += 1) {
@@ -51,7 +51,7 @@ export function snap(v, distance, strength) {
 }
 
 export function dot(a, b) {
-  var m = Math.min(a.length, b.length),
+  let m = Math.min(a.length, b.length),
     n = 0,
     i;
   for (i = 0; i < m; i += 1) {
@@ -83,7 +83,7 @@ function _fade(t) {
 
 // Convert low 4 bits of hash code into 12 gradient directions.
 function _grad(hash, x, y, z) {
-  var h, u, v;
+  let h, u, v;
   h = hash & 15;
   u = h < 8 ? x : y;
   v = h < 4 ? y : h === 12 || h === 14 ? x : z;
@@ -94,8 +94,8 @@ function _scale(n) {
   return (1 + n) / 2;
 }
 
-var _permutation = (function () {
-  var permutation, p, i;
+const _permutation = (function () {
+  let permutation, p, i;
   permutation = [
     151, 160, 137, 91, 90, 15, 131, 13, 201, 95, 96, 53, 194, 233, 7, 225, 140,
     36, 103, 30, 69, 142, 8, 99, 37, 240, 21, 10, 23, 190, 6, 148, 247, 120,
@@ -124,28 +124,28 @@ var _permutation = (function () {
 
 // Calculate Perlin noise
 export function noise(x, y, z) {
-  var p = _permutation;
+  const p = _permutation;
 
   // Find unit cube that contains the point.
-  var X = Math.floor(x) & 255;
-  var Y = Math.floor(y) & 255;
-  var Z = Math.floor(z) & 255;
+  const X = Math.floor(x) & 255;
+  const Y = Math.floor(y) & 255;
+  const Z = Math.floor(z) & 255;
   // Find relative x, y, z point in the cube.
   x -= Math.floor(x);
   y -= Math.floor(y);
   z -= Math.floor(z);
   // Compute fade curves for each x, y, z.
-  var u = _fade(x);
-  var v = _fade(y);
-  var w = _fade(z);
+  const u = _fade(x);
+  const v = _fade(y);
+  const w = _fade(z);
 
   // Hash coordinates of the 8 cube corners.
-  var A = p[X] + Y;
-  var AA = p[A] + Z;
-  var AB = p[A + 1] + Z;
-  var B = p[X + 1] + Y;
-  var BA = p[B] + Z;
-  var BB = p[B + 1] + Z;
+  const A = p[X] + Y;
+  const AA = p[A] + Z;
+  const AB = p[A + 1] + Z;
+  const B = p[X + 1] + Y;
+  const BA = p[B] + Z;
+  const BB = p[B + 1] + Z;
 
   // Add blended results from 8 corners of the cube.
   return _scale(

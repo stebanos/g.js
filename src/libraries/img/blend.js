@@ -4,8 +4,8 @@ const aliases = {
 };
 
 function addAliases(d) {
-  var i, mode, alias;
-  var modes = Object.keys(aliases);
+  let i, mode, alias;
+  const modes = Object.keys(aliases);
   for (i = 0; i < modes.length; i += 1) {
     mode = modes[i];
     alias = aliases[mode];
@@ -26,16 +26,16 @@ function getNativeModes() {
   if (typeof document === "undefined") {
     return {};
   }
-  var i, mode, darken, ok;
-  var nativeModes = {};
-  var dCanvas = document.createElement("canvas");
-  var ctx = dCanvas.getContext("2d");
+  let i, mode, darken, ok;
+  const nativeModes = {};
+  const dCanvas = document.createElement("canvas");
+  const ctx = dCanvas.getContext("2d");
 
   if (!ctx) {
     return {};
   }
 
-  var native = [
+  const native = [
     "source-over",
     "source-in",
     "source-out",
@@ -50,7 +50,7 @@ function getNativeModes() {
     "xor",
   ];
 
-  var maybeNative = [
+  const maybeNative = [
     "multiply",
     "screen",
     "overlay",
@@ -72,7 +72,7 @@ function getNativeModes() {
     "negation",
   ];
 
-  var nonNative = [
+  const nonNative = [
     "divide",
     "darker-color",
     "lighter-color",
@@ -116,18 +116,18 @@ function getNativeModes() {
 }
 
 const process = function (inData, outData, width, height, options) {
-  var blend_fn, sr, sg, sb, sa, dr, dg, db, da, or, og, ob, oa;
-  var max = Math.max;
-  var min = Math.min;
-  var div_2_255 = 2 / 255;
+  let blend_fn, sr, sg, sb, sa, dr, dg, db, da, or, og, ob, oa;
+  const max = Math.max;
+  const min = Math.min;
+  const div_2_255 = 2 / 255;
 
   /*R = 0.299;
      G = 0.587;
      B = 0.114;*/
 
-  var R = 0.2126;
-  var G = 0.7152;
-  var B = 0.0722;
+  const R = 0.2126;
+  const G = 0.7152;
+  const B = 0.0722;
 
   /** This is the formula used by Photoshop to convert a color from
    * RGB (Red, Green, Blue) to HSY (Hue, Saturation, Luminosity).
@@ -140,7 +140,7 @@ const process = function (inData, outData, width, height, options) {
     r /= 255;
     g /= 255;
     b /= 255;
-    var h, s, y;
+    let h, s, y;
 
     // For saturation equals to 0 any value of hue are valid.
     // In this case we choose 0 as a default value.
@@ -192,7 +192,7 @@ const process = function (inData, outData, width, height, options) {
    */
   function hsyToRgb(h, s, y) {
     h = h % 360;
-    var r, g, b, k; // Intermediate variable.
+    let r, g, b, k; // Intermediate variable.
 
     if (h >= 0 && h < 60) {
       // Sector 0: 0° - 60°
@@ -482,8 +482,8 @@ const process = function (inData, outData, width, height, options) {
   }
 
   function _svg_softlight() {
-    var m;
-    var pow = Math.pow;
+    let m;
+    const pow = Math.pow;
 
     if (0.0 === da) {
       or = sr;
@@ -573,9 +573,9 @@ const process = function (inData, outData, width, height, options) {
   }
 
   function _colordodge() {
-    var dr1 = (dr << 8) / (255 - sr);
-    var dg1 = (dg << 8) / (255 - sg);
-    var db1 = (db << 8) / (255 - sb);
+    const dr1 = (dr << 8) / (255 - sr);
+    const dg1 = (dg << 8) / (255 - sg);
+    const db1 = (db << 8) / (255 - sb);
 
     or = dr1 > 255 || sr === 255 ? 255 : dr1;
     og = dg1 > 255 || sg === 255 ? 255 : dg1;
@@ -625,9 +625,9 @@ const process = function (inData, outData, width, height, options) {
   }
 
   function _colorburn() {
-    var dr1 = 255 - ((255 - dr) << 8) / sr;
-    var dg1 = 255 - ((255 - dg) << 8) / sg;
-    var db1 = 255 - ((255 - db) << 8) / sb;
+    const dr1 = 255 - ((255 - dr) << 8) / sr;
+    const dg1 = 255 - ((255 - dg) << 8) / sg;
+    const db1 = 255 - ((255 - db) << 8) / sb;
 
     or = dr1 < 0 || sr === 0 ? 0 : dr1;
     og = dg1 < 0 || sg === 0 ? 0 : dg1;
@@ -677,9 +677,9 @@ const process = function (inData, outData, width, height, options) {
   }
 
   function _linearlight() {
-    var dr1 = 2 * sr + dr - 256;
-    var dg1 = 2 * sg + dg - 256;
-    var db1 = 2 * sb + db - 256;
+    const dr1 = 2 * sr + dr - 256;
+    const dg1 = 2 * sg + dg - 256;
+    const db1 = 2 * sb + db - 256;
 
     or = dr1 < 0 || (sr < 128 && dr1 < 0) ? 0 : dr1 > 255 ? 255 : dr1;
     og = dg1 < 0 || (sg < 128 && dg1 < 0) ? 0 : dg1 > 255 ? 255 : dg1;
@@ -687,7 +687,7 @@ const process = function (inData, outData, width, height, options) {
   }
 
   function _vividlight() {
-    var a;
+    let a;
 
     if (sr < 128) {
       if (sr) {
@@ -742,7 +742,7 @@ const process = function (inData, outData, width, height, options) {
   }
 
   function _pinlight() {
-    var a;
+    let a;
 
     if (sr < 128) {
       a = 2 * sr;
@@ -770,7 +770,7 @@ const process = function (inData, outData, width, height, options) {
   }
 
   function _hardmix() {
-    var a;
+    let a;
 
     if (sr < 128) {
       or = 255 - ((255 - dr) << 8) / (2 * sr) < 128 || sr === 0 ? 0 : 255;
@@ -795,36 +795,36 @@ const process = function (inData, outData, width, height, options) {
   }
 
   function _hue() {
-    var hcl1 = rgbToHsy(dr, dg, db);
-    var hcl2 = rgbToHsy(sr, sg, sb);
-    var rgb = hsyToRgb(hcl2[0], hcl1[1], hcl1[2]);
+    const hcl1 = rgbToHsy(dr, dg, db);
+    const hcl2 = rgbToHsy(sr, sg, sb);
+    const rgb = hsyToRgb(hcl2[0], hcl1[1], hcl1[2]);
     or = rgb[0];
     og = rgb[1];
     ob = rgb[2];
   }
 
   function _saturation() {
-    var hcl1 = rgbToHsy(dr, dg, db);
-    var hcl2 = rgbToHsy(sr, sg, sb);
-    var rgb = hsyToRgb(hcl1[0], hcl2[1], hcl1[2]);
+    const hcl1 = rgbToHsy(dr, dg, db);
+    const hcl2 = rgbToHsy(sr, sg, sb);
+    const rgb = hsyToRgb(hcl1[0], hcl2[1], hcl1[2]);
     or = rgb[0];
     og = rgb[1];
     ob = rgb[2];
   }
 
   function _luminosity() {
-    var hcl1 = rgbToHsy(dr, dg, db);
-    var hcl2 = rgbToHsy(sr, sg, sb);
-    var rgb = hsyToRgb(hcl1[0], hcl1[1], hcl2[2]);
+    const hcl1 = rgbToHsy(dr, dg, db);
+    const hcl2 = rgbToHsy(sr, sg, sb);
+    const rgb = hsyToRgb(hcl1[0], hcl1[1], hcl2[2]);
     or = rgb[0];
     og = rgb[1];
     ob = rgb[2];
   }
 
   function _color() {
-    var hcl1 = rgbToHsy(dr, dg, db);
-    var hcl2 = rgbToHsy(sr, sg, sb);
-    var rgb = hsyToRgb(hcl2[0], hcl2[1], hcl1[2]);
+    const hcl1 = rgbToHsy(dr, dg, db);
+    const hcl2 = rgbToHsy(sr, sg, sb);
+    const rgb = hsyToRgb(hcl2[0], hcl2[1], hcl1[2]);
     or = rgb[0];
     og = rgb[1];
     ob = rgb[2];
@@ -860,33 +860,33 @@ const process = function (inData, outData, width, height, options) {
   };
 
   function rectIntersect(r1, r2) {
-    var right1 = r1.x + r1.width;
-    var bottom1 = r1.y + r1.height;
-    var right2 = r2.x + r2.width;
-    var bottom2 = r2.y + r2.height;
+    const right1 = r1.x + r1.width;
+    const bottom1 = r1.y + r1.height;
+    const right2 = r2.x + r2.width;
+    const bottom2 = r2.y + r2.height;
 
-    var x = max(r1.x, r2.x);
-    var y = max(r1.y, r2.y);
-    var w = max(min(right1, right2) - x, 0);
-    var h = max(min(bottom1, bottom2) - y, 0);
+    const x = max(r1.x, r2.x);
+    const y = max(r1.y, r2.y);
+    const w = max(min(right1, right2) - x, 0);
+    const h = max(min(bottom1, bottom2) - y, 0);
     return [x, y, w, h];
   }
 
   (function () {
-    var pix, pixIn, x, y, a, a2, da2, demultiply, fBlend;
-    var data2 = options.data;
-    var opacity = options.opacity === 0 ? 0 : options.opacity || 1;
-    var fn = blend_fn[options.type || "_svg_normal"];
-    var dx = options.dx || 0;
-    var dy = options.dy || 0;
-    var ri = rectIntersect(
+    let pix, pixIn, x, y, a, a2, da2, demultiply, fBlend;
+    const data2 = options.data;
+    const opacity = options.opacity === 0 ? 0 : options.opacity || 1;
+    const fn = blend_fn[options.type || "_svg_normal"];
+    const dx = options.dx || 0;
+    const dy = options.dy || 0;
+    const ri = rectIntersect(
       { x: 0, y: 0, width: width, height: height },
       { x: dx, y: dy, width: options.width, height: options.height }
     );
-    var xi = ri[0];
-    var yi = ri[1];
-    var wi = ri[2];
-    var hi = ri[3];
+    const xi = ri[0];
+    const yi = ri[1];
+    const wi = ri[2];
+    const hi = ri[3];
 
     function pBlend() {
       sa = (data2[pixIn + 3] / 255) * opacity;
@@ -966,9 +966,9 @@ function _wrap(type) {
 }
 
 const blend = (function () {
-  var mode;
-  var d = { blend: _blend };
-  var modes = [
+  let mode;
+  const d = { blend: _blend };
+  let modes = [
     "source-over",
     "add",
     "multiply",
@@ -996,12 +996,12 @@ const blend = (function () {
     "luminosity",
     "color",
   ];
-  for (var i = 0; i < modes.length; i += 1) {
+  for (let i = 0; i < modes.length; i += 1) {
     mode = modes[i];
     d[mode] = _wrap(mode);
   }
   modes = Object.keys(modes);
-  for (i = 0; i < modes.length; i += 1) {}
+  for (let i = 0; i < modes.length; i += 1) {}
   // Aliases for the blending modes
   addAliases(d);
 

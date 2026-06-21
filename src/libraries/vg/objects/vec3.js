@@ -27,7 +27,7 @@ export default class Vec3 {
   }
   // Convert this vector to an array.
   toArray() {
-    var array = [];
+    const array = [];
     array.push(this.x);
     array.push(this.y);
     array.push(this.z);
@@ -39,7 +39,7 @@ export default class Vec3 {
   }
   // Create a new vector that is this vector, normalized.
   normalize() {
-    var len, c;
+    let len, c;
     len = this.getLength();
     if (len === 0) {
       return this;
@@ -58,7 +58,7 @@ export default class Vec3 {
   // Transform the vector according to the matrix and return the result.
   // A new vector is created, nothing is modified.
   transform(matrix4) {
-    var x, y, z, w, matrix;
+    let x, y, z, w, matrix;
 
     matrix = matrix4;
     x =

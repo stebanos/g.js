@@ -148,7 +148,7 @@ export const namedColors = {
 };
 
 function toHex(i) {
-  var s;
+  let s;
   if (i === 0) {
     return "00";
   } else {
@@ -183,7 +183,7 @@ export function rgba2hex(r, g, b, a) {
 
 // Converts the given hexadecimal color string to R,G,B (between 0.0-1.0).
 export function hex2rgb(hex) {
-  var r, g, b;
+  let r, g, b;
   hex = hex.replace(/^#/, "");
   if ((hex.length !== 3 && hex.length !== 6) || !/^[0-9a-fA-F]*$/.test(hex)) {
     throw new Error("Invalid hex value: #" + hex);
@@ -199,7 +199,7 @@ export function hex2rgb(hex) {
 
 // Converts the given R,G,B values to H,S,B (between 0.0-1.0).
 export function rgb2hsb(r, g, b) {
-  var h = 0,
+  let h = 0,
     s = 0,
     v = Math.max(r, g, b),
     d = v - Math.min(r, g, b);
@@ -228,7 +228,7 @@ export function hsb2rgb(h, s, v) {
     return [v, v, v];
   }
   h = (h % 1) * 6.0;
-  var i = Math.floor(h),
+  const i = Math.floor(h),
     f = h - i,
     x = v * (1 - s),
     y = v * (1 - s * f),
@@ -248,7 +248,7 @@ export function hsb2rgb(h, s, v) {
 // Converts the given R,G,B values to H,S,L (between 0.0-1.0).
 // Code adapted from http://github.com/mattdesl/float-rgb2hsl
 export function rgb2hsl(r, g, b) {
-  var min = Math.min(r, g, b),
+  let min = Math.min(r, g, b),
     max = Math.max(r, g, b),
     delta = max - min,
     h,
@@ -287,7 +287,7 @@ export function rgb2hsl(r, g, b) {
 // Converts the given H,S,L color values to R,G,B (between 0.0-1.0).
 // Code adapted from http://github.com/mattdesl/float-hsl2rgb
 export function hsl2rgb(h, s, l) {
-  var t1, t2, t3, rgb, val;
+  let t1, t2, t3, rgb, val;
 
   if (s === 0) {
     val = l;
@@ -302,7 +302,7 @@ export function hsl2rgb(h, s, l) {
   t1 = 2 * l - t2;
 
   rgb = [0, 0, 0];
-  for (var i = 0; i < 3; i++) {
+  for (let i = 0; i < 3; i++) {
     t3 = h + (1 / 3) * -(i - 1);
     if (t3 < 0) {
       t3 += 1;

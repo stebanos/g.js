@@ -17,7 +17,7 @@ function importSVG(svgString) {
 }
 
 function importImage(image) {
-  var layer = g.Layer.fromImage(image);
+  const layer = g.Layer.fromImage(image);
   return new g.Img(layer.toCanvas());
 }
 
@@ -27,7 +27,7 @@ function importText(string) {
 
 // Split the row, taking quotes into account.
 function splitRow(s, delimiter) {
-  var row = [],
+  let row = [],
     c,
     col = "",
     i,
@@ -58,7 +58,7 @@ function splitRow(s, delimiter) {
 }
 
 function importCSV(csvString, delimiter) {
-  var csvRows, header;
+  let csvRows, header;
   delimiter = delimiter || ",";
 
   if (!csvString) return null;
@@ -66,10 +66,10 @@ function importCSV(csvString, delimiter) {
   header = splitRow(csvRows[0], delimiter);
   csvRows = csvRows.slice(1);
 
-  var row,
+  let row,
     rows = [];
-  var m, sr, col, index;
-  for (var i = 0; i < csvRows.length; i += 1) {
+  let m, sr, col, index;
+  for (let i = 0; i < csvRows.length; i += 1) {
     row = csvRows[i];
     if (!!row) {
       m = {};
@@ -85,16 +85,16 @@ function importCSV(csvString, delimiter) {
 }
 
 function merge() {
-  var args = util.flatten(arguments);
+  const args = util.flatten(arguments);
   if (Array.isArray(args)) {
-    var objects = [];
-    for (var i = 0; i < args.length; i += 1) {
+    const objects = [];
+    for (let i = 0; i < args.length; i += 1) {
       if (!!args[i]) {
         objects.push(args[i]);
       }
     }
     if (objects.length > 0) {
-      var o = objects[0];
+      const o = objects[0];
       if (o && (o.commands || o.shapes || o.fontFamily)) {
         return vg.merge(objects);
       }
@@ -115,12 +115,12 @@ function mix(a, b, t) {
       g.mix(a.a, b.a, t)
     );
   } else if (typeof a === "object") {
-    var result = {};
-    var keys = Object.keys(a);
-    for (var i = 0, n = keys.length; i < n; i += 1) {
-      var k = keys[i];
-      var va = a[k];
-      var vb = b[k];
+    const result = {};
+    const keys = Object.keys(a);
+    for (let i = 0, n = keys.length; i < n; i += 1) {
+      const k = keys[i];
+      const va = a[k];
+      const vb = b[k];
       if (va !== undefined && vb !== undefined) {
         result[k] = g.mix(va, vb, t);
       }

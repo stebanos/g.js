@@ -11,7 +11,7 @@ export default class Rect {
   }
   // Returns a new rectangle where width and height are guaranteed to be positive values.
   normalize() {
-    var x = this.x,
+    let x = this.x,
       y = this.y,
       width = this.width,
       height = this.height;
@@ -48,21 +48,21 @@ export default class Rect {
     );
   }
   grow(dx, dy) {
-    var x = this.x - dx,
+    const x = this.x - dx,
       y = this.y - dy,
       width = this.width + dx * 2,
       height = this.height + dy * 2;
     return new Rect(x, y, width, height);
   }
   unite(r) {
-    var x = Math.min(this.x, r.x),
+    const x = Math.min(this.x, r.x),
       y = Math.min(this.y, r.y),
       width = Math.max(this.x + this.width, r.x + r.width) - x,
       height = Math.max(this.y + this.height, r.y + r.height) - y;
     return new Rect(x, y, width, height);
   }
   addPoint(x, y) {
-    var dx,
+    let dx,
       dy,
       _x = this.x,
       _y = this.y,

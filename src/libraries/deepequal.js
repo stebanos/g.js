@@ -44,7 +44,7 @@ export default function deepEqual(actual, expected) {
   } else if (util.isBuffer(actual) && util.isBuffer(expected)) {
     if (actual.length !== expected.length) return false;
 
-    for (var i = 0; i < actual.length; i++) {
+    for (let i = 0; i < actual.length; i++) {
       if (actual[i] !== expected[i]) return false;
     }
 
@@ -93,7 +93,7 @@ objEquiv = function (a, b) {
   if (a.prototype !== b.prototype) return false;
   //~~~I've managed to break Object.keys through screwy arguments passing.
   //   Converting to array solves the problem.
-  var aIsArgs = isArguments(a),
+  const aIsArgs = isArguments(a),
     bIsArgs = isArguments(b);
   if ((aIsArgs && !bIsArgs) || (!aIsArgs && bIsArgs)) return false;
   if (aIsArgs) {
@@ -101,7 +101,7 @@ objEquiv = function (a, b) {
     b = pSlice.call(b);
     return deepEqual(a, b);
   }
-  var ka, kb, key, i;
+  let ka, kb, key, i;
   try {
     ka = Object.keys(a);
     kb = Object.keys(b);

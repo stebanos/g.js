@@ -31,7 +31,7 @@ export default class Matrix4 {
   }
   // Create a perspective matrix transformation.
   static perspective(fov, aspect, zNear, zFar) {
-    var m = new Float32Array(Matrix4.IDENTITY.m),
+    const m = new Float32Array(Matrix4.IDENTITY.m),
       tan = 1.0 / Math.tan(fov * 0.5);
 
     m[0] = tan / aspect;
@@ -47,7 +47,7 @@ export default class Matrix4 {
     return new Matrix4(m);
   }
   static lookAt(eye, target, up) {
-    var m, zAxis, xAxis, yAxis, ex, ey, ez;
+    let m, zAxis, xAxis, yAxis, ex, ey, ez;
     m = new Float32Array(16);
     zAxis = target.subtract(eye).normalize();
     xAxis = Vec3.cross(up, zAxis).normalize();
@@ -78,7 +78,7 @@ export default class Matrix4 {
   }
   // Return a new matrix with the inversion of this matrix.
   invert() {
-    var l1,
+    let l1,
       l2,
       l3,
       l4,
@@ -178,7 +178,7 @@ export default class Matrix4 {
     return new Matrix4(m);
   }
   multiply(other) {
-    var m = new Float32Array(16);
+    const m = new Float32Array(16);
 
     m[0] =
       this.m[0] * other.m[0] +
@@ -267,7 +267,7 @@ export default class Matrix4 {
     return new Matrix4(m);
   }
   translate(tx, ty, tz) {
-    var m = new Float32Array(this.m);
+    const m = new Float32Array(this.m);
     m[12] += tx;
     m[13] += ty;
     m[14] += tz;

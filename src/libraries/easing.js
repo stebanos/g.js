@@ -111,9 +111,9 @@ export function easeInOutCirc(t, b, c, d) {
 }
 
 export function easeInElastic(t, b, c, d) {
-  var s = 1.70158;
-  var p = 0;
-  var a = c;
+  let s = 1.70158;
+  let p = 0;
+  let a = c;
   if (t === 0) {
     return b;
   }
@@ -137,9 +137,9 @@ export function easeInElastic(t, b, c, d) {
 }
 
 export function easeOutElastic(t, b, c, d) {
-  var s = 1.70158;
-  var p = 0;
-  var a = c;
+  let s = 1.70158;
+  let p = 0;
+  let a = c;
   if (t === 0) {
     return b;
   }
@@ -161,9 +161,9 @@ export function easeOutElastic(t, b, c, d) {
 }
 
 export function easeInOutElastic(t, b, c, d) {
-  var s = 1.70158;
-  var p = 0;
-  var a = c;
+  let s = 1.70158;
+  let p = 0;
+  let a = c;
   if (t === 0) {
     return b;
   }
@@ -244,7 +244,7 @@ export function easeInOutBounce(t, b, c, d) {
 }
 
 export function easing(f) {
-  var fn = g[f];
-  var args = Array.prototype.slice.call(arguments, 1);
+  const fn = g[f];
+  const args = Array.prototype.slice.call(arguments, 1);
   return fn.apply(null, args);
 }

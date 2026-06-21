@@ -21,7 +21,7 @@ describe('The angle function', function () {
 describe('The coordinates function', function () {
 
     it('calculates the point based on angle and distance', function () {
-        var p = g.coordinates(0, 0, 37, 27);
+        let p = g.coordinates(0, 0, 37, 27);
         assertAlmostEqual(p.x, 21.56316);
         assertAlmostEqual(p.y, 16.249);
         p = g.coordinates({x: 0, y: 0}, 90, 70);
@@ -56,10 +56,10 @@ describe('The distance function', function () {
 describe('The stack function', function () {
 
     it('returns valid bounds', function () {
-        var r1 = g.rect(0, 0, 100, 100);
-        var r2 = g.rect(0, 0, 100, 100);
-        var stacked = g.stack([r1, r2], 'e', 10);
-        var bounds = g.bounds(stacked);
+        const r1 = g.rect(0, 0, 100, 100);
+        const r2 = g.rect(0, 0, 100, 100);
+        const stacked = g.stack([r1, r2], 'e', 10);
+        const bounds = g.bounds(stacked);
         assert.deepEqual(bounds, {x: -50, y: -50, width: 210, height: 100});
     });
 

@@ -18,7 +18,7 @@ export default class Group {
     this.shapes.push(shape);
   }
   clone() {
-    var newShapes = [],
+    let newShapes = [],
       n = this.shapes.length,
       i;
     newShapes.length = n;
@@ -28,7 +28,7 @@ export default class Group {
     return new Group(newShapes);
   }
   colorize(options) {
-    var args = arguments;
+    const args = arguments;
     if (typeof options !== "object" || options instanceof Color) {
       options = {};
       if (args[0] !== undefined) {
@@ -41,25 +41,25 @@ export default class Group {
         options.strokeWidth = args[2];
       }
     }
-    var shapes = [];
+    const shapes = [];
     shapes.length = this.shapes.length;
-    for (var i = 0; i < this.shapes.length; i += 1) {
+    for (let i = 0; i < this.shapes.length; i += 1) {
       shapes[i] = this.shapes[i].colorize(options);
     }
     return new Group(shapes);
   }
   desaturate(options) {
-    var shapes = [];
+    const shapes = [];
     shapes.length = this.shapes.length;
-    for (var i = 0; i < this.shapes.length; i += 1) {
+    for (let i = 0; i < this.shapes.length; i += 1) {
       shapes[i] = this.shapes[i].desaturate(options);
     }
     return new Group(shapes);
   }
   invert() {
-    var shapes = [];
+    const shapes = [];
     shapes.length = this.shapes.length;
-    for (var i = 0; i < this.shapes.length; i += 1) {
+    for (let i = 0; i < this.shapes.length; i += 1) {
       shapes[i] = this.shapes[i].invert();
     }
     return new Group(shapes);
@@ -68,7 +68,7 @@ export default class Group {
     if (this.shapes.length === 0) {
       return new Rect(0, 0, 0, 0);
     }
-    var i,
+    let i,
       r,
       shape,
       shapes = this.shapes;
@@ -91,7 +91,7 @@ export default class Group {
     if (precision === undefined) {
       precision = 100;
     }
-    var i,
+    let i,
       shapes = this.shapes;
     for (i = 0; i < shapes.length; i += 1) {
       if (shapes[i].contains(x, y, precision)) {
@@ -104,45 +104,45 @@ export default class Group {
     if (precision === undefined) {
       precision = 10;
     }
-    var sum = 0;
-    var shapes = this.shapes;
-    for (var i = 0; i < shapes.length; i += 1) {
+    let sum = 0;
+    const shapes = this.shapes;
+    for (let i = 0; i < shapes.length; i += 1) {
       sum += shapes[i].length(precision);
     }
     return sum;
   }
   resampleByAmount(points, perContour) {
-    var path;
+    let path;
     if (!perContour) {
       path = new Path.combine(this);
       return path.resampleByAmount(points, perContour);
     }
-    var shapes = [];
+    const shapes = [];
     shapes.length = this.shapes.length;
-    for (var i = 0; i < this.shapes.length; i += 1) {
+    for (let i = 0; i < this.shapes.length; i += 1) {
       shapes[i] = this.shapes[i].resampleByAmount(points, perContour);
     }
     return new Group(shapes);
   }
   resampleByLength(length) {
-    var shapes = [];
+    const shapes = [];
     shapes.length = this.shapes.length;
-    for (var i = 0; i < this.shapes.length; i += 1) {
+    for (let i = 0; i < this.shapes.length; i += 1) {
       shapes[i] = this.shapes[i].resampleByLength(length);
     }
     return new Group(shapes);
   }
   toSVG() {
-    var l = [];
+    const l = [];
     l.length = this.shapes.length;
-    for (var i = 0; i < this.shapes.length; i += 1) {
+    for (let i = 0; i < this.shapes.length; i += 1) {
       l[i] = this.shapes[i].toSVG();
     }
     return "<g>" + l.join("") + "</g>";
   }
   // Draw the group to a 2D context.
   draw(ctx) {
-    var i,
+    let i,
       shapes = this.shapes,
       nShapes = shapes.length;
     for (i = 0; i < nShapes; i += 1) {

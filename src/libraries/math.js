@@ -33,7 +33,7 @@ export function add(...args) {
 }
 
 export function and(...args) {
-  var argLength = args.length;
+  const argLength = args.length;
   if (argLength === 2) {
     return args[0] && args[1];
   } else if (argLength === 1) {
@@ -88,7 +88,7 @@ export function degrees(radians) {
 }
 
 export function divide(...args) {
-  var argLength = args.length;
+  const argLength = args.length;
   function checkIfZero(arg) {
     if (arg === 0) {
       throw new Error("Divide by zero");
@@ -133,7 +133,7 @@ export function makeNumbers(s, separator) {
   if (!separator) {
     separator = "";
   }
-  var i,
+  let i,
     num,
     numbers = [],
     strings = s.split(separator);
@@ -167,7 +167,7 @@ export function mod(a, b) {
 }
 
 export function multiply(...args) {
-  var argLength = args.length;
+  const argLength = args.length;
   if (argLength === 2) {
     return args[0] * args[1];
   } else if (argLength === 1) {
@@ -193,7 +193,7 @@ export function odd(v) {
 }
 
 export function or(...args) {
-  var argLength = args.length;
+  const argLength = args.length;
   if (argLength === 2) {
     return args[0] || args[1];
   } else if (argLength === 1) {
@@ -221,7 +221,7 @@ export function radians(degrees) {
 }
 
 export function randomNumbers(amount, min, max, seed) {
-  var argLength = arguments.length;
+  const argLength = arguments.length;
   if (argLength < 4 || (!seed && seed !== 0)) {
     seed = Math.random();
   }
@@ -236,15 +236,15 @@ export function randomNumbers(amount, min, max, seed) {
     max = 1;
   }
   if (max < min) {
-    var tmp = max;
+    const tmp = max;
     max = min;
     min = tmp;
   }
-  var v;
-  var delta = max - min;
-  var numbers = [];
-  var rand = randomGenerator(seed || 0);
-  for (var i = 0; i < amount; i += 1) {
+  let v;
+  const delta = max - min;
+  const numbers = [];
+  const rand = randomGenerator(seed || 0);
+  for (let i = 0; i < amount; i += 1) {
     v = min + rand(0, 1) * delta;
     numbers.push(v);
   }
@@ -261,8 +261,8 @@ export function range(min, max, step, includeMax) {
   if (step > 0 && min > max) return [];
   if (step < 0 && min < max) return [];
   if (step === 0) return [];
-  var values = [];
-  var i;
+  const values = [];
+  let i;
   if (min < max) {
     if (!!includeMax) {
       for (i = min; i <= max; i += step) {
@@ -296,7 +296,7 @@ export function round(v, a) {
 }
 
 export function sample(amount, min, max, circular) {
-  var d,
+  let d,
     values = [],
     i;
   values.length = amount;
@@ -316,7 +316,7 @@ export function sineWave(v, min, max, period, offset) {
   if (max === undefined) max = 1;
   if (period === undefined) period = 1;
   if (offset === undefined) offset = 0;
-  var amplitude = (max - min) / 2;
+  const amplitude = (max - min) / 2;
   return (
     min + amplitude + Math.sin(((offset + v) * TWO_PI) / period) * amplitude
   );
@@ -327,8 +327,8 @@ export function squareWave(v, min, max, period, offset) {
   if (max === undefined) max = 1;
   if (period === undefined) period = 1;
   if (offset === undefined) offset = 0;
-  var halfPeriod = period / 2;
-  var d = (v + offset) % period;
+  const halfPeriod = period / 2;
+  const d = (v + offset) % period;
   if (d < halfPeriod) {
     return max;
   } else {
@@ -341,7 +341,7 @@ export function triangleWave(v, min, max, period, offset) {
   if (max === undefined) max = 1;
   if (period === undefined) period = 1;
   if (offset === undefined) offset = 0;
-  var amplitude = (max - min) / 2,
+  let amplitude = (max - min) / 2,
     frequency = TWO_PI / period,
     phase = 0,
     time = v + offset + period / 4;
@@ -359,7 +359,7 @@ export function sawtoothWave(v, min, max, period, offset) {
   if (max === undefined) max = 1;
   if (period === undefined) period = 1;
   if (offset === undefined) offset = 0;
-  var amplitude = (max - min) / 2,
+  let amplitude = (max - min) / 2,
     frequency = TWO_PI / period,
     phase = 0,
     time = v + offset;
@@ -387,7 +387,7 @@ export const sin = Math.sin;
 export const sqrt = Math.sqrt;
 
 export function subtract(...args) {
-  var argLength = args.length;
+  const argLength = args.length;
   if (argLength === 2) {
     return args[0] - args[1];
   } else if (argLength === 1) {
@@ -406,7 +406,7 @@ export function total(...args) {
 }
 
 export function xor(bool1, bool2) {
-  var argLength = arguments.length;
+  const argLength = arguments.length;
   if (argLength === 2) {
     return !!(bool1 ^ bool2);
   } else {

@@ -19,9 +19,9 @@ import { flatten } from '../../util';
 import { pointInPolygon } from '../util/geo';
 import { radians, clamp } from '../util/math';
 
-var CLOSE_COMMAND = Object.freeze({ type: CLOSE });
+const CLOSE_COMMAND = Object.freeze({ type: CLOSE });
 
-var KAPPA = 0.5522847498307936; // (-1 + Math.sqrt(2)) / 3 * 4
+const KAPPA = 0.5522847498307936; // (-1 + Math.sqrt(2)) / 3 * 4
 
 function _roundCoord(n, fractionDigits = 3) {
   if (n % 1 === 0) return n;
@@ -29,7 +29,7 @@ function _roundCoord(n, fractionDigits = 3) {
 }
 
 function _cloneCommand(cmd) {
-  var newCmd = { type: cmd.type };
+  const newCmd = { type: cmd.type };
   if (newCmd.type !== CLOSE) {
     newCmd.x = cmd.x;
     newCmd.y = cmd.y;
@@ -54,10 +54,10 @@ export default class Path {
     this.strokeWidth = strokeWidth !== undefined ? strokeWidth : 1;
   }
   static combine() {
-    var shapes = flatten(arguments);
-    var shape,
+    const shapes = flatten(arguments);
+    let shape,
       commands = [];
-    for (var i = 0; i < shapes.length; i += 1) {
+    for (let i = 0; i < shapes.length; i += 1) {
       shape = shapes[i];
       if (shape.commands) {
         commands = commands.concat(shape.commands);
@@ -68,7 +68,7 @@ export default class Path {
     return new Path(commands);
   }
   clone() {
-    var p = new Path(),
+    let p = new Path(),
       n = this.commands.length,
       i;
     p.commands.length = this.commands.length;
@@ -81,7 +81,7 @@ export default class Path {
     return p;
   }
   extend(commandsOrPath) {
-    var commands = commandsOrPath.commands || commandsOrPath;
+    const commands = commandsOrPath.commands || commandsOrPath;
     Array.prototype.push.apply(this.commands, commands);
   }
   moveTo(x, y) {
@@ -102,7 +102,7 @@ export default class Path {
     });
   }
   quadTo(x1, y1, x, y) {
-    var prevX = this.commands[this.commands.length - 1].x,
+    const prevX = this.commands[this.commands.length - 1].x,
       prevY = this.commands[this.commands.length - 1].y,
       cp1x = prevX + (2 / 3) * (x1 - prevX),
       cp1y = prevY + (2 / 3) * (y1 - prevY),
@@ -127,7 +127,7 @@ export default class Path {
     this.close();
   }
   addRoundedRect(cx, cy, width, height, rx, ry) {
-    var ONE_MINUS_QUARTER = 1.0 - 0.552,
+    let ONE_MINUS_QUARTER = 1.0 - 0.552,
       dx = rx,
       dy = ry,
       left = cx,
@@ -187,12 +187,12 @@ export default class Path {
     this.close();
   }
   addEllipse(x, y, width, height) {
-    var dx = KAPPA * 0.5 * width;
-    var dy = KAPPA * 0.5 * height;
-    var x0 = x + 0.5 * width;
-    var y0 = y + 0.5 * height;
-    var x1 = x + width;
-    var y1 = y + height;
+    const dx = KAPPA * 0.5 * width;
+    const dy = KAPPA * 0.5 * height;
+    const x0 = x + 0.5 * width;
+    const y0 = y + 0.5 * height;
+    const x1 = x + width;
+    const y1 = y + height;
 
     this.moveTo(x, y0);
     this.curveTo(x, y0 - dy, x0 - dx, y, x0, y);
@@ -214,7 +214,7 @@ export default class Path {
   }
   addArc(x, y, width, height, startAngle, degrees, arcType) {
     arcType = arcType || 'pie';
-    var w,
+    let w,
       h,
       angStRad,
       ext,
@@ -294,7 +294,7 @@ export default class Path {
     }
   }
   colorize(options) {
-    var args = arguments;
+    const args = arguments;
     if (typeof options !== 'object' || options instanceof Color) {
       options = {};
       if (args[0] !== undefined) {
@@ -307,7 +307,7 @@ export default class Path {
         options.strokeWidth = args[2];
       }
     }
-    var p = this.clone();
+    const p = this.clone();
     if (options.fill) {
       p.fill = Color.clone(options.fill);
     }
@@ -320,9 +320,9 @@ export default class Path {
     return p;
   }
   desaturate(options) {
-    var p = this.clone();
-    var fill = p.fill;
-    var stroke = p.stroke;
+    const p = this.clone();
+    let fill = p.fill;
+    let stroke = p.stroke;
     if (!(fill instanceof Color)) {
       fill = Color.parse(fill);
     }
@@ -334,9 +334,9 @@ export default class Path {
     return p;
   }
   invert() {
-    var p = this.clone();
-    var fill = p.fill;
-    var stroke = p.stroke;
+    const p = this.clone();
+    let fill = p.fill;
+    let stroke = p.stroke;
     if (!(fill instanceof Color)) {
       fill = Color.parse(fill);
     }
@@ -348,11 +348,11 @@ export default class Path {
     return p;
   }
   contours() {
-    var contours = [],
+    let contours = [],
       currentContour = [];
 
-    var cmd;
-    for (var i = 0; i < this.commands.length; i += 1) {
+    let cmd;
+    for (let i = 0; i < this.commands.length; i += 1) {
       cmd = this.commands[i];
       if (cmd.type === MOVETO) {
         if (currentContour.length !== 0) {
@@ -378,7 +378,7 @@ export default class Path {
       return new Rect(0, 0, 0, 0);
     }
 
-    var px,
+    let px,
       py,
       prev,
       right,
@@ -388,8 +388,8 @@ export default class Path {
       maxX = -Number.MAX_VALUE,
       maxY = -Number.MAX_VALUE;
 
-    var cmd;
-    for (var i = 0; i < this.commands.length; i += 1) {
+    let cmd;
+    for (let i = 0; i < this.commands.length; i += 1) {
       cmd = this.commands[i];
       if (cmd.type === MOVETO || cmd.type === LINETO) {
         px = cmd.x;
@@ -408,7 +408,7 @@ export default class Path {
         }
         prev = cmd;
       } else if (cmd.type === CURVETO) {
-        var r = extrema(
+        const r = extrema(
           prev.x,
           prev.y,
           cmd.x1,
@@ -449,8 +449,8 @@ export default class Path {
   // Returns an array of DynamicPathElements along the path.
   // To omit the last point on closed paths: {end: 1-1.0/amount}
   points(amount, options) {
-    var start = options && options.start !== undefined ? options.start : 0.0;
-    var end = options && options.end !== undefined ? options.end : 1.0;
+    const start = options && options.start !== undefined ? options.start : 0.0;
+    const end = options && options.end !== undefined ? options.end : 1.0;
     if (this.commands.length === 0) {
       // Otherwise bezier.point() will raise an error for empty paths.
       return [];
@@ -461,15 +461,15 @@ export default class Path {
     // For open paths (e.g. a line) we do want the last point, so we use amount - 1.
     // E.g. If amount=4, and path is open, we want the point at t 0.0, 0.33, 0.66 and 1.0.
     // E.g. If amount=2, and path is open, we want the point at t 0.0 and 1.0.
-    var d;
+    let d;
     if (options && options.closed) {
       d = amount > 1 ? (end - start) / amount : end - start;
     } else {
       d = amount > 1 ? (end - start) / (amount - 1) : end - start;
     }
-    var pts = [];
-    var segmentLengths = bezierSegmentLengths(this.commands, true, 10);
-    for (var i = 0; i < amount; i += 1) {
+    const pts = [];
+    const segmentLengths = bezierSegmentLengths(this.commands, true, 10);
+    for (let i = 0; i < amount; i += 1) {
       pts.push(this.point(start + d * i, segmentLengths));
     }
     return pts;
@@ -483,20 +483,20 @@ export default class Path {
   }
   // Returns true when point (x,y) falls within the contours of the path.
   contains(x, y, precision) {
-    var points = this.points(precision !== undefined ? precision : 100);
+    const points = this.points(precision !== undefined ? precision : 100);
     return pointInPolygon(points, x, y);
   }
   resampleByAmount(points, perContour) {
-    var subPaths = perContour ? this.contours() : [this.commands];
-    var p = new Path([], this.fill, this.stroke, this.strokeWidth);
-    for (var j = 0; j < subPaths.length; j += 1) {
-      var subPath = new Path(subPaths[j]);
-      var options = {};
+    const subPaths = perContour ? this.contours() : [this.commands];
+    const p = new Path([], this.fill, this.stroke, this.strokeWidth);
+    for (let j = 0; j < subPaths.length; j += 1) {
+      const subPath = new Path(subPaths[j]);
+      const options = {};
       if (subPath.isClosed()) {
         options.closed = true;
       }
-      var pts = subPath.points(points, options);
-      for (var i = 0; i < pts.length; i += 1) {
+      const pts = subPath.points(points, options);
+      for (let i = 0; i < pts.length; i += 1) {
         if (i === 0) {
           p.moveTo(pts[i].x, pts[i].y);
         } else {
@@ -511,22 +511,22 @@ export default class Path {
   }
   resampleByLength(segmentLength, options) {
     options = options || {};
-    var force = options.force || false;
-    var subPaths = this.contours();
-    var commands = [];
+    const force = options.force || false;
+    const subPaths = this.contours();
+    let commands = [];
     if (!force) {
       segmentLength = Math.max(segmentLength, 1);
     }
-    for (var i = 0; i < subPaths.length; i += 1) {
-      var subPath = new Path(subPaths[i]);
-      var contourLength = subPath.length();
-      var amount = Math.ceil(contourLength / segmentLength);
+    for (let i = 0; i < subPaths.length; i += 1) {
+      const subPath = new Path(subPaths[i]);
+      const contourLength = subPath.length();
+      const amount = Math.ceil(contourLength / segmentLength);
       commands = commands.concat(subPath.resampleByAmount(amount).commands);
     }
     return new Path(commands, this.fill, this.stroke, this.strokeWidth);
   }
   toPathData(fractionDigits = 3) {
-    var i, d, cmd, x, y, x1, y1, x2, y2;
+    let i, d, cmd, x, y, x1, y1, x2, y2;
     d = '';
     for (i = 0; i < this.commands.length; i += 1) {
       cmd = this.commands[i];
@@ -573,14 +573,14 @@ export default class Path {
   }
   // Output the path as an SVG string.
   toSVG() {
-    var svg = '<path d="';
+    let svg = '<path d="';
     svg += this.toPathData();
     svg += '"';
 
-    var style = '';
+    let style = '';
 
-    var fill;
-    var fillOpacity;
+    let fill;
+    let fillOpacity;
     if (this.fill) {
       fill = Color.parse(this.fill);
       if (fill.a < 1) {
@@ -601,8 +601,8 @@ export default class Path {
       style += 'fill-opacity:' + fillOpacity + ';';
     }
 
-    var stroke;
-    var strokeOpacity;
+    let stroke;
+    let strokeOpacity;
 
     if (this.stroke) {
       stroke = Color.parse(this.stroke);
@@ -626,7 +626,7 @@ export default class Path {
   }
   // Draw the path to a 2D context.
   draw(ctx) {
-    var nCommands, i, cmd;
+    let nCommands, i, cmd;
     ctx.beginPath();
     nCommands = this.commands.length;
     for (i = 0; i < nCommands; i += 1) {

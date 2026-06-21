@@ -10,14 +10,14 @@ import Point from "../objects/point";
 import Text from "../objects/text";
 
 export function roundedRect(cx, cy, width, height, rx, ry) {
-  var p = new Path();
+  const p = new Path();
   p.addRoundedRect(cx, cy, width, height, rx, ry);
   return p;
 }
 
 export function quad(pt1, pt2, pt3, pt4) {
-  var args = arguments;
-  var p = new Path();
+  const args = arguments;
+  const p = new Path();
   if (args.length === 8) {
     Path.prototype.addQuad.apply(p, args);
   } else {
@@ -31,7 +31,7 @@ export function quad(pt1, pt2, pt3, pt4) {
 }
 
 export function rect(position, width, height, roundness) {
-  var args = arguments;
+  const args = arguments;
   if (args.length === 3) {
     position = Point.read(position);
   } else if (args.length === 4) {
@@ -56,7 +56,7 @@ export function rect(position, width, height, roundness) {
   }
 
   if (!roundness || (roundness.x === 0 && roundness.y === 0)) {
-    var p = new Path();
+    const p = new Path();
     p.addRect(position.x - width / 2, position.y - height / 2, width, height);
     return p;
   } else {
@@ -72,7 +72,7 @@ export function rect(position, width, height, roundness) {
 }
 
 export function ellipse(position, width, height) {
-  var args = arguments;
+  const args = arguments;
   if (args.length === 4) {
     position = Point.read(args[0], args[1]);
     width = args[2];
@@ -80,13 +80,13 @@ export function ellipse(position, width, height) {
   } else {
     position = Point.read(position);
   }
-  var p = new Path();
+  const p = new Path();
   p.addEllipse(position.x - width / 2, position.y - height / 2, width, height);
   return p;
 }
 
 export function line(point1, point2) {
-  var args = arguments;
+  const args = arguments;
   if (args.length === 4) {
     point1 = Point.read(args[0], args[1]);
     point2 = Point.read(args[2], args[3]);
@@ -94,7 +94,7 @@ export function line(point1, point2) {
     point1 = Point.read(point1);
     point2 = Point.read(point2);
   }
-  var line = new Path();
+  const line = new Path();
   line.addLine(point1.x, point1.y, point2.x, point2.y);
   line.fill = null;
   line.stroke = "black";
@@ -102,7 +102,7 @@ export function line(point1, point2) {
 }
 
 export function lineAngle(point, angle, distance) {
-  var args = arguments;
+  const args = arguments;
   if (args.length === 4) {
     point = Point.read(args[0], args[1]);
     distance = args[2];
@@ -110,12 +110,12 @@ export function lineAngle(point, angle, distance) {
   } else {
     point = Point.read(point);
   }
-  var point2 = coordinates(point.x, point.y, angle, distance);
+  const point2 = coordinates(point.x, point.y, angle, distance);
   return vg.line(point, point2);
 }
 
 export function arc(position, width, height, startAngle, degrees, arcType) {
-  var args = arguments;
+  const args = arguments;
   if (args.length === 7) {
     position = Point.read(args[0], args[1]);
     width = args[2];
@@ -126,13 +126,13 @@ export function arc(position, width, height, startAngle, degrees, arcType) {
   } else {
     position = Point.read(position);
   }
-  var p = new Path();
+  const p = new Path();
   p.addArc(position.x, position.y, width, height, startAngle, degrees, arcType);
   return p;
 }
 
 export function curve(pt1, pt2, t, distance) {
-  var args = arguments;
+  const args = arguments;
   if (args.length === 6) {
     pt1 = Point.read(args[0], args[1]);
     pt2 = Point.read(args[2], args[3]);
@@ -143,7 +143,7 @@ export function curve(pt1, pt2, t, distance) {
     pt2 = Point.read(pt2);
   }
 
-  var cx = pt1.x + t * (pt2.x - pt1.x),
+  const cx = pt1.x + t * (pt2.x - pt1.x),
     cy = pt1.y + t * (pt2.y - pt1.y),
     a = angle(pt1.x, pt1.y, pt2.x, pt2.y) + 90,
     q = coordinates(cx, cy, a, distance),
@@ -154,7 +154,7 @@ export function curve(pt1, pt2, t, distance) {
     c2x = pt2.x + (2 / 3.0) * (qx - pt2.x),
     c2y = pt2.y + (2 / 3.0) * (qy - pt2.y);
 
-  var p = new Path();
+  const p = new Path();
   p.moveTo(pt1.x, pt1.y);
   p.curveTo(c1x, c1y, c2x, c2y, pt2.x, pt2.y);
   p.fill = null;
@@ -163,7 +163,7 @@ export function curve(pt1, pt2, t, distance) {
 }
 
 export function polygon(position, radius, sides, align) {
-  var args = arguments;
+  const args = arguments;
   if (
     args.length === 5 ||
     (args.length === 4 &&
@@ -181,7 +181,7 @@ export function polygon(position, radius, sides, align) {
     }
   }
   sides = Math.max(sides, 3);
-  var c0,
+  let c0,
     c1,
     i,
     c,
@@ -195,7 +195,7 @@ export function polygon(position, radius, sides, align) {
     c1 = coordinates(x, y, a, r);
     da = -angle(c1.x, c1.y, c0.x, c0.y);
   }
-  var p = new Path();
+  const p = new Path();
   for (i = 0; i < sides; i += 1) {
     c = coordinates(x, y, a * i + da, r);
     if (i === 0) {
@@ -209,7 +209,7 @@ export function polygon(position, radius, sides, align) {
 }
 
 export function star(position, points, outer, inner) {
-  var args = arguments;
+  const args = arguments;
   if (
     args.length === 5 ||
     (args.length === 4 &&
@@ -226,8 +226,8 @@ export function star(position, points, outer, inner) {
   if (!inner) {
     inner = outer;
   }
-  var i, angle, radius, x, y;
-  var p = new Path();
+  let i, angle, radius, x, y;
+  const p = new Path();
   p.moveTo(position.x, position.y + outer / 2);
   // Calculate the points of the star.
   for (i = 1; i < points * 2; i += 1) {
@@ -250,7 +250,7 @@ export function stripCommas(c) {
 }
 
 export function freehand(pathString) {
-  var i,
+  let i,
     j,
     x,
     y,
@@ -264,7 +264,7 @@ export function freehand(pathString) {
     }
   }
 
-  var p = new Path();
+  const p = new Path();
   for (j = 0; j < contours.length; j += 1) {
     values = [];
     elems = contours[j].split(" ");
@@ -292,7 +292,7 @@ export function freehand(pathString) {
 
 // Create a grid of points.
 export function grid(columns, rows, columnWidth, rowHeight, position) {
-  var gridWidth,
+  let gridWidth,
     left,
     gridHeight,
     top,
@@ -340,7 +340,7 @@ export function grid(columns, rows, columnWidth, rowHeight, position) {
 //     vg.text('Hello', 0, 0, {fontFamily: 'Helvetica', fontSize: 12});  // align: center is the default.
 //     vg.text('Hello', {fontFamily: 'Helvetica', fontSize: 12}); // the position defaults to 0,0.
 export function text() {
-  var args = Array.prototype.slice.call(arguments);
+  const args = Array.prototype.slice.call(arguments);
   args.unshift(null);
   return new (Function.prototype.bind.apply(Text, args))();
 }

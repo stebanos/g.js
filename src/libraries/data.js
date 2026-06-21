@@ -5,9 +5,9 @@ import { distinct } from "./list";
 
 // Convert values from one range to another
 export function convert(v, inMin, inMax, outMin, outMax) {
-  var argLength = arguments.length;
+  const argLength = arguments.length;
   if (argLength === 2) {
-    var d = arguments[1];
+    const d = arguments[1];
     inMin = d.inMin;
     inMax = d.inMax;
     outMin = d.outMin;
@@ -29,11 +29,11 @@ export function convert(v, inMin, inMax, outMin, outMax) {
 
 export function filterData(data, key, op, value) {
   if (!data) return [];
-  var i, l, row, obj;
+  let i, l, row, obj;
   if (value === null || value === undefined) {
     return data;
   }
-  var results = [];
+  const results = [];
   if (op === "==") {
     for (i = 0, l = data.length; i < l; i++) {
       row = data[i];
@@ -118,15 +118,15 @@ export function legend  (scale, position, direction, nTicks) {
 }; */
 
 export function keys(data) {
-  var allKeys = [];
-  for (var i = 0; i < data.length; i++) {
+  let allKeys = [];
+  for (let i = 0; i < data.length; i++) {
     allKeys = allKeys.concat(Object.keys(data[i]));
   }
   return distinct(allKeys);
 }
 
 export function lookup(table, key) {
-  var obj, v;
+  let obj, v;
   obj = table;
   // First try to lookup the key as-is.
   v = obj[key];
@@ -136,9 +136,9 @@ export function lookup(table, key) {
     }
     return v;
   }
-  var token,
+  let token,
     tokens = key.split(".");
-  for (var i = 0; i < tokens.length; i += 1) {
+  for (let i = 0; i < tokens.length; i += 1) {
     token = tokens[i];
     if (!obj) {
       continue;
@@ -162,7 +162,7 @@ export function dataScale(domain, outMin, outMax) {
 export function ticks(min, max, n) {
   n = n !== undefined ? n : 10;
 
-  var span = max - min,
+  let span = max - min,
     step = Math.pow(10, Math.floor(Math.log(span / n) / Math.LN10)),
     err = (n / span) * step,
     ticks = [],

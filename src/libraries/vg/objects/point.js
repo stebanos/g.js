@@ -9,7 +9,7 @@ export default class Point {
     if (arguments.length === 2) {
       return new Point(x, y);
     }
-    var arg = x;
+    const arg = x;
     if (arg instanceof Point) {
       return arg;
     } else if (typeof arg === "number") {
@@ -52,12 +52,12 @@ export default class Point {
     return Math.atan2(this.y, this.x);
   }
   distanceTo(v) {
-    var dx = this.x - v.x,
+    const dx = this.x - v.x,
       dy = this.y - v.y;
     return Math.sqrt(dx * dx + dy * dy);
   }
   normalize() {
-    var m = this.magnitude();
+    const m = this.magnitude();
     if (m !== 0) {
       return this.divide(m);
     } else {

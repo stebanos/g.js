@@ -18,7 +18,7 @@ import ClipperLib from "js-clipper";
 // var ClipperLib = require("../../../../third_party/clipper");
 
 function _cloneCommand(cmd) {
-  var newCmd = { type: cmd.type };
+  const newCmd = { type: cmd.type };
   if (newCmd.type !== CLOSE) {
     newCmd.x = cmd.x;
     newCmd.y = cmd.y;
@@ -44,7 +44,7 @@ export const NORTH = "n";
 export const SOUTH = "s";
 
 export function bounds(o) {
-  var r, i, n;
+  let r, i, n;
   if (!o) {
     return new Rect();
   } else if (typeof o.bounds === "function") {
@@ -83,7 +83,7 @@ export function bounds(o) {
 }
 
 export function makeCenteredRect(cx, cy, width, height) {
-  var x = cx - width / 2,
+  const x = cx - width / 2,
     y = cy - height / 2;
   return new Rect(x, y, width, height);
 }
@@ -100,9 +100,9 @@ export function makeRect(x, y, width, height) {
 // This function works like makeGroup, except that this can take any number
 // of arguments.
 export function merge() {
-  var args = flatten(arguments);
-  var shapes = [];
-  for (var i = 0; i < args.length; i += 1) {
+  const args = flatten(arguments);
+  const shapes = [];
+  for (let i = 0; i < args.length; i += 1) {
     if (args[i] && args[i].length !== 0) {
       shapes.push(args[i]);
     }
@@ -118,9 +118,9 @@ export function toPoints(shape) {
   if (!shape) {
     return [];
   }
-  var i;
+  let i;
   if (shape.commands) {
-    var cmd,
+    let cmd,
       commands = [];
     for (i = 0; i < shape.commands.length; i += 1) {
       cmd = shape.commands[i];
@@ -130,7 +130,7 @@ export function toPoints(shape) {
     }
     return commands;
   }
-  var points = [];
+  let points = [];
   for (i = 0; i < shape.shapes.length; i += 1) {
     points = points.concat(vg.shapePoints(shape.shapes[i]));
   }
@@ -178,7 +178,7 @@ export function skew(shape, skew, origin) {
 }
 
 export function copy(shape, copies, order, translate, rotate, scale) {
-  var i,
+  let i,
     t,
     j,
     op,
@@ -223,7 +223,7 @@ export function copy(shape, copies, order, translate, rotate, scale) {
 export function fit(shape, position, width, height, stretch) {
   if (!shape) return null;
   stretch = stretch !== undefined ? stretch : false;
-  var t,
+  let t,
     sx,
     sy,
     bounds = vg.bounds(shape),
@@ -262,7 +262,7 @@ export function fitTo(shape, bounding, stretch) {
   if (!shape) return null;
   if (!bounding) return shape;
 
-  var bounds = vg.bounds(bounding),
+  const bounds = vg.bounds(bounding),
     bx = bounds.x,
     by = bounds.y,
     bw = bounds.width,
@@ -273,12 +273,12 @@ export function fitTo(shape, bounding, stretch) {
 
 export function mirror(shape, angle, origin, keepOriginal) {
   if (!shape) return null;
-  var t = new Transform();
+  let t = new Transform();
   t = t.translate(origin.x, origin.y);
   t = t.rotate(angle * 2 - 180);
   t = t.scale(-1, 1);
   t = t.translate(-origin.x, -origin.y);
-  var newShape = t.transformShape(shape);
+  const newShape = t.transformShape(shape);
 
   if (keepOriginal) {
     if (Array.isArray(shape) && shape.length > 0) {
@@ -292,7 +292,7 @@ export function mirror(shape, angle, origin, keepOriginal) {
 
 export function pathLength(shape, options) {
   if (!shape) return 0;
-  var precision = 20;
+  let precision = 20;
   if (options && options.precision) {
     precision = options.precision;
   }
@@ -310,13 +310,13 @@ export function resampleByAmount(shape, amount, perContour) {
 }
 
 export function _wigglePoints(shape, offset, rand) {
-  var i, dx, dy;
+  let i, dx, dy;
   if (shape.commands) {
-    var p = new Path([], shape.fill, shape.stroke, shape.strokeWidth);
+    const p = new Path([], shape.fill, shape.stroke, shape.strokeWidth);
     for (i = 0; i < shape.commands.length; i += 1) {
       dx = (rand(0, 1) - 0.5) * offset.x * 2;
       dy = (rand(0, 1) - 0.5) * offset.y * 2;
-      var cmd = shape.commands[i];
+      const cmd = shape.commands[i];
       if (cmd.type === MOVETO) {
         p.moveTo(cmd.x + dx, cmd.y + dy);
       } else if (cmd.type === LINETO) {
@@ -329,7 +329,7 @@ export function _wigglePoints(shape, offset, rand) {
     }
     return p;
   } else if (shape.shapes) {
-    var wShapes = [];
+    const wShapes = [];
     wShapes.length = shape.shapes.length;
     for (i = 0; i < shape.shapes.length; i += 1) {
       wShapes[i] = vg._wigglePoints(shape.shapes[i], offset, rand);
@@ -341,7 +341,7 @@ export function _wigglePoints(shape, offset, rand) {
     shape[0].x !== undefined &&
     shape[0].y !== undefined
   ) {
-    var wPoints = [];
+    const wPoints = [];
     wPoints.length = shape.length;
     for (i = 0; i < shape.length; i += 1) {
       dx = (rand(0, 1) - 0.5) * offset.x * 2;
@@ -350,7 +350,7 @@ export function _wigglePoints(shape, offset, rand) {
     }
     return wPoints;
   } else {
-    var w = [];
+    const w = [];
     w.length = shape.length;
     for (i = 0; i < shape.length; i += 1) {
       w[i] = vg._wigglePoints(shape[i], offset, rand);
@@ -362,7 +362,7 @@ export function _wigglePoints(shape, offset, rand) {
 export function wigglePoints(shape, offset, seed) {
   if (!shape) return null;
   seed = seed !== undefined ? seed : Math.random();
-  var rand = randomGenerator(seed);
+  const rand = randomGenerator(seed);
   if (offset === undefined) {
     offset = { x: 10, y: 10 };
   } else if (typeof offset === "number") {
@@ -372,9 +372,9 @@ export function wigglePoints(shape, offset, seed) {
 }
 
 export function _wiggleContours(shape, offset, rand) {
-  var i;
+  let i;
   if (shape.commands) {
-    var dx,
+    let dx,
       dy,
       t,
       subPaths = shape.contours(),
@@ -389,14 +389,14 @@ export function _wiggleContours(shape, offset, rand) {
     }
     return new Path(commands, shape.fill, shape.stroke, shape.strokeWidth);
   } else if (shape.shapes) {
-    var wShapes = [];
+    const wShapes = [];
     wShapes.length = shape.shapes.length;
     for (i = 0; i < shape.shapes.length; i += 1) {
       wShapes[i] = vg._wiggleContours(shape.shapes[i], offset, rand);
     }
     return new Group(wShapes);
   } else {
-    var w = [];
+    const w = [];
     w.length = shape.length;
     for (i = 0; i < shape.length; i += 1) {
       w[i] = vg._wiggleContours(shape[i], offset, rand);
@@ -408,7 +408,7 @@ export function _wiggleContours(shape, offset, rand) {
 export function wiggleContours(shape, offset, seed) {
   if (!shape) return null;
   seed = seed !== undefined ? seed : Math.random();
-  var rand = randomGenerator(seed);
+  const rand = randomGenerator(seed);
   if (offset === undefined) {
     offset = { x: 10, y: 10 };
   } else if (typeof offset === "number") {
@@ -423,12 +423,12 @@ export function _wigglePaths(shape, offset, rand) {
   } else if (shape.shapes) {
     return new Group(vg._wigglePaths(shape.shapes, offset, rand));
   } else if (Array.isArray(shape)) {
-    var subShape,
+    let subShape,
       dx,
       dy,
       t,
       newShapes = [];
-    for (var i = 0; i < shape.length; i += 1) {
+    for (let i = 0; i < shape.length; i += 1) {
       subShape = shape[i];
       if (subShape.commands) {
         dx = (rand(0, 1) - 0.5) * offset.x * 2;
@@ -446,7 +446,7 @@ export function _wigglePaths(shape, offset, rand) {
 export function wigglePaths(shape, offset, seed) {
   if (!shape) return null;
   seed = seed !== undefined ? seed : Math.random();
-  var rand = randomGenerator(seed);
+  const rand = randomGenerator(seed);
   if (offset === undefined) {
     offset = { x: 10, y: 10 };
   } else if (typeof offset === "number") {
@@ -459,7 +459,7 @@ export function wigglePaths(shape, offset, seed) {
 export function scatterPoints(shape, amount, seed) {
   if (!shape) return [];
   seed = seed !== undefined ? seed : Math.random();
-  var i,
+  let i,
     j,
     contourPath,
     nrKeypoints,
@@ -509,9 +509,9 @@ export function scatterPoints(shape, amount, seed) {
 
 export function connectPoints(points, closed) {
   if (!points) return null;
-  var pt,
+  let pt,
     p = new Path();
-  for (var i = 0; i < points.length; i += 1) {
+  for (let i = 0; i < points.length; i += 1) {
     pt = points[i];
     if (i === 0) {
       p.moveTo(pt.x, pt.y);
@@ -529,7 +529,7 @@ export function connectPoints(points, closed) {
 
 export function align(shape, position, hAlign, vAlign) {
   if (!shape) return null;
-  var dx,
+  let dx,
     dy,
     t,
     x = position.x,
@@ -564,10 +564,10 @@ export function snapShape(shape, distance, strength, center) {
   strength = strength !== undefined ? strength : 1;
   center = center || Point.ZERO;
 
-  var i, x, y;
+  let i, x, y;
   if (shape.commands) {
-    var p = new Path([], shape.fill, shape.stroke, shape.strokeWidth);
-    var cmd, x1, y1, x2, y2;
+    const p = new Path([], shape.fill, shape.stroke, shape.strokeWidth);
+    let cmd, x1, y1, x2, y2;
     for (i = 0; i < shape.commands.length; i += 1) {
       cmd = shape.commands[i];
       if (cmd.type === MOVETO || cmd.type === LINETO || cmd.type === CURVETO) {
@@ -592,7 +592,7 @@ export function snapShape(shape, distance, strength, center) {
     }
     return p;
   } else if (shape.shapes) {
-    var sShapes = [];
+    const sShapes = [];
     sShapes.length = shape.shapes.length;
     for (i = 0; i < shape.shapes.length; i += 1) {
       sShapes[i] = vg.snap(shape.shapes[i], distance, strength, center);
@@ -604,7 +604,7 @@ export function snapShape(shape, distance, strength, center) {
     shape[0].x !== undefined &&
     shape[0].y !== undefined
   ) {
-    var point,
+    let point,
       sPoints = [];
     sPoints.length = shape.length;
     for (i = 0; i < shape.length; i += 1) {
@@ -615,7 +615,7 @@ export function snapShape(shape, distance, strength, center) {
     }
     return sPoints;
   } else {
-    var s = [];
+    const s = [];
     s.length = shape.length;
     for (i = 0; i < shape.length; i += 1) {
       s[i] = vg.snap(shape[i], distance, strength, center);
@@ -627,13 +627,13 @@ export function snapShape(shape, distance, strength, center) {
 export function deletePoints(shape, bounding, invert) {
   if (!shape) return null;
   if (!bounding) return shape;
-  var i,
+  let i,
     cmd,
     commands = [];
-  var pt,
+  let pt,
     points = [];
   if (shape.commands) {
-    var newCurve = true;
+    let newCurve = true;
     for (i = 0; i < shape.commands.length; i += 1) {
       cmd = _cloneCommand(shape.commands[i]);
       if (
@@ -654,7 +654,7 @@ export function deletePoints(shape, bounding, invert) {
     }
     return new Path(commands, shape.fill, shape.stroke, shape.strokeWidth);
   } else if (shape.shapes) {
-    var dShapes = [];
+    const dShapes = [];
     dShapes.length = shape.shapes.length;
     for (i = 0; i < shape.shapes.length; i += 1) {
       dShapes[i] = vg.deletePoints(shape.shapes[i], bounding, invert);
@@ -677,7 +677,7 @@ export function deletePoints(shape, bounding, invert) {
     }
     return points;
   } else {
-    var d = [];
+    const d = [];
     d.length = shape.length;
     for (i = 0; i < shape.length; i += 1) {
       d[i] = vg.deletePoints(shape[i], bounding, invert);
@@ -693,14 +693,14 @@ export function deletePaths(shape, bounding, invert) {
     return new Group(vg.deletePaths(shape.shapes, bounding, invert));
   } else if (Array.isArray(shape)) {
     if (!bounding) return shape;
-    var j,
+    let j,
       s,
       selected,
       cmd,
       subShapes,
       newShapes = [];
-    var shapes = shape;
-    for (var i = 0; i < shapes.length; i += 1) {
+    const shapes = shape;
+    for (let i = 0; i < shapes.length; i += 1) {
       s = shapes[i];
       if (s.commands) {
         selected = false;
@@ -747,7 +747,7 @@ export function pointOnPath(shape, t) {
   if (t < 0) {
     t = 1 + t;
   }
-  var pt = shape.point(t);
+  const pt = shape.point(t);
   return new Point(pt.x, pt.y);
 }
 
@@ -772,7 +772,7 @@ export function shapeOnPath(
     shapes.reverse();
   }
 
-  var i,
+  let i,
     pos,
     p1,
     p2,
@@ -785,7 +785,7 @@ export function shapeOnPath(
 
   function putOnPath(shape) {
     if (alignment === "distributed") {
-      var p = length / (amount * shapes.length - 1);
+      const p = length / (amount * shapes.length - 1);
       pos = (c * p) / length;
       pos = m + pos * (1 - 2 * m);
     } else {
@@ -837,7 +837,7 @@ export function _angleToPoint(point) {
     if (shape.x !== undefined && shape.y !== undefined) {
       return angle(shape.x, shape.y, point.x, point.y);
     } else {
-      var centerPoint = shape.bounds().centerPoint();
+      const centerPoint = shape.bounds().centerPoint();
       return angle(centerPoint.x, centerPoint.y, point.x, point.y);
     }
   };
@@ -848,7 +848,7 @@ export function _distanceToPoint(point) {
     if (shape.x !== undefined && shape.y !== undefined) {
       return distance(shape.x, shape.y, point.x, point.y);
     } else {
-      var centerPoint = shape.bounds().centerPoint();
+      const centerPoint = shape.bounds().centerPoint();
       return distance(centerPoint.x, centerPoint.y, point.x, point.y);
     }
   };
@@ -858,7 +858,7 @@ export function shapeSort(shapes, method, origin) {
   if (!shapes) return null;
   origin = origin || Point.ZERO;
 
-  var methods = {
+  const methods = {
     x: vg._x,
     y: vg._y,
     angle: vg._angleToPoint(origin),
@@ -868,9 +868,9 @@ export function shapeSort(shapes, method, origin) {
   if (method === undefined) {
     return shapes;
   }
-  var newShapes = shapes.slice(0);
+  const newShapes = shapes.slice(0);
   newShapes.sort(function (a, b) {
-    var _a = method(a),
+    const _a = method(a),
       _b = method(b);
     if (_a < _b) {
       return -1;
@@ -891,7 +891,7 @@ export function ungroup(shape) {
   if (!shape) {
     return [];
   } else if (shape.shapes) {
-    var i,
+    let i,
       s,
       shapes = [];
     for (i = 0; i < shape.shapes.length; i += 1) {
@@ -912,17 +912,17 @@ export function ungroup(shape) {
 
 export function centerPoint(shape) {
   if (!shape) return Point.ZERO;
-  var r = vg.bounds(shape);
+  const r = vg.bounds(shape);
   return new Point(r.x + r.width / 2, r.y + r.height / 2);
 }
 
 export function link(shape1, shape2, orientation) {
   if (!shape1 || !shape2) return null;
-  var p = new Path();
-  var a = shape1.bounds();
-  var b = shape2.bounds();
+  const p = new Path();
+  const a = shape1.bounds();
+  const b = shape2.bounds();
   if (orientation === vg.HORIZONTAL) {
-    var hw = (b.x - (a.x + a.width)) / 2;
+    const hw = (b.x - (a.x + a.width)) / 2;
     p.moveTo(a.x + a.width, a.y);
     p.curveTo(a.x + a.width + hw, a.y, b.x - hw, b.y, b.x, b.y);
     p.lineTo(b.x, b.y + b.height);
@@ -936,7 +936,7 @@ export function link(shape1, shape2, orientation) {
     );
     p.close();
   } else {
-    var hh = (b.y - (a.y + a.height)) / 2;
+    const hh = (b.y - (a.y + a.height)) / 2;
     p.moveTo(a.x, a.y + a.height);
     p.curveTo(a.x, a.y + a.height + hh, b.x, b.y - hh, b.x, b.y);
     p.lineTo(b.x + b.width, b.y);
@@ -953,7 +953,7 @@ export function link(shape1, shape2, orientation) {
   return p;
 }
 
-var compoundMethods = {
+const compoundMethods = {
   union: ClipperLib.ClipType.ctUnion,
   difference: ClipperLib.ClipType.ctDifference,
   intersection: ClipperLib.ClipType.ctIntersection,
@@ -961,8 +961,8 @@ var compoundMethods = {
 };
 
 export function _compoundToPoints(shape) {
-  var l1 = [];
-  var i, l, s, j, pt;
+  const l1 = [];
+  let i, l, s, j, pt;
   for (i = 0; i < shape.length; i += 1) {
     l = [];
     s = shape[i];
@@ -981,7 +981,7 @@ function cmdToPathKit(cmd) {
   if (!window.PathKit) {
     throw new Error("PathKit module not found.");
   }
-  var PathKit = window.PathKit;
+  const PathKit = window.PathKit;
   if (cmd.type === MOVETO) {
     return [PathKit.MOVE_VERB, cmd.x, cmd.y];
   } else if (cmd.type === LINETO) {
@@ -993,13 +993,13 @@ function cmdToPathKit(cmd) {
   }
 }
 
-var compoundOpsPathKit;
+let compoundOpsPathKit;
 
 export function _compoundPathKit(shape1, shape2, method) {
   if (!window.PathKit) {
     throw new Error("PathKit module not found.");
   }
-  var PathKit = window.PathKit;
+  const PathKit = window.PathKit;
   if (!compoundOpsPathKit) {
     compoundOpsPathKit = {
       union: PathKit.PathOp.UNION,
@@ -1009,13 +1009,13 @@ export function _compoundPathKit(shape1, shape2, method) {
     };
   }
 
-  var cmds1 = shape1.commands.map(cmdToPathKit);
-  var cmds2 = shape2.commands.map(cmdToPathKit);
-  var p1 = PathKit.FromCmds(cmds1);
-  var p2 = PathKit.FromCmds(cmds2);
+  const cmds1 = shape1.commands.map(cmdToPathKit);
+  const cmds2 = shape2.commands.map(cmdToPathKit);
+  const p1 = PathKit.FromCmds(cmds1);
+  const p2 = PathKit.FromCmds(cmds2);
   p1.op(p2, compoundOpsPathKit[method]);
-  var cmds = p1.toCmds();
-  var path = new Path();
+  const cmds = p1.toCmds();
+  const path = new Path();
   cmds.forEach(function (cmd) {
     if (cmd[0] === PathKit.MOVE_VERB) {
       path.moveTo(cmd[1], cmd[2]);
@@ -1051,20 +1051,20 @@ export function compound(shape1, shape2, method) {
   ) {
     return vg._compoundPathKit(shape1, shape2, method);
   }
-  var contours1 = shape1.resampleByLength(1).contours();
-  var contours2 = shape2.resampleByLength(1).contours();
+  const contours1 = shape1.resampleByLength(1).contours();
+  const contours2 = shape2.resampleByLength(1).contours();
 
-  var subjPaths = vg._compoundToPoints(contours1);
-  var clipPaths = vg._compoundToPoints(contours2);
-  var scale = 100;
+  const subjPaths = vg._compoundToPoints(contours1);
+  const clipPaths = vg._compoundToPoints(contours2);
+  const scale = 100;
   ClipperLib.JS.ScaleUpPaths(subjPaths, scale);
   ClipperLib.JS.ScaleUpPaths(clipPaths, scale);
 
-  var cpr = new ClipperLib.Clipper();
+  const cpr = new ClipperLib.Clipper();
   cpr.AddPaths(subjPaths, ClipperLib.PolyType.ptSubject, shape1.isClosed());
   cpr.AddPaths(clipPaths, ClipperLib.PolyType.ptClip, shape2.isClosed());
 
-  var solutionPaths = new ClipperLib.Paths();
+  let solutionPaths = new ClipperLib.Paths();
   cpr.Execute(
     compoundMethods[method],
     solutionPaths,
@@ -1073,8 +1073,8 @@ export function compound(shape1, shape2, method) {
   );
   solutionPaths = ClipperLib.JS.Clean(solutionPaths, 0.1 * scale);
   ClipperLib.JS.ScaleDownPaths(solutionPaths, scale);
-  var path = new Path();
-  var i, j, s;
+  const path = new Path();
+  let i, j, s;
   for (i = 0; i < solutionPaths.length; i += 1) {
     s = solutionPaths[i];
     for (j = 0; j < s.length; j += 1) {
@@ -1116,7 +1116,7 @@ function constructPath(points, closed) {
     length += 1;
   }
   for (i = 0; i < length; i += 1) {
-    let seg = segments[i % segments.length];
+    const seg = segments[i % segments.length];
     if (i === 0) {
       commands.push({ cmd: "moveto", pt: seg._pt });
     } else {
@@ -1154,22 +1154,22 @@ export function roundedSegments(shape, d) {
   const points = vg.toPoints(shape);
   const newPoints = [];
   for (let i = 0; i < points.length; i += 1) {
-    let pt = points[i];
+    const pt = points[i];
     let prev;
     if (i === 0) {
       prev = points[points.length - 1];
     } else {
       prev = points[i - 1];
     }
-    let next = points[(i + 1) % points.length];
-    let a = degrees(Math.atan2(next.y - prev.y, next.x - prev.x));
-    let c1 = coordinates(pt.x, pt.y, a, -d[i % d.length]);
-    let c2 = coordinates(pt.x, pt.y, a, d[i % d.length]);
+    const next = points[(i + 1) % points.length];
+    const a = degrees(Math.atan2(next.y - prev.y, next.x - prev.x));
+    const c1 = coordinates(pt.x, pt.y, a, -d[i % d.length]);
+    const c2 = coordinates(pt.x, pt.y, a, d[i % d.length]);
     newPoints.push(c1);
     newPoints.push(pt);
     newPoints.push(c2);
   }
-  let path = constructPath(newPoints, shape.isClosed());
+  const path = constructPath(newPoints, shape.isClosed());
   path.fill = shape.fill;
   path.stroke = shape.stroke;
   path.strokeWidth = shape.strokeWidth;

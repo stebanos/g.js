@@ -41,7 +41,7 @@ export default class Transform {
     ]);
   }
   isIdentity() {
-    var m = this.m;
+    const m = this.m;
     return (
       m[0] === 1 &&
       m[1] === 0 &&
@@ -58,7 +58,7 @@ export default class Transform {
     return Transform._mmult(matrix.m, this.m);
   }
   inverse() {
-    var m = this.m,
+    const m = this.m,
       d = m[0] * m[3] - m[1] * m[2];
     return new Transform([
       m[3] / d,
@@ -79,35 +79,35 @@ export default class Transform {
     return Transform._mmult([1, 0, 0, 1, x, y], this.m);
   }
   rotate(angle) {
-    var c = Math.cos(radians(angle)),
+    const c = Math.cos(radians(angle)),
       s = Math.sin(radians(angle));
     return Transform._mmult([c, s, -s, c, 0, 0], this.m);
   }
   skew(x, y) {
-    var kx = (Math.PI * x) / 180.0,
+    const kx = (Math.PI * x) / 180.0,
       ky = (Math.PI * y) / 180.0;
     return Transform._mmult([1, Math.tan(ky), -Math.tan(kx), 1, 0, 0], this.m);
   }
   // Returns the new coordinates of the given point (x,y) after transformation.
   transformPoint(point) {
-    var x = point.x,
+    const x = point.x,
       y = point.y,
       m = this.m;
     return new Point(x * m[0] + y * m[2] + m[4], x * m[1] + y * m[3] + m[5]);
   }
   transformPoints(points) {
-    var transformedPoints = [];
-    for (var i = 0; i < points.length; i += 1) {
+    const transformedPoints = [];
+    for (let i = 0; i < points.length; i += 1) {
       transformedPoints.push(this.transformPoint(points[i]));
     }
     return transformedPoints;
   }
   transformPath(path) {
-    var m = this.m;
-    var commands = [];
+    const m = this.m;
+    const commands = [];
     commands.length = path.commands.length;
-    for (var i = 0, l = path.commands.length; i < l; i++) {
-      var cmd = path.commands[i];
+    for (let i = 0, l = path.commands.length; i < l; i++) {
+      const cmd = path.commands[i];
       switch (cmd.type) {
         case MOVETO:
         case LINETO:
@@ -147,19 +147,19 @@ export default class Transform {
     return new Path(commands, path.fill, path.stroke, path.strokeWidth);
   }
   transformText(text) {
-    var t = text.clone();
+    const t = text.clone();
     t.transform = this.append(t.transform);
     return t;
   }
   transformGroup(group) {
-    var transformedShapes = [];
-    for (var i = 0; i < group.shapes.length; i += 1) {
+    const transformedShapes = [];
+    for (let i = 0; i < group.shapes.length; i += 1) {
       transformedShapes.push(this.transformShape(group.shapes[i]));
     }
     return new Group(transformedShapes);
   }
   transformShape(shape) {
-    var fn;
+    let fn;
     if (shape.shapes) {
       fn = this.transformGroup;
     } else if (shape.commands) {
@@ -174,8 +174,8 @@ export default class Transform {
       if (shape[0].x !== undefined && shape[0].y !== undefined) {
         fn = this.transformPoints;
       } else {
-        var l = [];
-        for (var i = 0; i < shape.length; i += 1) {
+        const l = [];
+        for (let i = 0; i < shape.length; i += 1) {
           l.push(this.transformShape(shape[i]));
         }
         return l;

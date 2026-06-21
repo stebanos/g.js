@@ -4,7 +4,7 @@ import randomGenerator from "./random";
 import deepEqual from "./deepequal";
 
 export function combine() {
-  var i,
+  let i,
     l,
     result = [];
   for (i = 0; i < arguments.length; i++) {
@@ -20,7 +20,7 @@ export function contains(l, value) {
   if (!l) {
     return false;
   }
-  for (var i = 0; i < l.length; i += 1) {
+  for (let i = 0; i < l.length; i += 1) {
     if (deepEqual.deepEqual(l[i], value)) {
       return true;
     }
@@ -32,9 +32,9 @@ export function cycle(l, length) {
   if (!l || length <= 0) {
     return [];
   }
-  var newList = [];
-  var ll = l.length;
-  for (var i = 0; i < length; i += 1) {
+  const newList = [];
+  const ll = l.length;
+  for (let i = 0; i < length; i += 1) {
     newList.push(l[i % ll]);
   }
   return newList;
@@ -59,7 +59,7 @@ export function cull(l, booleans) {
   if (!booleans) {
     return l;
   }
-  var i,
+  let i,
     keep,
     results = [];
   for (i = 0; i < l.length; i++) {
@@ -76,7 +76,7 @@ export function distinct(l) {
   if (!l) {
     return [];
   }
-  var i,
+  let i,
     length,
     value,
     result = [],
@@ -112,7 +112,7 @@ export function interleave() {
   let elIndex = 0;
   while (true) {
     for (let i = 0; i < args.length; i++) {
-      let arg = args[i];
+      const arg = args[i];
       if (arg.length > elIndex) {
         results.push(arg[elIndex]);
       } else {
@@ -137,9 +137,9 @@ export function pick(l, amount, seed) {
   if (!seed && seed !== 0) {
     seed = Math.random();
   }
-  var rand = randomGenerator(seed || 0);
-  var results = [];
-  for (var i = 0; i < amount; i += 1) {
+  const rand = randomGenerator(seed || 0);
+  const results = [];
+  for (let i = 0; i < amount; i += 1) {
     results.push(l[Math.floor(rand(0, l.length))]);
   }
   return results;
@@ -152,7 +152,7 @@ export function randomSample(l, amount, seed) {
   if (!seed && seed !== 0) {
     seed = Math.random();
   }
-  var shuffledlist = g.shuffle(l, seed);
+  const shuffledlist = g.shuffle(l, seed);
   if (!amount) {
     return shuffledlist;
   }
@@ -169,7 +169,7 @@ export function repeat(l, amount, perItem) {
   if (amount <= 0) {
     return [];
   }
-  var i,
+  let i,
     j,
     v,
     newList = [];
@@ -215,14 +215,14 @@ export function shift(l, amount) {
     return [];
   }
   amount = amount % l.length;
-  var head = l.slice(0, amount),
+  const head = l.slice(0, amount),
     result = l.slice(amount);
   result.push.apply(result, head);
   return result;
 }
 
 export function shuffle(l, seed) {
-  var i, j, tmp, r;
+  let i, j, tmp, r;
   if (!seed && seed !== 0) {
     seed = Math.random();
   }
@@ -239,7 +239,7 @@ export function shuffle(l, seed) {
 
 export function slice(l, start, size, invert) {
   if (!l) return [];
-  var firstList, secondList;
+  let firstList, secondList;
   if (!invert) {
     return l.slice(start, start + size);
   } else {
@@ -276,7 +276,7 @@ export function sort(l, key) {
 }
 
 export function switch_(index) {
-  var nLists = arguments.length - 1;
+  const nLists = arguments.length - 1;
   index = index % nLists;
   if (index < 0) {
     index += nLists;
@@ -286,7 +286,7 @@ export function switch_(index) {
 
 export function takeEvery(l, n, offset) {
   if (!l) return [];
-  var i,
+  let i,
     results = [];
   offset = offset || 0;
   for (i = 0; i < l.length; i += 1) {
@@ -298,7 +298,7 @@ export function takeEvery(l, n, offset) {
 }
 
 export function zipMap(keys, vals) {
-  var i,
+  let i,
     k,
     v,
     m = {},
