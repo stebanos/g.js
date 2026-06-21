@@ -4,7 +4,7 @@
 // https://github.com/gdsmith/jquery.easing
 // t: current time, b: beginning value, c: change in value, d: duration
 
-var g = {};
+const g = {};
 
 g.easeInQuad = function (t, b, c, d) {
     return c * (t /= d) * t + b;
@@ -99,9 +99,9 @@ g.easeInOutCirc = function (t, b, c, d) {
 };
 
 g.easeInElastic = function (t, b, c, d) {
-    var s = 1.70158;
-    var p = 0;
-    var a = c;
+    let s = 1.70158;
+    let p = 0;
+    let a = c;
     if (t === 0) { return b; }
     if ((t /= d) === 1) { return b + c; }
     if (!p) p = d * 0.3;
@@ -116,9 +116,9 @@ g.easeInElastic = function (t, b, c, d) {
 };
 
 g.easeOutElastic = function (t, b, c, d) {
-    var s = 1.70158;
-    var p = 0;
-    var a = c;
+    let s = 1.70158;
+    let p = 0;
+    let a = c;
     if (t === 0) { return b; }
     if ((t /= d) === 1) { return b + c; }
     if (!p) p = d * 0.3;
@@ -133,9 +133,9 @@ g.easeOutElastic = function (t, b, c, d) {
 };
 
 g.easeInOutElastic = function (t, b, c, d) {
-    var s = 1.70158;
-    var p = 0;
-    var a = c;
+    let s = 1.70158;
+    let p = 0;
+    let a = c;
     if (t === 0) { return b; }
     if ((t /= d / 2) === 2) { return b + c; }
     if (!p) p = d * (0.3 * 1.5);
@@ -194,8 +194,8 @@ g.easeInOutBounce = function (t, b, c, d) {
 };
 
 g.easing = function (f) {
-    var fn = g[f];
-    var args = Array.prototype.slice.call(arguments, 1);
+    const fn = g[f];
+    const args = Array.prototype.slice.call(arguments, 1);
     return fn.apply(null, args);
 };
 

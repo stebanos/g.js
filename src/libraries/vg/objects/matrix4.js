@@ -2,10 +2,10 @@
 
 'use strict';
 
-var Vec3 = require('../objects/vec3');
+const Vec3 = require('../objects/vec3');
 
 // Construct a 4x4 matrix.
-var Matrix4 = function (m) {
+const Matrix4 = function (m) {
     if (m !== undefined) {
        // TODO Check for type and length
         this.m = m;
@@ -35,8 +35,8 @@ Matrix4.IDENTITY = new Matrix4();
 
 // Create a perspective matrix transformation.
 Matrix4.perspective = function (fov, aspect, zNear, zFar) {
-    var m = new Float32Array(Matrix4.IDENTITY.m),
-        tan = 1.0 / (Math.tan(fov * 0.5));
+    const m = new Float32Array(Matrix4.IDENTITY.m),
+          tan = 1.0 / (Math.tan(fov * 0.5));
 
     m[0] = tan / aspect;
     m[1] = m[2] = m[3] = 0.0;
@@ -52,7 +52,7 @@ Matrix4.perspective = function (fov, aspect, zNear, zFar) {
 };
 
 Matrix4.lookAt = function (eye, target, up) {
-    var m, zAxis, xAxis, yAxis, ex, ey, ez;
+    let m, zAxis, xAxis, yAxis, ex, ey, ez;
     m = new Float32Array(16);
     zAxis = target.subtract(eye).normalize();
     xAxis = Vec3.cross(up, zAxis).normalize();
@@ -84,7 +84,7 @@ Matrix4.lookAt = function (eye, target, up) {
 
 // Return a new matrix with the inversion of this matrix.
 Matrix4.prototype.invert = function () {
-    var l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11, l12, l13, l14, l15, l16, l17, l18, l19, l20, l21, l22, l23, l24, l25, l26, l27, l28,
+    let l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11, l12, l13, l14, l15, l16, l17, l18, l19, l20, l21, l22, l23, l24, l25, l26, l27, l28,
         l29, l30, l31, l32, l33, l34, l35, l36, l37, l38, l39, m;
     l1 = this.m[0];
     l2 = this.m[1];
@@ -147,7 +147,7 @@ Matrix4.prototype.invert = function () {
 };
 
 Matrix4.prototype.multiply = function (other) {
-    var m = new Float32Array(16);
+    const m = new Float32Array(16);
 
     m[0] = this.m[0] * other.m[0] + this.m[1] * other.m[4] + this.m[2] * other.m[8] + this.m[3] * other.m[12];
     m[1] = this.m[0] * other.m[1] + this.m[1] * other.m[5] + this.m[2] * other.m[9] + this.m[3] * other.m[13];
@@ -173,7 +173,7 @@ Matrix4.prototype.multiply = function (other) {
 };
 
 Matrix4.prototype.translate = function (tx, ty, tz) {
-    var m = new Float32Array(this.m);
+    const m = new Float32Array(this.m);
     m[12] += tx;
     m[13] += ty;
     m[14] += tz;

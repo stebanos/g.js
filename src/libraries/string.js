@@ -1,6 +1,6 @@
 'use strict';
 
-var g = {};
+const g = {};
 
 g.characterAt = function (s, index) {
     if (!s || s.length === 0) { return ''; }
@@ -12,9 +12,9 @@ g.characterAt = function (s, index) {
 };
 
 g.concatenate = function () {
-    var result = '';
-    for (var i = 0; i < arguments.length; i++) {
-        var s = arguments[i];
+    let result = '';
+    for (let i = 0; i < arguments.length; i++) {
+        let s = arguments[i];
         s = s !== undefined ? String(s) : '';
         result += s;
     }
@@ -24,7 +24,7 @@ g.concatenate = function () {
 g.endsWith = function (s, value) {
     if (!s || !value) { return false; }
     s = String(s);
-    return s.indexOf(value, s.length - value.length) !== -1;
+    return !!~s.indexOf(value, s.length - value.length);
 };
 
 g.reverse = function (l) {
@@ -34,7 +34,7 @@ g.reverse = function (l) {
 g.startsWith = function (s, value) {
     if (!s || !value) { return false; }
     s = String(s);
-    return s.indexOf(value) === 0;
+    return !s.indexOf(value);
 };
 
 g.string = String;
@@ -42,7 +42,7 @@ g.string = String;
 g.stringContains = function (s, sub) {
     if (!s || !sub) { return false; }
     s = String(s);
-    return s.indexOf(sub) !== -1;
+    return !!~s.indexOf(sub);
 };
 
 g.stringEquals = function (string1, string2, ignoreCase) {
@@ -96,7 +96,7 @@ g.substring = function (s, start, end, endOffset) {
 
     if (end !== undefined) {
         if (endOffset) {
-            end += 1;
+            end++;
         }
     }
     return s.substring(start, end);
@@ -104,9 +104,9 @@ g.substring = function (s, start, end, endOffset) {
 
 g.toCharacterCodes = function(s) {
     if (!s) return [];
-    var codes = [];
+    const codes = [];
     codes.length = s.length;
-    for (var i = 0; i < s.length; i += 1) {
+    for (let i = 0; i < s.length; i++) {
         codes[i] = s.charCodeAt(i);
     }
     return codes;
@@ -124,10 +124,10 @@ g.toLowerCase = function (s) {
 };
 
 g.toTitleCase = function (s) {
-    var c, result = '';
+    let result = '';
     s = String(s);
-    for (var i = 0; i < s.length; i += 1) {
-        c = s[i];
+    for (let i = 0; i < s.length; i++) {
+        const c = s[i];
         if (result.length === 0 || result[result.length - 1] === ' ') {
             result += c.toUpperCase();
         } else {
@@ -145,12 +145,12 @@ g.toUpperCase = function (s) {
 g.wordCount = function (s) {
     if (!s) { return 0; }
     s = String(s);
-    var split = s.split(new RegExp('\\w+'));
+    const split = s.split(new RegExp('\\w+'));
     return split.length - 1;
 };
 
 g.toWords = function (s) {
-    var l = s.split(/\W+/);
+    const l = s.split(/\W+/);
     if (l[l.length - 1] === '') {
         l.pop();
     }

@@ -1,12 +1,12 @@
 'use strict';
 
-var randomGenerator = function (seed) {
+const randomGenerator = function (seed) {
     // Note: the generator didn't work with negative seed values, so here we
     // transform our original seed into a new (positive) seed value with which we
     // create a new generator.
     if (seed < 0) {
-        var gen = randomGenerator(Math.abs(seed));
-        for (var i = 0; i < 23; i += 1) {
+        const gen = randomGenerator(Math.abs(seed));
+        for (let i = 0; i < 23; i++) {
             gen();
         }
         return randomGenerator(gen(0, 10000));
@@ -18,18 +18,18 @@ var randomGenerator = function (seed) {
         min = min || 0;
         max = max || 1;
         seed = (seed * 9301 + 49297) % 233280;
-        var v = seed / 233280;
+        const v = seed / 233280;
         return min + v * (max - min);
     };
 };
 
-var flatten = function (arg) {
-	var arr = Array.prototype.slice.call(arg);
-	var args = [];
-	for (var i = 0; i < arr.length; i += 1) {
-		var o = arr[i];
+const flatten = function (arg) {
+	const arr = Array.prototype.slice.call(arg);
+	const args = [];
+	for (let i = 0; i < arr.length; i++) {
+		const o = arr[i];
 		if (Array.isArray(o)) {
-			for (var j = 0; j < o.length; j += 1) {
+			for (let j = 0; j < o.length; j++) {
 				args.push(o[j]);
 			}
 		} else {
@@ -37,7 +37,7 @@ var flatten = function (arg) {
 		}
 	}
 	return args;
-} 
+};
 
 exports.randomGenerator = randomGenerator;
 exports.flatten = flatten;

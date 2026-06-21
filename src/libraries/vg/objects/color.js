@@ -2,17 +2,17 @@
 
 'use strict';
 
-var math = require('../util/math');
-var color = require('../util/color');
-var js = require('../util/js');
+const math = require('../util/math');
+const color = require('../util/color');
+const js = require('../util/js');
 
-// var RGB = 'RGB';
-var HSB = 'HSB';
-var HSL = 'HSL';
-var HEX = 'HEX';
+// const RGB = 'RGB';
+const HSB = 'HSB';
+const HSL = 'HSL';
+const HEX = 'HEX';
 
-var Color = function (v1, v2, v3, v4, v5) {
-    var _r, _g, _b, _a, rgb, options;
+const Color = function (v1, v2, v3, v4, v5) {
+    let _r, _g, _b, _a, rgb, options;
     if (v1 === undefined) {
         _r = _g = _b = 0;
         _a = 1;
@@ -187,13 +187,13 @@ Color.prototype.toHex = function (ignoreAlpha) {
 
 Color.prototype.desaturate = function (options) {
     if (this.r === this.g && this.g === this.b) { return this; }
-    var rCoeff, gCoeff, bCoeff;
+    let rCoeff, gCoeff, bCoeff;
     if (options === undefined || !options.method || options.method === 'ITU-R BT.601') {
         rCoeff = 0.3; gCoeff = 0.59; bCoeff = 0.11;
     } else if (options.method === 'ITU-R BT.709') {
         rCoeff = 0.2125; gCoeff = 0.7154; bCoeff = 0.0721;
     }
-    var gray = this.r * rCoeff + this.g * gCoeff + this.b * bCoeff;
+    const gray = this.r * rCoeff + this.g * gCoeff + this.b * bCoeff;
     return new Color(gray, gray, gray, this.a);
 };
 
@@ -219,14 +219,14 @@ Color.toCSS = function (c) {
     } else if (typeof c === 'string') {
         return c;
     } else if (c instanceof Color) {
-        let r255 = Math.round(c.r * 255),
-            g255 = Math.round(c.g * 255),
-            b255 = Math.round(c.b * 255);
+        const r255 = Math.round(c.r * 255),
+              g255 = Math.round(c.g * 255),
+              b255 = Math.round(c.b * 255);
         return 'rgba(' + r255 + ', ' + g255 + ', ' + b255 + ', ' + c.a + ')';
     } else if (c.r !== undefined && c.g !== undefined && c.b !== undefined) {
-        let r255 = Math.round(c.r * 255),
-            g255 = Math.round(c.g * 255),
-            b255 = Math.round(c.b * 255);
+        const r255 = Math.round(c.r * 255),
+              g255 = Math.round(c.g * 255),
+              b255 = Math.round(c.b * 255);
         if (c.a === undefined) {
             return 'rgb(' + r255 + ', ' + g255 + ', ' + b255 + ')';
         } else {
@@ -242,7 +242,7 @@ Color.toHex = function (c, ignoreAlpha) {
 };
 
 Color.make = function () {
-    var c = Object.create(Color.prototype);
+    const c = Object.create(Color.prototype);
     c.constructor = Color.prototype;
     Color.apply(c, arguments);
     return c;
@@ -255,7 +255,7 @@ Color.parse = function (s) {
         return s.indexOf(value) === 0;
     }
 
-    var m;
+    let m;
     if (s === undefined || s === null) {
         return new Color(0, 0, 0, 0);
     } else if (s instanceof Color) {

@@ -1,10 +1,10 @@
 'use strict';
 
-var vg = require('./vg/vg');
-var img = require('./img/img');
-var math = require('./math');
+const vg = require('./vg/vg');
+const img = require('./img/img');
+const math = require('./math');
 
-var g = {};
+const g = {};
 
 g.HORIZONTAL = 'horizontal';
 g.VERTICAL = 'vertical';
@@ -33,9 +33,10 @@ function transform(shape, t) {
     if (shape instanceof vg.Path || shape instanceof vg.Group || shape instanceof vg.Text || ((shape.x !== undefined && shape.y !== undefined))) {
         return transformShape(shape, t);
     } else if (Array.isArray(shape)) {
-        var l = [];
-        for (var i = 0; i < shape.length; i += 1) {
-            l.push(transform(shape[i], t));
+        const l = [];
+		l.length = shape.length;
+        for (let i = 0; i < shape.length; i++) {
+            l[i] = transform(shape[i], t);
         }
         return l;
     } else if (shape instanceof img.Img) {
@@ -47,10 +48,10 @@ g.align = function (shape, position, hAlign, vAlign) {
     if (!shape) {
         return;
     }
-    var dx, dy, t,
-        x = position.x,
-        y = position.y,
-        bounds = vg.bounds(shape);
+    const x = position.x,
+          y = position.y,
+          bounds = vg.bounds(shape);
+	let dx, dy;
     if (hAlign === g.LEFT) {
         dx = x - bounds.x;
     } else if (hAlign === g.RIGHT) {
@@ -70,12 +71,12 @@ g.align = function (shape, position, hAlign, vAlign) {
         dy = 0;
     }
 
-    t = new vg.Transform().translate(dx, dy);
+    const t = new vg.Transform().translate(dx, dy);
     return transform(shape, t);
 };
 
 g.colorize = function (shape, options) {
-    var args = arguments;
+    const args = arguments;
     if (typeof options !== 'object' || options instanceof vg.Color) {
         options = {};
         if (args[1] !== undefined) { options.fill = args[1]; }
@@ -95,8 +96,8 @@ g.colorize = function (shape, options) {
 
 g.copy = function (shape, copies, order, translate, rotate, scale) {
     if (!shape) return [];
-    var i, t, j, op, fn,
-        shapes = [],
+    let fn,
+	    shapes = [],
         tx = 0,
         ty = 0,
         r = 0,
@@ -113,10 +114,10 @@ g.copy = function (shape, copies, order, translate, rotate, scale) {
         fn = transformImage;
     }
 
-    for (i = 0; i < copies; i += 1) {
-        t = new vg.Transform();
-        for (j = 0; j < order.length; j += 1) {
-            op = order[j];
+    for (let i = 0; i < copies; i++) {
+        let t = new vg.Transform();
+        for (let j = 0; j < order.length; j++) {
+            const op = order[j];
             if (op === 't') {
                 t = t.translate(tx, ty);
             } else if (op === 'r') {
@@ -143,12 +144,12 @@ g.copy = function (shape, copies, order, translate, rotate, scale) {
 g.flip = function (shape, axis) {
     if (axis === 'none') { return shape; }
     if (shape instanceof vg.Path || shape instanceof vg.Group || shape instanceof vg.Text || (Array.isArray(shape) && shape.length > 0 && shape[0].x !== undefined && shape[0].y !== undefined)) {
-        var x = axis === g.HORIZONTAL || axis === g.BOTH ? -1 : 1;
-        var y = axis === g.VERTICAL || axis === g.BOTH ? -1 : 1;
+        const x = axis === g.HORIZONTAL || axis === g.BOTH ? -1 : 1;
+        const y = axis === g.VERTICAL || axis === g.BOTH ? -1 : 1;
         return vg.scale(shape, new vg.Point(x, y), vg.centerPoint(shape));
     } else if (shape instanceof img.Img) {
-        var image = shape;
-        var layer = image.toLayer(false);
+        const image = shape;
+        const layer = image.toLayer(false);
         if (axis === g.HORIZONTAL || axis === g.BOTH) {
             layer.flipHorizontal();
         }
@@ -164,17 +165,16 @@ g.fit = function (shape, position, width, height, stretch) {
         return;
     }
     stretch = stretch !== undefined ? stretch : false;
-    var t, sx, sy,
-        bounds = vg.bounds(shape),
-        bx = bounds.x,
-        by = bounds.y,
-        bw = bounds.width,
-        bh = bounds.height;
 
-    // Make sure bw and bh aren't infinitely small numbers.
-    // This will lead to incorrect transformations with for examples lines.
-    bw = (bw > 0.000000000001) ? bw : 0;
-    bh = (bh > 0.000000000001) ? bh : 0;
+	const bounds = vg.bounds(shape),
+	      bx = bounds.x,
+	      by = bounds.y,
+          // Make sure bw and bh aren't infinitely small numbers.
+          // This will lead to incorrect transformations with for examples lines.
+          bw = (bounds.width > 0.000000000001) ? bounds.width : 0,
+          bh = (bounds.height > 0.000000000001) ? bounds.height : 0;
+
+    let t, sx, sy;
 
     t = new vg.Transform();
     t = t.translate(position.x, position.y);
@@ -202,11 +202,11 @@ g.fitTo = function (shape, bounding, stretch) {
         return shape;
     }
 
-    var bounds = vg.bounds(bounding),
-        bx = bounds.x,
-        by = bounds.y,
-        bw = bounds.width,
-        bh = bounds.height;
+    const bounds = vg.bounds(bounding),
+          bx = bounds.x,
+          by = bounds.y,
+          bw = bounds.width,
+          bh = bounds.height;
 
     return g.fit(shape, {x: bx + bw / 2, y: by + bh / 2}, bw, bh, stretch);
 };
@@ -216,36 +216,38 @@ g.hslAdjust = function (v, hue, saturation, lightness, alpha) {
 
     // First, handle the image case.
     if (v instanceof img.Img) {
-        var image = v;
-        var layer = image.toLayer(false);
+        const image = v;
+        const layer = image.toLayer(false);
         layer.addFilter('hslAdjust', {h: hue, s: saturation, l: lightness, a: alpha});
         return image.withCanvas(layer.toCanvas());
     }
 
     hue = clamp(hue, -1, 1);
+    hue = (hue * 6) % 6;
     saturation = clamp(saturation, -1, 1);
     lightness = clamp(lightness, -1, 1);
     alpha = clamp(alpha, -1, 1);
-    var satMul = 1 + saturation * (saturation < 0 ? 1 : 2);
-    var lightMul = lightness < 0 ? 1 + lightness : 1 - lightness;
-    var lightAdd = lightness < 0 ? 0 : lightness;
-    var r, g, b, vs, ms, vm, h, s, l, m, vmh, sextant;
-    hue = (hue * 6) % 6;
+	
+    const satMul = 1 + saturation * (saturation < 0 ? 1 : 2),
+          lightMul = lightness < 0 ? 1 + lightness : 1 - lightness,
+          lightAdd = lightness < 0 ? 0 : lightness;
+	
+    let r, g, b, vs, ms, vm, h, s, l, m, vmh, sextant;
 
     function hslAdjust(v1) {
         if (v1 instanceof vg.Group) {
-            var newShapes = [];
-            for (var i = 0; i < v1.shapes.length; i += 1) {
+            const newShapes = [];
+            for (let i = 0; i < v1.shapes.length; i++) {
                 newShapes.push(hslAdjust(v1.shapes[i]));
             }
             return new vg.Group(newShapes);
         } else if (v1 instanceof vg.Path) {
-            var p = v1.clone();
+            const p = v1.clone();
             p.fill = hslAdjust(p.fill);
             p.stroke = hslAdjust(p.stroke);
             return p;
         }
-        var c = v1;
+        let c = v1;
         if (!(c instanceof vg.Color)) {
             c = vg.Color.parse(c);
         }
@@ -370,23 +372,23 @@ g.rgbAdjust = function (v, red, green, blue, alpha) {
 
     function rgbAdjust(v) {
         if (v instanceof img.Img) {
-            var image = v;
-            var layer = image.toLayer(false);
+            const image = v;
+            const layer = image.toLayer(false);
             layer.addFilter('rgbAdjust', {r: red, g: green, b: blue, a: alpha});
             return image.withCanvas(layer.toCanvas());
         } else if (v instanceof vg.Group) {
-            var newShapes = [];
-            for (var i = 0; i < v.shapes.length; i += 1) {
+            const newShapes = [];
+            for (let i = 0; i < v.shapes.length; i++) {
                 newShapes.push(rgbAdjust(v.shapes[i]));
             }
             return new vg.Group(newShapes);
         } else if (v instanceof vg.Path) {
-            var p = v.clone();
+            const p = v.clone();
             p.fill = rgbAdjust(p.fill);
             p.stroke = rgbAdjust(p.stroke);
             return p;
         }
-        var c = v;
+        let c = v;
         if (!(c instanceof vg.Color)) {
             c = vg.Color.parse(c);
         }
@@ -403,43 +405,42 @@ g.stack = function (shapes, direction, margin) {
         return shapes;
     }
 
-    var i, shape, tx, ty, t, bounds,
-        firstBounds = shapes[0].bounds(),
-        newShapes = [];
+    const firstBounds = shapes[0].bounds();
+    const newShapes = [];
 
     if (direction === 'e') {
-        tx = firstBounds.x;
-        for (i = 0; i < shapes.length; i += 1) {
-            shape = shapes[i];
-            bounds = shape.bounds();
-            t = new vg.Transform().translate(tx - bounds.x, 0);
+        let tx = firstBounds.x;
+        for (let i = 0; i < shapes.length; i++) {
+            const shape = shapes[i],
+                  bounds = shape.bounds(),
+                  t = new vg.Transform().translate(tx - bounds.x, 0);
             newShapes.push(transform(shape, t));
             tx += bounds.width + margin;
         }
     } else if (direction === 'w') {
-        tx = firstBounds.x + firstBounds.width;
-        for (i = 0; i < shapes.length; i += 1) {
-            shape = shapes[i];
-            bounds = shape.bounds();
-            t = new vg.Transform().translate(tx - (bounds.x + bounds.width), 0);
+        let tx = firstBounds.x + firstBounds.width;
+        for (let i = 0; i < shapes.length; i++) {
+            const shape = shapes[i],
+                  bounds = shape.bounds(),
+                  t = new vg.Transform().translate(tx - (bounds.x + bounds.width), 0);
             newShapes.push(transform(shape, t));
             tx -= bounds.width + margin;
         }
     } else if (direction === 'n') {
-        ty = firstBounds.y + firstBounds.height;
-        for (i = 0; i < shapes.length; i += 1) {
-            shape = shapes[i];
-            bounds = shape.bounds();
-            t = new vg.Transform().translate(0, ty - (bounds.y + bounds.height));
+        let ty = firstBounds.y + firstBounds.height;
+        for (let i = 0; i < shapes.length; i++) {
+            const shape = shapes[i],
+                  bounds = shape.bounds(),
+                  t = new vg.Transform().translate(0, ty - (bounds.y + bounds.height));
             newShapes.push(transform(shape, t));
             ty -= bounds.height + margin;
         }
     } else if (direction === 's') {
-        ty = firstBounds.y;
-        for (i = 0; i < shapes.length; i += 1) {
-            shape = shapes[i];
-            bounds = shape.bounds();
-            t = new vg.Transform().translate(0, ty - bounds.y);
+        let ty = firstBounds.y;
+        for (let i = 0; i < shapes.length; i++) {
+            const shape = shapes[i],
+                  bounds = shape.bounds(),
+                  t = new vg.Transform().translate(0, ty - bounds.y);
             newShapes.push(transform(shape, t));
             ty += bounds.height + margin;
         }
@@ -448,7 +449,7 @@ g.stack = function (shapes, direction, margin) {
 };
 
 g.angle = function (point1, point2) {
-    var args = arguments;
+    const args = arguments;
     if (args.length === 4) {
         point1 = vg.Point.read(args[0], args[1]);
         point2 = vg.Point.read(args[2], args[3]);
@@ -460,7 +461,7 @@ g.angle = function (point1, point2) {
 };
 
 g.coordinates = function (point, angle, distance) {
-    var args = arguments;
+    const args = arguments;
     if (args.length === 4) {
         point = vg.Point.read(args[0], args[1]);
         angle = args[2];
@@ -472,7 +473,7 @@ g.coordinates = function (point, angle, distance) {
 };
 
 g.distance = function (point1, point2) {
-    var args = arguments;
+    const args = arguments;
     if (args.length === 4) {
         point1 = vg.Point.read(args[0], args[1]);
         point2 = vg.Point.read(args[2], args[3]);
@@ -521,8 +522,8 @@ g.desaturate = function (shape, method) {
 g.invert = function (shape) {
     if (!shape) { return null; }
     if (shape instanceof img.Img) {
-        var image = shape;
-        var layer = image.toLayer(false);
+        const image = shape;
+        const layer = image.toLayer(false);
         layer.addFilter('invert');
         return image.withCanvas(layer.toCanvas());
     }

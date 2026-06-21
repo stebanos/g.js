@@ -5,11 +5,11 @@
 
 'use strict';
 
-var Color = require('../objects/color');
-var Rect = require('../objects/rect');
-var Transform = require('../objects/transform');
+const Color = require('../objects/color');
+const Rect = require('../objects/rect');
+const Transform = require('../objects/transform');
 
-var _dummyContext = null;
+let _dummyContext = null;
 
 // Generates a Text object.
 // The function can take many possible argument forms, either by listing them in order
@@ -21,12 +21,12 @@ var _dummyContext = null;
 //     new g.Text('Hello', [0, 0], {fontFamily: 'Helvetica', fontSize: 12, textAlign: 'center'});
 //     new g.Text('Hello', 0, 0, {fontFamily: 'Helvetica', fontSize: 12});  // align: center is the default.
 //     new g.Text('Hello', {fontFamily: 'Helvetica', fontSize: 12}); // the position defaults to 0,0.
-var GText = function (text) {
-    var args = Array.prototype.slice.call(arguments, 1),
-        secondArg = arguments[1],
-        thirdArg = arguments[2],
-        lastArg = arguments[arguments.length - 1],
-        options;
+const GText = function (text) {
+    let options,
+	    args = Array.prototype.slice.call(arguments, 1);
+    const secondArg = arguments[1],
+          thirdArg = arguments[2],
+          lastArg = arguments[arguments.length - 1];
 
     // The text is required and always the first argument.
     this.text = String(text);
@@ -87,7 +87,7 @@ var GText = function (text) {
 };
 
 GText.prototype.clone = function () {
-    var t = new GText();
+    const t = new GText();
     t.text = this.text;
     t._x = this._x;
     t._y = this._y;
@@ -110,7 +110,7 @@ GText._getDummyContext = function () {
             _dummyContext = {
                 font: '10px sans-serif',
                 measureText: function (text) {
-                    var fontSize = parseFloat(this.font);
+                    const fontSize = parseFloat(this.font);
                     // The 0.6 is the average width / fontSize ratio across all characters and font sizes.
                     return {width: text.length * fontSize * 0.6};
                 }
@@ -125,7 +125,7 @@ GText.prototype._getFont = function () {
 };
 
 GText.prototype.colorize = function (fill) {
-    var t = this.clone();
+    const t = this.clone();
     t.fill = Color.clone(fill);
     return t;
 };
@@ -134,7 +134,7 @@ GText.prototype.draw = function (ctx) {
     ctx.save();
     ctx.font = this._getFont();
     ctx.textAlign = this.textAlign;
-    var m = this.transform.m;
+    const m = this.transform.m;
     ctx.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
     ctx.fillStyle = Color.toCSS(this.fill);
     ctx.fillText(this.text, this._x, this._y);
@@ -142,8 +142,8 @@ GText.prototype.draw = function (ctx) {
 };
 
 GText.prototype.bounds = function () {
-    var ctx = GText._getDummyContext(),
-        metrics,
+    const ctx = GText._getDummyContext();
+    let metrics,
         x = this._x;
     ctx.font = this._getFont();
     // FIXME: measureText returns a TextMetrics object that only contains width.
@@ -157,12 +157,12 @@ GText.prototype.bounds = function () {
 };
 
 GText.prototype.toSVG = function () {
-    var svg = '<text';
+    let svg = '<text';
     svg += ' x="' + this._x + '"';
     svg += ' y="' + this._y + '"';
     svg += ' font-family="' + this.fontFamily + '"';
     svg += ' font-size="' + this.fontSize + '"';
-    var textAnchor;
+    let textAnchor;
     if (this.textAlign === 'left') {
         textAnchor = 'start';
     } else if (this.textAlign === 'center') {
@@ -172,7 +172,7 @@ GText.prototype.toSVG = function () {
     }
     svg += ' text-anchor="' + textAnchor + '"';
     if (this.fill !== 'black') {
-        var fill = Color.parse(this.fill);
+        const fill = Color.parse(this.fill);
         svg += ' fill="' + fill.toHex(true) + '"';
         if (fill.a < 1) {
             svg += ' opacity="' + fill.a + '"';

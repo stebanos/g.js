@@ -2,9 +2,9 @@
 
 'use strict';
 
-var Point = require('../objects/point');
+const Point = require('../objects/point');
 
-var Rect = function (x, y, width, height) {
+const Rect = function (x, y, width, height) {
     this.x = x !== undefined ? x : 0;
     this.y = y !== undefined ? y : 0;
     this.width = width !== undefined ? width : 0;
@@ -17,7 +17,7 @@ Object.defineProperty(Rect.prototype, 'xywh', {
 
 // Returns a new rectangle where width and height are guaranteed to be positive values.
 Rect.prototype.normalize = function () {
-    var x = this.x,
+    let x = this.x,
         y = this.y,
         width = this.width,
         height = this.height;
@@ -48,23 +48,23 @@ Rect.prototype.containsRect = function (r) {
 };
 
 Rect.prototype.grow = function (dx, dy) {
-    var x = this.x - dx,
-        y = this.y - dy,
-        width = this.width + dx * 2,
-        height = this.height + dy * 2;
+    const x = this.x - dx,
+          y = this.y - dy,
+          width = this.width + dx * 2,
+          height = this.height + dy * 2;
     return new Rect(x, y, width, height);
 };
 
 Rect.prototype.unite = function (r) {
-    var x = Math.min(this.x, r.x),
-        y = Math.min(this.y, r.y),
-        width = Math.max(this.x + this.width, r.x + r.width) - x,
-        height = Math.max(this.y + this.height, r.y + r.height) - y;
+    const x = Math.min(this.x, r.x),
+          y = Math.min(this.y, r.y),
+          width = Math.max(this.x + this.width, r.x + r.width) - x,
+          height = Math.max(this.y + this.height, r.y + r.height) - y;
     return new Rect(x, y, width, height);
 };
 
 Rect.prototype.addPoint = function (x, y) {
-    var dx, dy,
+    let dx, dy,
         _x = this.x,
         _y = this.y,
         width = this.width,

@@ -2,23 +2,23 @@
 
 'use strict';
 
-var bezier = require('../util/bezier');
-var math = require('../util/math');
+const bezier = require('../util/bezier');
+const math = require('../util/math');
 
-var Group = require('../objects/group');
-var Path = require('../objects/path');
-var Point = require('../objects/point');
+const Group = require('../objects/group');
+const Path = require('../objects/path');
+const Point = require('../objects/point');
 
-var MOVETO  = bezier.MOVETO;
-var LINETO  = bezier.LINETO;
-var QUADTO  = bezier.QUADTO;
-var CURVETO = bezier.CURVETO;
-var CLOSE   = bezier.CLOSE;
+const MOVETO  = bezier.MOVETO;
+const LINETO  = bezier.LINETO;
+const QUADTO  = bezier.QUADTO;
+const CURVETO = bezier.CURVETO;
+const CLOSE   = bezier.CLOSE;
 
 // A geometric transformation in Euclidean space (i.e. 2D)
 // that preserves collinearity and ratio of distance between points.
 // Linear transformations include rotation, translation, scaling, shear.
-var Transform = function (m) {
+const Transform = function (m) {
     if (m !== undefined) {
         this.m = m;
     } else {
@@ -50,7 +50,7 @@ Transform._mmult = function (a, b) {
 };
 
 Transform.prototype.isIdentity = function () {
-    var m = this.m;
+    const m = this.m;
     return (m[0] === 1 && m[1] === 0 && m[2] === 0 && m[3] === 1 && m[4] === 0 && m[5] === 0);
 };
 
@@ -63,8 +63,8 @@ Transform.prototype.append = function (matrix) {
 };
 
 Transform.prototype.inverse = function () {
-    var m = this.m,
-        d = m[0] * m[3] - m[1] * m[2];
+    const m = this.m,
+          d = m[0] * m[3] - m[1] * m[2];
     return new Transform([
         m[3] / d,
         -m[1] / d,
@@ -85,22 +85,22 @@ Transform.prototype.translate = function (x, y) {
 };
 
 Transform.prototype.rotate = function (angle) {
-    var c = Math.cos(math.radians(angle)),
-        s = Math.sin(math.radians(angle));
+    const c = Math.cos(math.radians(angle)),
+          s = Math.sin(math.radians(angle));
     return Transform._mmult([c, s, -s, c, 0, 0], this.m);
 };
 
 Transform.prototype.skew = function (x, y) {
-    var kx = Math.PI * x / 180.0,
-        ky = Math.PI * y / 180.0;
+    const kx = Math.PI * x / 180.0,
+          ky = Math.PI * y / 180.0;
     return Transform._mmult([1, Math.tan(ky), -Math.tan(kx), 1, 0, 0], this.m);
 };
 
 // Returns the new coordinates of the given point (x,y) after transformation.
 Transform.prototype.transformPoint = function (point) {
-    var x = point.x,
-        y = point.y,
-        m = this.m;
+    const x = point.x,
+          y = point.y,
+          m = this.m;
     return new Point(
         x * m[0] + y * m[2] + m[4],
         x * m[1] + y * m[3] + m[5]
@@ -108,19 +108,19 @@ Transform.prototype.transformPoint = function (point) {
 };
 
 Transform.prototype.transformPoints = function (points) {
-    var transformedPoints = [];
-    for (var i = 0; i < points.length; i += 1) {
+    const transformedPoints = [];
+    for (let i = 0; i < points.length; i++) {
         transformedPoints.push(this.transformPoint(points[i]));
     }
     return transformedPoints;
 };
 
 Transform.prototype.transformPath = function (path) {
-    var m = this.m;
-    var commands = [];
+    const m = this.m;
+    const commands = [];
     commands.length = path.commands.length;
-    for (var i = 0, l = path.commands.length; i < l; i++) {
-        var cmd = path.commands[i];
+    for (let i = 0, l = path.commands.length; i < l; i++) {
+        const cmd = path.commands[i];
         switch(cmd.type) {
             case MOVETO:
             case LINETO:
@@ -161,21 +161,21 @@ Transform.prototype.transformPath = function (path) {
 };
 
 Transform.prototype.transformText = function (text) {
-    var t = text.clone();
+    const t = text.clone();
     t.transform = this.append(t.transform);
     return t;
 };
 
 Transform.prototype.transformGroup = function (group) {
-    var transformedShapes = [];
-    for (var i = 0; i < group.shapes.length; i += 1) {
+    const transformedShapes = [];
+    for (let i = 0; i < group.shapes.length; i++) {
         transformedShapes.push(this.transformShape(group.shapes[i]));
     }
     return new Group(transformedShapes);
 };
 
 Transform.prototype.transformShape = function (shape) {
-    var fn;
+    let fn;
     if (shape.shapes) {
         fn = this.transformGroup;
     } else if (shape.commands) {
@@ -190,8 +190,8 @@ Transform.prototype.transformShape = function (shape) {
         if (shape[0].x !== undefined && shape[0].y !== undefined) {
             fn = this.transformPoints;
         } else {
-            var l = [];
-            for (var i = 0; i < shape.length; i += 1) {
+            const l = [];
+            for (let i = 0; i < shape.length; i++) {
                 l.push(this.transformShape(shape[i]));
             }
             return l;

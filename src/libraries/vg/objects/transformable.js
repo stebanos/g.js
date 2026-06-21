@@ -2,19 +2,19 @@
 
 'use strict';
 
-var Point = require('../objects/point');
-var Transform = require('../objects/transform');
+const Point = require('../objects/point');
+const Transform = require('../objects/transform');
 
-var Transformable = {
+const Transformable = {
     translate: function (position) {
         if (!position) { position = Point.ZERO; }
-        var t = new Transform().translate(position.x, position.y);
+        const t = new Transform().translate(position.x, position.y);
         return t.transformShape(this);
     },
 
     scale: function (scale, origin) {
         if (!origin) { origin = Point.ZERO; }
-        var sx, sy;
+        let sx, sy;
         if (typeof scale === 'number') {
             sx = scale;
             sy = scale;
@@ -22,7 +22,7 @@ var Transformable = {
             sx = scale.x;
             sy = scale.y;
         }
-        var t = new Transform();
+        let t = new Transform();
         t = t.translate(origin.x, origin.y);
         t = t.scale(sx, sy);
         t = t.translate(-origin.x, -origin.y);
@@ -31,7 +31,7 @@ var Transformable = {
 
     rotate: function (angle, origin) {
         if (!origin) { origin = Point.ZERO; }
-        var t = new Transform();
+        let t = new Transform();
         t = t.translate(origin.x, origin.y);
         t = t.rotate(angle);
         t = t.translate(-origin.x, -origin.y);
@@ -40,7 +40,7 @@ var Transformable = {
 
     skew: function (skew, origin) {
         if (!origin) { origin = Point.ZERO; }
-        var t = new Transform();
+        let t = new Transform();
         t = t.translate(origin.x, origin.y);
         t = t.skew(skew.x, skew.y);
         t = t.translate(-origin.x, -origin.y);

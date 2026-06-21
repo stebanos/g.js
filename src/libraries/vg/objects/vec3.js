@@ -2,7 +2,7 @@
 
 'use strict';
 
-var Vec3 = function (x, y, z) {
+const Vec3 = function (x, y, z) {
     this.x = x === undefined ? 0 : x;
     this.y = y === undefined ? 0 : y;
     this.z = z === undefined ? 0 : z;
@@ -36,7 +36,7 @@ Vec3.prototype.toString = function () {
 
 // Convert this vector to an array.
 Vec3.prototype.toArray = function () {
-    var array = [];
+    const array = [];
     array.push(this.x);
     array.push(this.y);
     array.push(this.z);
@@ -50,7 +50,7 @@ Vec3.prototype.getLength = function () {
 
 // Create a new vector that is this vector, normalized.
 Vec3.prototype.normalize = function () {
-    var len, c;
+    let len, c;
     len = this.getLength();
     if (len === 0) {
         return this;
@@ -72,7 +72,7 @@ Vec3.prototype.subtract = function (o) {
 // Transform the vector according to the matrix and return the result.
 // A new vector is created, nothing is modified.
 Vec3.prototype.transform = function (matrix4) {
-    var x, y, z, w, matrix;
+    let x, y, z, w, matrix;
 
     matrix = matrix4;
     x = (this.x * matrix.m[0]) + (this.y * matrix.m[4]) + (this.z * matrix.m[8]) + matrix.m[12];

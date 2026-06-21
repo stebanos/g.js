@@ -1,13 +1,13 @@
 'use strict';
 
-var deepEqual = require('./deepequal');
-var util = require('./util');
-var g = {};
+const deepEqual = require('./deepequal');
+const util = require('./util');
+const g = {};
 
 g.combine = function () {
-    var i, l, result = [];
-    for (i = 0; i < arguments.length; i++) {
-        l = arguments[i];
+    let result = [];
+    for (let i = 0; i < arguments.length; i++) {
+        const l = arguments[i];
         if (l) {
             result = result.concat(l);
         }
@@ -17,7 +17,7 @@ g.combine = function () {
 
 g.contains = function (l, value) {
     if (!l) { return false; }
-    for (var i = 0; i < l.length; i += 1) {
+    for (let i = 0; i < l.length; i++) {
         if (deepEqual.deepEqual(l[i], value)) {
             return true;
         }
@@ -27,9 +27,9 @@ g.contains = function (l, value) {
 
 g.cycle = function (l, length) {
     if (!l || length <= 0) { return []; }
-    var newList = [];
-    var ll = l.length;
-    for (var i = 0; i < length; i += 1) {
+    const ll = l.length;
+    const newList = [];
+    for (let i = 0; i < length; i++) {
         newList.push(l[i % ll]);
     }
     return newList;
@@ -50,11 +50,10 @@ g.count = function (l) {
 g.cull = function (l, booleans) {
     if (!l) { return []; }
     if (!booleans) { return l; }
-    var i, keep, results = [];
-    for (i = 0; i < l.length; i++) {
+    const results = [];
+    for (let i = 0; i < l.length; i++) {
         // Cycle through the list of boolean values.
-        keep = booleans[i % booleans.length];
-        if (keep) {
+        if (booleans[i % booleans.length]) {
             results.push(l[i]);
         }
     }
@@ -63,11 +62,10 @@ g.cull = function (l, booleans) {
 
 g.distinct = function(l) {
     if (!l) { return []; }
-    var i, length, value,
-        result = [],
-        seen = [];
-    for (i = 0, length = l.length; i < length; i += 1) {
-        value = l[i];
+    const result = [],
+          seen = [];
+    for (let i = 0; i < l.length; i++) {
+        const value = l[i];
         if (!g.contains(seen, value)) {
             seen.push(value);
             result.push(l[i]);
@@ -93,14 +91,14 @@ g.interleave = function () {
     let elIndex = 0;
     while (true) {
         for (let i = 0; i < args.length; i++) {
-            let arg = args[i];
+            const arg = args[i];
             if (arg.length > elIndex) {
                 results.push(arg[elIndex]);
             } else {
                 return results;
             }
         }
-        elIndex += 1;
+        elIndex++;
     }
 };
 
@@ -116,9 +114,9 @@ g.pick = function (l, amount, seed) {
     if (!seed && seed !== 0) {
         seed = Math.random();
     }
-    var rand = util.randomGenerator(seed || 0);
-    var results = [];
-    for (var i = 0; i < amount; i += 1) {
+    const rand = util.randomGenerator(seed || 0),
+          results = [];
+    for (let i = 0; i < amount; i++) {
         results.push(l[Math.floor(rand(0, l.length))]);
     }
     return results;
@@ -131,7 +129,7 @@ g.randomSample = function (l, amount, seed) {
     if (!seed && seed !== 0) {
         seed = Math.random();
     }
-    var shuffledlist = g.shuffle(l, seed);
+    const shuffledlist = g.shuffle(l, seed);
     if (!amount) { return shuffledlist; }
     return g.slice(shuffledlist, 0, amount);
 };
@@ -142,16 +140,15 @@ g.repeat = function (l, amount, perItem) {
         l = [l];
     }
     if (amount <= 0) { return []; }
-    var i, j, v,
-        newList = [];
+    const newList = [];
     if (!perItem) {
-        for (i = 0; i < amount; i += 1) {
+        for (let i = 0; i < amount; i++) {
             newList.push.apply(newList, l);
         }
     } else {
-        for (i = 0; i < l.length; i += 1) {
-            v = l[i];
-            for (j = 0; j < amount; j += 1) {
+        for (let i = 0; i < l.length; i++) {
+            const v = l[i];
+            for (let j = 0; j < amount; j++) {
                 newList.push(v);
             }
         }
@@ -178,22 +175,21 @@ g.shift = function (l, amount) {
     // If the amount is bigger than the number of items, wrap around.
     if (!l) { return []; }
     amount = amount % l.length;
-    var head = l.slice(0, amount),
-        result = l.slice(amount);
+    const head = l.slice(0, amount);
+    const result = l.slice(amount);
     result.push.apply(result, head);
     return result;
 };
 
 g.shuffle = function (l, seed) {
-    var i, j, tmp, r;
     if (!seed && seed !== 0) {
         seed = Math.random();
     }
-    r = util.randomGenerator(seed || 0);
+    const r = util.randomGenerator(seed || 0);
     l = l.slice();
-    for (i = l.length - 1; i > 0; i--) {
-        j = Math.floor(r(0, i + 1));
-        tmp = l[i];
+    for (let i = l.length - 1; i > 0; i--) {
+        const j = Math.floor(r(0, i + 1));
+        const tmp = l[i];
         l[i] = l[j];
         l[j] = tmp;
     }
@@ -202,12 +198,11 @@ g.shuffle = function (l, seed) {
 
 g.slice = function (l, start, size, invert) {
     if (!l) return [];
-    var firstList, secondList;
     if (!invert) {
         return l.slice(start, start + size);
     } else {
-        firstList = l.slice(0, start);
-        secondList = l.slice(start + size);
+        const firstList = l.slice(0, start);
+        const secondList = l.slice(start + size);
         firstList.push.apply(firstList, secondList);
         return firstList;
     }
@@ -233,7 +228,7 @@ g.sort = function (l, key) {
 };
 
 g.switch = function (index) {
-    var nLists = (arguments.length - 1);
+    const nLists = (arguments.length - 1);
     index = index % nLists;
     if (index < 0) {
         index += nLists;
@@ -243,9 +238,9 @@ g.switch = function (index) {
 
 g.takeEvery = function (l, n, offset) {
     if (!l) return [];
-    var i, results = [];
     offset = offset || 0;
-    for (i = 0; i < l.length; i += 1) {
+    const results = [];
+    for (let i = 0; i < l.length; i++) {
         if (i % n === offset) {
             results.push(l[i]);
         }
@@ -254,12 +249,11 @@ g.takeEvery = function (l, n, offset) {
 };
 
 g.zipMap = function (keys, vals) {
-    var i, k, v,
-        m = {},
-        minLength = Math.min(keys.length, vals.length);
-    for (i = 0; i < minLength; i += 1) {
-        k = keys[i];
-        v = vals[i];
+    const m = {};
+    const minLength = Math.min(keys.length, vals.length);
+    for (let i = 0; i < minLength; i++) {
+        const k = keys[i];
+        const v = vals[i];
         m[k] = v;
     }
     return m;

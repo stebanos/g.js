@@ -2,7 +2,7 @@
 
 'use strict';
 
-var Point = function (x, y) {
+const Point = function (x, y) {
     this.x = x !== undefined ? x : 0;
     this.y = y !== undefined ? y : 0;
 };
@@ -15,7 +15,7 @@ Point.ZERO = new Point(0, 0);
 
 Point.read = function (x, y) {
     if (arguments.length === 2) { return new Point(x, y); }
-    var arg = x;
+    const arg = x;
     if (arg instanceof Point) {
         return arg;
     } else if (typeof arg === 'number') {
@@ -65,13 +65,13 @@ Point.prototype.heading = function () {
 };
 
 Point.prototype.distanceTo = function (v) {
-    var dx = this.x - v.x,
-        dy = this.y - v.y;
+    const dx = this.x - v.x,
+          dy = this.y - v.y;
     return Math.sqrt(dx * dx + dy * dy);
 };
 
 Point.prototype.normalize = function () {
-    var m = this.magnitude();
+    const m = this.magnitude();
     if (m !== 0) {
         return this.divide(m);
     } else {

@@ -1,17 +1,17 @@
 'use strict';
 
-var values = require('lodash.values');
-var groupBy = require('lodash.groupby');
+const values = require('lodash.values');
+const groupBy = require('lodash.groupby');
 
-var list = require('./list');
+const list = require('./list');
 
-var g = {};
+const g = {};
 
 // Convert values from one range to another
 g.convert = function (v, inMin, inMax, outMin, outMax) {
-    var argLength = arguments.length;
+    const argLength = arguments.length;
     if (argLength === 2) {
-        var d = arguments[1];
+        const d = arguments[1];
         inMin = d.inMin;
         inMax = d.inMax;
         outMin = d.outMin;
@@ -33,13 +33,13 @@ g.convert = function (v, inMin, inMax, outMin, outMax) {
 
 g.filterData = function (data, key, op, value) {
     if (!data) return [];
-    var i, l, row, obj;
+    let i, row, obj;
     if (value === null || value === undefined) {
         return data;
     }
-    var results = [];
+    const results = [];
     if (op === '==') {
-        for (i = 0, l = data.length; i < l; i++) {
+        for (i = 0; i < data.length; i++) {
             row = data[i];
             obj = row[key];
             if (obj == value) { // jshint ignore:line
@@ -47,7 +47,7 @@ g.filterData = function (data, key, op, value) {
             }
         }
     } else if (op === '!=') {
-        for (i = 0, l = data.length; i < l; i++) {
+        for (i = 0; i < data.length; i++) {
             row = data[i];
             obj = row[key];
             if (obj != value) { // jshint ignore:line
@@ -55,7 +55,7 @@ g.filterData = function (data, key, op, value) {
             }
         }
     } else if (op === '>') {
-        for (i = 0, l = data.length; i < l; i++) {
+        for (i = 0; i < data.length; i++) {
             row = data[i];
             obj = row[key];
             if (obj > value) {
@@ -63,7 +63,7 @@ g.filterData = function (data, key, op, value) {
             }
         }
     } else if (op === '>=') {
-        for (i = 0, l = data.length; i < l; i++) {
+        for (i = 0; i < data.length; i++) {
             row = data[i];
             obj = row[key];
             if (obj >= value) {
@@ -71,7 +71,7 @@ g.filterData = function (data, key, op, value) {
             }
         }
     } else if (op === '<') {
-        for (i = 0, l = data.length; i < l; i++) {
+        for (i = 0; i < data.length; i++) {
             row = data[i];
             obj = row[key];
             if (obj < value) {
@@ -79,7 +79,7 @@ g.filterData = function (data, key, op, value) {
             }
         }
     } else if (op === '<=') {
-        for (i = 0, l = data.length; i < l; i++) {
+        for (i = 0; i < data.length; i++) {
             row = data[i];
             obj = row[key];
             if (obj <= value) {
@@ -120,27 +120,26 @@ g.legend = function (scale, position, direction, nTicks) {
 }; */
 
 g.keys = function (data) {
-    var allKeys = [];
-    for (var i = 0; i < data.length; i++) {
+    let allKeys = [];
+    for (let i = 0; i < data.length; i++) {
         allKeys = allKeys.concat(Object.keys(data[i]));
     }
     return list.distinct(allKeys);
 };
 
 g.lookup = function (table, key) {
-    var obj, v;
-    obj = table;
+    let obj = table;
     // First try to lookup the key as-is.
-    v = obj[key];
+    let v = obj[key];
     if (v !== undefined) {
         if (typeof v === 'function') {
             v = v.call(obj);
         }
         return v;
     }
-    var token, tokens = key.split('.');
-    for (var i = 0; i < tokens.length; i += 1) {
-        token = tokens[i];
+    const tokens = key.split('.');
+    for (let i = 0; i < tokens.length; i++) {
+        const token = tokens[i];
         if (!obj) { continue; }
         if (typeof obj[token] === 'function') {
             v = obj[token];
@@ -162,11 +161,9 @@ g.dataScale = function (domain, outMin, outMax) {
 g.ticks = function (min, max, n) {
     n = n !== undefined ? n : 10;
 
-    var span = max - min,
-        step = Math.pow(10, Math.floor(Math.log(span / n) / Math.LN10)),
-        err = n / span * step,
-        ticks = [],
-        i;
+    const span = max - min;
+    let step = Math.pow(10, Math.floor(Math.log(span / n) / Math.LN10));
+    const err = n / span * step;
 
     if (err <= 0.15) {
         step *= 10;
@@ -179,7 +176,8 @@ g.ticks = function (min, max, n) {
     min = Math.ceil(min / step) * step;
     max = Math.floor(max / step) * step + (step * 0.5);
 
-    for (i = min; i < max; i += step) {
+    const ticks = [];
+    for (let i = min; i < max; i += step) {
         ticks.push(i);
     }
 

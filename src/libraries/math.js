@@ -1,13 +1,13 @@
 'use strict';
 
-var reduce = require('lodash.reduce');
+const reduce = require('lodash.reduce');
 
-var util = require('./util');
-var vg = require('./vg/vg');
+const util = require('./util');
+const vg = require('./vg/vg');
 
-var g = {};
+const g = {};
 
-var TWO_PI = Math.PI * 2;
+const TWO_PI = Math.PI * 2;
 
 g.abs = Math.abs;
 
@@ -18,9 +18,9 @@ g.accumulate = function (values) {
         values = [values];
     }
     if (!values || values.length === 0) { return [0.0]; }
-    var i, b = [],
-        currentTotal = 0;
-    for (i = 0; i < values.length; i++) {
+    const b = [];
+    let currentTotal = 0;
+    for (let i = 0; i < values.length; i++) {
         b.push(currentTotal);
         currentTotal += values[i];
     }
@@ -35,7 +35,7 @@ g.add = function (a, b) {
 };
 
 g.and = function (bool1, bool2) {
-    var argLength = arguments.length;
+    const argLength = arguments.length;
     if (argLength === 2) {
         return bool1 && bool2;
     } else if (argLength === 1) {
@@ -55,8 +55,8 @@ g.average = function (values) {
         values = [values];
     }
     if (!values || values.length === 0) { return 0; }
-    var i, sum = 0;
-    for (i = 0; i < values.length; i += 1) {
+    let sum = 0;
+    for (let i = 0; i < values.length; i++) {
         sum += values[i];
     }
     return sum / values.length;
@@ -98,7 +98,7 @@ g.degrees = function (radians) {
 };
 
 g.divide = function (a, b) {
-    var argLength = arguments.length;
+    const argLength = arguments.length;
     function checkIfZero(arg) {
         if (arg === 0) {
             throw new Error('Divide by zero');
@@ -140,10 +140,10 @@ g.log = function (v) {
 g.makeNumbers = function (s, separator) {
     if (!s) { return []; }
     if (!separator) { separator = ''; }
-    var i, num, numbers = [],
-        strings = s.split(separator);
-    for (i = 0; i < strings.length; i += 1) {
-        num = parseFloat(strings[i]);
+    const strings = s.split(separator),
+	      numbers = [];
+    for (let i = 0; i < strings.length; i++) {
+        const num = parseFloat(strings[i]);
         if (num === 0 || num) {
             numbers.push(num);
         }
@@ -152,7 +152,7 @@ g.makeNumbers = function (s, separator) {
 };
 
 g.max = function () {
-    var values = arguments;
+    let values = arguments;
     if (arguments.length === 1 && Array.isArray(arguments[0])) {
         values = arguments[0];
     }
@@ -163,7 +163,7 @@ g.max = function () {
 };
 
 g.min = function () {
-    var values = arguments;
+    let values = arguments;
     if (arguments.length === 1 && Array.isArray(arguments[0])) {
         values = arguments[0];
     }
@@ -178,7 +178,7 @@ g.mod = function (a, b) {
 };
 
 g.multiply = function (a, b) {
-    var argLength = arguments.length;
+    const argLength = arguments.length;
     if (argLength === 2) { return a * b; }
     else if (argLength === 1) { return a; }
     return reduce(arguments, function(total, n) {
@@ -203,7 +203,7 @@ g.odd = function (v) {
 };
 
 g.or = function (bool1, bool2) {
-    var argLength = arguments.length;
+    const argLength = arguments.length;
     if (argLength === 2) {
         return bool1 || bool2;
     } else if (argLength === 1) {
@@ -233,7 +233,7 @@ g.radians = function (degrees) {
 };
 
 g.randomNumbers = function (amount, min, max, seed) {
-    var argLength = arguments.length;
+    const argLength = arguments.length;
     if (argLength < 4 || (!seed && seed !== 0)) {
         seed = Math.random();
     }
@@ -248,16 +248,15 @@ g.randomNumbers = function (amount, min, max, seed) {
         max = 1;
     }
     if (max < min) {
-        var tmp = max;
+        const tmp = max;
         max = min;
         min = tmp;
     }
-    var v;
-    var delta = max - min;
-    var numbers = [];
-    var rand = util.randomGenerator(seed || 0);
-    for (var i = 0; i < amount; i += 1) {
-        v = min + (rand(0, 1) * delta);
+    const delta = max - min,
+          rand = util.randomGenerator(seed || 0),
+          numbers = [];
+    for (let i = 0; i < amount; i++) {
+        const v = min + (rand(0, 1) * delta);
         numbers.push(v);
     }
     return numbers;
@@ -271,25 +270,24 @@ g.range = function (min, max, step, includeMax) {
     if (step > 0 && min > max) return [];
     if (step < 0 && min < max) return [];
     if (step === 0) return [];
-    var values = [];
-    var i;
+    const values = [];
     if (min < max) {
         if (!!includeMax) {
-            for (i = min; i <= max; i += step) {
+            for (let i = min; i <= max; i += step) {
                 values.push(i);
             }
         } else {
-            for (i = min; i < max; i += step) {
+            for (let i = min; i < max; i += step) {
                 values.push(i);
             }
         }
     } else {
         if (!!includeMax) {
-            for (i = min; i >= max; i += step) {
+            for (let i = min; i >= max; i += step) {
                 values.push(i);
             }
         } else {
-            for (i = min; i > max; i += step) {
+            for (let i = min; i > max; i += step) {
                 values.push(i);
             }
         }
@@ -306,16 +304,16 @@ g.round = function (v, a) {
 };
 
 g.sample = function (amount, min, max, circular) {
-    var d,
-        values = [],
-        i;
+	const values = [];
     values.length = amount;
+
+    let d;
     if (circular) {
         d = (max - min) / amount;
     } else {
         d = (max - min) / (amount - 1);
     }
-    for (i = 0; i < amount; i += 1) {
+    for (let i = 0; i < amount; i++) {
         values[i] = min + i * d;
     }
     return values;
@@ -326,7 +324,7 @@ g.sineWave = function (v, min, max, period, offset) {
     if (max === undefined) max = 1;
     if (period === undefined) period = 1;
     if (offset === undefined) offset = 0;
-    var amplitude = (max - min) / 2;
+    const amplitude = (max - min) / 2;
     return (min + amplitude) + Math.sin((offset + v) * TWO_PI / period) * amplitude;
 };
 
@@ -335,8 +333,8 @@ g.squareWave = function (v, min, max, period, offset) {
     if (max === undefined) max = 1;
     if (period === undefined) period = 1;
     if (offset === undefined) offset = 0;
-    var halfPeriod = period / 2;
-    var d = (v + offset) % period;
+    const halfPeriod = period / 2;
+    const d = (v + offset) % period;
     if (d < halfPeriod) {
         return max;
     } else {
@@ -349,10 +347,10 @@ g.triangleWave = function (v, min, max, period, offset) {
     if (max === undefined) max = 1;
     if (period === undefined) period = 1;
     if (offset === undefined) offset = 0;
-    var amplitude = (max - min) / 2,
-        frequency = TWO_PI / period,
-        phase = 0,
-        time = v + offset + period / 4;
+    const amplitude = (max - min) / 2,
+          frequency = TWO_PI / period,
+	      time = v + offset + period / 4;
+	let phase = 0;
     if (time % period !== 0) {
         phase = (time * frequency) % TWO_PI;
     }
@@ -365,10 +363,10 @@ g.sawtoothWave = function (v, min, max, period, offset) {
     if (max === undefined) max = 1;
     if (period === undefined) period = 1;
     if (offset === undefined) offset = 0;
-    var amplitude = (max - min) / 2,
-        frequency = TWO_PI / period,
-        phase = 0,
-        time = v + offset;
+    const amplitude = (max - min) / 2,
+	      frequency = TWO_PI / period,
+	      time = v + offset;
+	let phase = 0;
     if (time % period !== 0) {
         phase = (time * frequency) % TWO_PI;
     }
@@ -391,7 +389,7 @@ g.sin = Math.sin;
 g.sqrt = Math.sqrt;
 
 g.subtract = function (a, b) {
-    var argLength = arguments.length;
+    const argLength = arguments.length;
     if (argLength === 2) { return a - b; }
     else if (argLength === 1) { return -a; }
     else if (argLength === 0) { throw new Error('Wrong number of arguments'); }
@@ -411,15 +409,15 @@ g.total = function (values) {
         values = [];
     }
     if (values.length === 0) { return 0; }
-    var i, total = 0;
-    for (i = 0; i < values.length; i += 1) {
+    let total = 0;
+    for (let i = 0; i < values.length; i++) {
         total += values[i];
     }
     return total;
 };
 
 g.xor = function (bool1, bool2) {
-    var argLength = arguments.length;
+    const argLength = arguments.length;
     if (argLength === 2) {
         return !!(bool1 ^ bool2);
     } else {
