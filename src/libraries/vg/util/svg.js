@@ -5,7 +5,7 @@
 // - for constructing individual paths: canvg - https://code.google.com/p/canvg/
 // - for constructing arcs: fabric.js - http://fabricjs.com
 
-import { DOMParser } from '@xmldom/xmldom';
+import { DOMParser, MIME_TYPE } from '@xmldom/xmldom';
 
 import Color from '../objects/color.js';
 import Group from '../objects/group.js';
@@ -889,10 +889,12 @@ export function interpret(svgNode) {
 
 export function parseString(s) {
     const doc = new DOMParser({
-        errorHandler: function (key, msg) {
-            throw new Error('Could not parse string "' + String(s) + '": ' + msg);
+        onError: function (level, msg) {
+            if (level === 'error' || level === 'fatalError') {
+                throw new Error('Could not parse string "' + String(s) + '": ' + msg);
+            }
         }
-    }).parseFromString(s);
+    }).parseFromString(s, MIME_TYPE.XML_APPLICATION);
     if (doc) {
         return interpret(doc.documentElement);
     } else {

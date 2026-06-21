@@ -34,7 +34,7 @@
     "node": ">=20"
   },
   "dependencies": {
-    "@xmldom/xmldom": "0.8.7",
+    "@xmldom/xmldom": "^0.9.10",
     "async": "^3.2.6",
     "js-clipper": "1.0.1",
     "pathkit-wasm": "1.0.0",
