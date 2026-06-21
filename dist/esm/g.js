@@ -5,7 +5,11 @@ var __getOwnPropNames = Object.getOwnPropertyNames;
 var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __commonJS = (cb, mod2) => function __require() {
-  return mod2 || (0, cb[__getOwnPropNames(cb)[0]])((mod2 = { exports: {} }).exports, mod2), mod2.exports;
+  try {
+    return mod2 || (0, cb[__getOwnPropNames(cb)[0]])((mod2 = { exports: {} }).exports, mod2), mod2.exports;
+  } catch (e2) {
+    throw mod2 = 0, e2;
+  }
 };
 var __export = (target, all) => {
   for (var name in all)
@@ -186,8 +190,7 @@ var require_dom = __commonJS({
       return current;
     }
     function toOrderedSet(input) {
-      if (!input)
-        return [];
+      if (!input) return [];
       var list = splitOnASCIIWhitespace(input);
       return Object.keys(list.reduce(orderedSetReducer, {}));
     }
@@ -259,12 +262,10 @@ var require_dom = __commonJS({
         error = this;
         Error.call(this, ExceptionMessage[code]);
         this.message = ExceptionMessage[code];
-        if (Error.captureStackTrace)
-          Error.captureStackTrace(this, DOMException);
+        if (Error.captureStackTrace) Error.captureStackTrace(this, DOMException);
       }
       error.code = code;
-      if (message)
-        this.message = this.message + ": " + message;
+      if (message) this.message = this.message + ": " + message;
       return error;
     }
     DOMException.prototype = Error.prototype;
@@ -1431,6 +1432,8 @@ var require_dom = __commonJS({
           return buf.push("<?", node.target, " ", node.data, "?>");
         case ENTITY_REFERENCE_NODE:
           return buf.push("&", node.nodeName, ";");
+        //case ENTITY_NODE:
+        //case NOTATION_NODE:
         default:
           buf.push("??", node.nodeName);
       }
@@ -1441,6 +1444,11 @@ var require_dom = __commonJS({
         case ELEMENT_NODE:
           node2 = node.cloneNode(false);
           node2.ownerDocument = doc;
+        //var attrs = node2.attributes;
+        //var len = attrs.length;
+        //for(var i=0;i<len;i++){
+        //node2.setAttributeNodeNS(importNode(doc,attrs.item(i),deep));
+        //}
         case DOCUMENT_FRAGMENT_NODE:
           break;
         case ATTRIBUTE_NODE:
@@ -1838,8 +1846,7 @@ var require_sax = __commonJS({
     function ParseError(message, locator) {
       this.message = message;
       this.locator = locator;
-      if (Error.captureStackTrace)
-        Error.captureStackTrace(this, ParseError);
+      if (Error.captureStackTrace) Error.captureStackTrace(this, ParseError);
     }
     ParseError.prototype = new Error();
     ParseError.prototype.name = ParseError.name;
@@ -1953,6 +1960,7 @@ var require_sax = __commonJS({
               }
               end++;
               break;
+            // end elment
             case "?":
               locator && position(tagStart);
               end = parseInstruction(source, tagStart, domBuilder);
@@ -2088,6 +2096,7 @@ var require_sax = __commonJS({
               case S_ATTR_SPACE:
                 el.closed = true;
                 break;
+              //case S_EQ:
               default:
                 throw new Error("attribute invalid close char('/')");
             }
@@ -2106,7 +2115,9 @@ var require_sax = __commonJS({
               case S_TAG_SPACE:
               case S_TAG_CLOSE:
                 break;
+              //normal
               case S_ATTR_NOQUOT_VALUE:
+              //Compatible state
               case S_ATTR:
                 value = source.slice(start, p);
                 if (value.slice(-1) === "/") {
@@ -2131,6 +2142,7 @@ var require_sax = __commonJS({
                 throw new Error("attribute value missed!!");
             }
             return p;
+          /*xml space '\x20' | #x9 | #xD | #xA; */
           case "\x80":
             c = " ";
           default:
@@ -2154,6 +2166,9 @@ var require_sax = __commonJS({
               }
             } else {
               switch (s) {
+                //case S_TAG:void();break;
+                //case S_ATTR:void();break;
+                //case S_ATTR_NOQUOT_VALUE:void();break;
                 case S_ATTR_SPACE:
                   var tagName = el.tagName;
                   if (!NAMESPACE.isHTML(currentNSMap[""]) || !attrName.match(/^(?:disabled|checked|selected)$/i)) {
@@ -2394,8 +2409,7 @@ var require_sax = __commonJS({
       reg.exec(source);
       while (match = reg.exec(source)) {
         buf.push(match);
-        if (match[1])
-          return buf;
+        if (match[1]) return buf;
       }
     }
     exports.XMLReader = XMLReader;
@@ -2643,10 +2657,8 @@ var require_clipper = __commonJS({
       module.exports = ClipperLib2;
       isNode = true;
     } else {
-      if (typeof document !== "undefined")
-        window.ClipperLib = ClipperLib2;
-      else
-        self["ClipperLib"] = ClipperLib2;
+      if (typeof document !== "undefined") window.ClipperLib = ClipperLib2;
+      else self["ClipperLib"] = ClipperLib2;
     }
     var navigator_appName;
     if (!isNode) {
@@ -2658,58 +2670,32 @@ var require_clipper = __commonJS({
     }
     var nav;
     var browser = {};
-    if (nav.indexOf("chrome") != -1 && nav.indexOf("chromium") == -1)
-      browser.chrome = 1;
-    else
-      browser.chrome = 0;
-    if (nav.indexOf("chromium") != -1)
-      browser.chromium = 1;
-    else
-      browser.chromium = 0;
-    if (nav.indexOf("safari") != -1 && nav.indexOf("chrome") == -1 && nav.indexOf("chromium") == -1)
-      browser.safari = 1;
-    else
-      browser.safari = 0;
-    if (nav.indexOf("firefox") != -1)
-      browser.firefox = 1;
-    else
-      browser.firefox = 0;
-    if (nav.indexOf("firefox/17") != -1)
-      browser.firefox17 = 1;
-    else
-      browser.firefox17 = 0;
-    if (nav.indexOf("firefox/15") != -1)
-      browser.firefox15 = 1;
-    else
-      browser.firefox15 = 0;
-    if (nav.indexOf("firefox/3") != -1)
-      browser.firefox3 = 1;
-    else
-      browser.firefox3 = 0;
-    if (nav.indexOf("opera") != -1)
-      browser.opera = 1;
-    else
-      browser.opera = 0;
-    if (nav.indexOf("msie 10") != -1)
-      browser.msie10 = 1;
-    else
-      browser.msie10 = 0;
-    if (nav.indexOf("msie 9") != -1)
-      browser.msie9 = 1;
-    else
-      browser.msie9 = 0;
-    if (nav.indexOf("msie 8") != -1)
-      browser.msie8 = 1;
-    else
-      browser.msie8 = 0;
-    if (nav.indexOf("msie 7") != -1)
-      browser.msie7 = 1;
-    else
-      browser.msie7 = 0;
-    if (nav.indexOf("msie ") != -1)
-      browser.msie = 1;
-    else
-      browser.msie = 0;
+    if (nav.indexOf("chrome") != -1 && nav.indexOf("chromium") == -1) browser.chrome = 1;
+    else browser.chrome = 0;
+    if (nav.indexOf("chromium") != -1) browser.chromium = 1;
+    else browser.chromium = 0;
+    if (nav.indexOf("safari") != -1 && nav.indexOf("chrome") == -1 && nav.indexOf("chromium") == -1) browser.safari = 1;
+    else browser.safari = 0;
+    if (nav.indexOf("firefox") != -1) browser.firefox = 1;
+    else browser.firefox = 0;
+    if (nav.indexOf("firefox/17") != -1) browser.firefox17 = 1;
+    else browser.firefox17 = 0;
+    if (nav.indexOf("firefox/15") != -1) browser.firefox15 = 1;
+    else browser.firefox15 = 0;
+    if (nav.indexOf("firefox/3") != -1) browser.firefox3 = 1;
+    else browser.firefox3 = 0;
+    if (nav.indexOf("opera") != -1) browser.opera = 1;
+    else browser.opera = 0;
+    if (nav.indexOf("msie 10") != -1) browser.msie10 = 1;
+    else browser.msie10 = 0;
+    if (nav.indexOf("msie 9") != -1) browser.msie9 = 1;
+    else browser.msie9 = 0;
+    if (nav.indexOf("msie 8") != -1) browser.msie8 = 1;
+    else browser.msie8 = 0;
+    if (nav.indexOf("msie 7") != -1) browser.msie7 = 1;
+    else browser.msie7 = 0;
+    if (nav.indexOf("msie ") != -1) browser.msie = 1;
+    else browser.msie = 0;
     ClipperLib2.biginteger_used = null;
     var dbits;
     var canary = 244837814094590;
@@ -2717,14 +2703,10 @@ var require_clipper = __commonJS({
     function BigInteger(a, b, c) {
       ClipperLib2.biginteger_used = 1;
       if (a != null)
-        if ("number" == typeof a && "undefined" == typeof b)
-          this.fromInt(a);
-        else if ("number" == typeof a)
-          this.fromNumber(a, b, c);
-        else if (b == null && "string" != typeof a)
-          this.fromString(a, 256);
-        else
-          this.fromString(a, b);
+        if ("number" == typeof a && "undefined" == typeof b) this.fromInt(a);
+        else if ("number" == typeof a) this.fromNumber(a, b, c);
+        else if (b == null && "string" != typeof a) this.fromString(a, 256);
+        else this.fromString(a, b);
     }
     function nbi() {
       return new BigInteger(null);
@@ -2783,14 +2765,11 @@ var require_clipper = __commonJS({
     var rr;
     var vv;
     rr = "0".charCodeAt(0);
-    for (vv = 0; vv <= 9; ++vv)
-      BI_RC[rr++] = vv;
+    for (vv = 0; vv <= 9; ++vv) BI_RC[rr++] = vv;
     rr = "a".charCodeAt(0);
-    for (vv = 10; vv < 36; ++vv)
-      BI_RC[rr++] = vv;
+    for (vv = 10; vv < 36; ++vv) BI_RC[rr++] = vv;
     rr = "A".charCodeAt(0);
-    for (vv = 10; vv < 36; ++vv)
-      BI_RC[rr++] = vv;
+    for (vv = 10; vv < 36; ++vv) BI_RC[rr++] = vv;
     function int2char(n) {
       return BI_RM.charAt(n);
     }
@@ -2799,20 +2778,16 @@ var require_clipper = __commonJS({
       return c == null ? -1 : c;
     }
     function bnpCopyTo(r) {
-      for (var i = this.t - 1; i >= 0; --i)
-        r[i] = this[i];
+      for (var i = this.t - 1; i >= 0; --i) r[i] = this[i];
       r.t = this.t;
       r.s = this.s;
     }
     function bnpFromInt(x) {
       this.t = 1;
       this.s = x < 0 ? -1 : 0;
-      if (x > 0)
-        this[0] = x;
-      else if (x < -1)
-        this[0] = x + this.DV;
-      else
-        this.t = 0;
+      if (x > 0) this[0] = x;
+      else if (x < -1) this[0] = x + this.DV;
+      else this.t = 0;
     }
     function nbv(i) {
       var r = nbi();
@@ -2821,18 +2796,12 @@ var require_clipper = __commonJS({
     }
     function bnpFromString(s, b) {
       var k;
-      if (b == 16)
-        k = 4;
-      else if (b == 8)
-        k = 3;
-      else if (b == 256)
-        k = 8;
-      else if (b == 2)
-        k = 1;
-      else if (b == 32)
-        k = 5;
-      else if (b == 4)
-        k = 2;
+      if (b == 16) k = 4;
+      else if (b == 8) k = 3;
+      else if (b == 256) k = 8;
+      else if (b == 2) k = 1;
+      else if (b == 32) k = 5;
+      else if (b == 4) k = 2;
       else {
         this.fromRadix(s, b);
         return;
@@ -2843,8 +2812,7 @@ var require_clipper = __commonJS({
       while (--i >= 0) {
         var x = k == 8 ? s[i] & 255 : intAt(s, i);
         if (x < 0) {
-          if (s.charAt(i) == "-")
-            mi = true;
+          if (s.charAt(i) == "-") mi = true;
           continue;
         }
         mi = false;
@@ -2856,39 +2824,28 @@ var require_clipper = __commonJS({
         } else
           this[this.t - 1] |= x << sh;
         sh += k;
-        if (sh >= this.DB)
-          sh -= this.DB;
+        if (sh >= this.DB) sh -= this.DB;
       }
       if (k == 8 && (s[0] & 128) != 0) {
         this.s = -1;
-        if (sh > 0)
-          this[this.t - 1] |= (1 << this.DB - sh) - 1 << sh;
+        if (sh > 0) this[this.t - 1] |= (1 << this.DB - sh) - 1 << sh;
       }
       this.clamp();
-      if (mi)
-        BigInteger.ZERO.subTo(this, this);
+      if (mi) BigInteger.ZERO.subTo(this, this);
     }
     function bnpClamp() {
       var c = this.s & this.DM;
-      while (this.t > 0 && this[this.t - 1] == c)
-        --this.t;
+      while (this.t > 0 && this[this.t - 1] == c) --this.t;
     }
     function bnToString(b) {
-      if (this.s < 0)
-        return "-" + this.negate().toString(b);
+      if (this.s < 0) return "-" + this.negate().toString(b);
       var k;
-      if (b == 16)
-        k = 4;
-      else if (b == 8)
-        k = 3;
-      else if (b == 2)
-        k = 1;
-      else if (b == 32)
-        k = 5;
-      else if (b == 4)
-        k = 2;
-      else
-        return this.toRadix(b);
+      if (b == 16) k = 4;
+      else if (b == 8) k = 3;
+      else if (b == 2) k = 1;
+      else if (b == 32) k = 5;
+      else if (b == 4) k = 2;
+      else return this.toRadix(b);
       var km = (1 << k) - 1, d, m = false, r = "", i = this.t;
       var p = this.DB - i * this.DB % k;
       if (i-- > 0) {
@@ -2907,10 +2864,8 @@ var require_clipper = __commonJS({
               --i;
             }
           }
-          if (d > 0)
-            m = true;
-          if (m)
-            r += int2char(d);
+          if (d > 0) m = true;
+          if (m) r += int2char(d);
         }
       }
       return m ? r : "0";
@@ -2925,15 +2880,12 @@ var require_clipper = __commonJS({
     }
     function bnCompareTo(a) {
       var r = this.s - a.s;
-      if (r != 0)
-        return r;
+      if (r != 0) return r;
       var i = this.t;
       r = i - a.t;
-      if (r != 0)
-        return this.s < 0 ? -r : r;
+      if (r != 0) return this.s < 0 ? -r : r;
       while (--i >= 0)
-        if ((r = this[i] - a[i]) != 0)
-          return r;
+        if ((r = this[i] - a[i]) != 0) return r;
       return 0;
     }
     function nbits(x) {
@@ -2961,22 +2913,18 @@ var require_clipper = __commonJS({
       return r;
     }
     function bnBitLength() {
-      if (this.t <= 0)
-        return 0;
+      if (this.t <= 0) return 0;
       return this.DB * (this.t - 1) + nbits(this[this.t - 1] ^ this.s & this.DM);
     }
     function bnpDLShiftTo(n, r) {
       var i;
-      for (i = this.t - 1; i >= 0; --i)
-        r[i + n] = this[i];
-      for (i = n - 1; i >= 0; --i)
-        r[i] = 0;
+      for (i = this.t - 1; i >= 0; --i) r[i + n] = this[i];
+      for (i = n - 1; i >= 0; --i) r[i] = 0;
       r.t = this.t + n;
       r.s = this.s;
     }
     function bnpDRShiftTo(n, r) {
-      for (var i = n; i < this.t; ++i)
-        r[i - n] = this[i];
+      for (var i = n; i < this.t; ++i) r[i - n] = this[i];
       r.t = Math.max(this.t - n, 0);
       r.s = this.s;
     }
@@ -2989,8 +2937,7 @@ var require_clipper = __commonJS({
         r[i + ds + 1] = this[i] >> cbs | c;
         c = (this[i] & bm) << bs;
       }
-      for (i = ds - 1; i >= 0; --i)
-        r[i] = 0;
+      for (i = ds - 1; i >= 0; --i) r[i] = 0;
       r[ds] = c;
       r.t = this.t + ds + 1;
       r.s = this.s;
@@ -3011,8 +2958,7 @@ var require_clipper = __commonJS({
         r[i - ds - 1] |= (this[i] & bm) << cbs;
         r[i - ds] = this[i] >> bs;
       }
-      if (bs > 0)
-        r[this.t - ds - 1] |= (this.s & bm) << cbs;
+      if (bs > 0) r[this.t - ds - 1] |= (this.s & bm) << cbs;
       r.t = this.t - ds;
       r.clamp();
     }
@@ -3041,10 +2987,8 @@ var require_clipper = __commonJS({
         c -= a.s;
       }
       r.s = c < 0 ? -1 : 0;
-      if (c < -1)
-        r[i++] = this.DV + c;
-      else if (c > 0)
-        r[i++] = c;
+      if (c < -1) r[i++] = this.DV + c;
+      else if (c > 0) r[i++] = c;
       r.t = i;
       r.clamp();
     }
@@ -3052,20 +2996,16 @@ var require_clipper = __commonJS({
       var x = this.abs(), y = a.abs();
       var i = x.t;
       r.t = i + y.t;
-      while (--i >= 0)
-        r[i] = 0;
-      for (i = 0; i < y.t; ++i)
-        r[i + x.t] = x.am(0, y[i], r, i, 0, x.t);
+      while (--i >= 0) r[i] = 0;
+      for (i = 0; i < y.t; ++i) r[i + x.t] = x.am(0, y[i], r, i, 0, x.t);
       r.s = 0;
       r.clamp();
-      if (this.s != a.s)
-        BigInteger.ZERO.subTo(r, r);
+      if (this.s != a.s) BigInteger.ZERO.subTo(r, r);
     }
     function bnpSquareTo(r) {
       var x = this.abs();
       var i = r.t = 2 * x.t;
-      while (--i >= 0)
-        r[i] = 0;
+      while (--i >= 0) r[i] = 0;
       for (i = 0; i < x.t - 1; ++i) {
         var c = x.am(i, x[i], r, 2 * i, 0, 1);
         if ((r[i + x.t] += x.am(i + 1, 2 * x[i], r, 2 * i + 1, c, x.t - i - 1)) >= x.DV) {
@@ -3073,25 +3013,20 @@ var require_clipper = __commonJS({
           r[i + x.t + 1] = 1;
         }
       }
-      if (r.t > 0)
-        r[r.t - 1] += x.am(i, x[i], r, 2 * i, 0, 1);
+      if (r.t > 0) r[r.t - 1] += x.am(i, x[i], r, 2 * i, 0, 1);
       r.s = 0;
       r.clamp();
     }
     function bnpDivRemTo(m, q, r) {
       var pm = m.abs();
-      if (pm.t <= 0)
-        return;
+      if (pm.t <= 0) return;
       var pt = this.abs();
       if (pt.t < pm.t) {
-        if (q != null)
-          q.fromInt(0);
-        if (r != null)
-          this.copyTo(r);
+        if (q != null) q.fromInt(0);
+        if (r != null) this.copyTo(r);
         return;
       }
-      if (r == null)
-        r = nbi();
+      if (r == null) r = nbi();
       var y = nbi(), ts = this.s, ms = m.s;
       var nsh = this.DB - nbits(pm[pm.t - 1]);
       if (nsh > 0) {
@@ -3103,8 +3038,7 @@ var require_clipper = __commonJS({
       }
       var ys = y.t;
       var y0 = y[ys - 1];
-      if (y0 == 0)
-        return;
+      if (y0 == 0) return;
       var yt = y0 * (1 << this.F1) + (ys > 1 ? y[ys - 2] >> this.F2 : 0);
       var d1 = this.FV / yt, d2 = (1 << this.F1) / yt, e2 = 1 << this.F2;
       var i = r.t, j = i - ys, t = q == null ? nbi() : q;
@@ -3115,44 +3049,36 @@ var require_clipper = __commonJS({
       }
       BigInteger.ONE.dlShiftTo(ys, t);
       t.subTo(y, y);
-      while (y.t < ys)
-        y[y.t++] = 0;
+      while (y.t < ys) y[y.t++] = 0;
       while (--j >= 0) {
         var qd = r[--i] == y0 ? this.DM : Math.floor(r[i] * d1 + (r[i - 1] + e2) * d2);
         if ((r[i] += y.am(0, qd, r, j, 0, ys)) < qd) {
           y.dlShiftTo(j, t);
           r.subTo(t, r);
-          while (r[i] < --qd)
-            r.subTo(t, r);
+          while (r[i] < --qd) r.subTo(t, r);
         }
       }
       if (q != null) {
         r.drShiftTo(ys, q);
-        if (ts != ms)
-          BigInteger.ZERO.subTo(q, q);
+        if (ts != ms) BigInteger.ZERO.subTo(q, q);
       }
       r.t = ys;
       r.clamp();
-      if (nsh > 0)
-        r.rShiftTo(nsh, r);
-      if (ts < 0)
-        BigInteger.ZERO.subTo(r, r);
+      if (nsh > 0) r.rShiftTo(nsh, r);
+      if (ts < 0) BigInteger.ZERO.subTo(r, r);
     }
     function bnMod(a) {
       var r = nbi();
       this.abs().divRemTo(a, null, r);
-      if (this.s < 0 && r.compareTo(BigInteger.ZERO) > 0)
-        a.subTo(r, r);
+      if (this.s < 0 && r.compareTo(BigInteger.ZERO) > 0) a.subTo(r, r);
       return r;
     }
     function Classic(m) {
       this.m = m;
     }
     function cConvert(x) {
-      if (x.s < 0 || x.compareTo(this.m) >= 0)
-        return x.mod(this.m);
-      else
-        return x;
+      if (x.s < 0 || x.compareTo(this.m) >= 0) return x.mod(this.m);
+      else return x;
     }
     function cRevert(x) {
       return x;
@@ -3174,11 +3100,9 @@ var require_clipper = __commonJS({
     Classic.prototype.mulTo = cMulTo;
     Classic.prototype.sqrTo = cSqrTo;
     function bnpInvDigit() {
-      if (this.t < 1)
-        return 0;
+      if (this.t < 1) return 0;
       var x = this[0];
-      if ((x & 1) == 0)
-        return 0;
+      if ((x & 1) == 0) return 0;
       var y = x & 3;
       y = y * (2 - (x & 15) * y) & 15;
       y = y * (2 - (x & 255) * y) & 255;
@@ -3198,8 +3122,7 @@ var require_clipper = __commonJS({
       var r = nbi();
       x.abs().dlShiftTo(this.m.t, r);
       r.divRemTo(this.m, null, r);
-      if (x.s < 0 && r.compareTo(BigInteger.ZERO) > 0)
-        this.m.subTo(r, r);
+      if (x.s < 0 && r.compareTo(BigInteger.ZERO) > 0) this.m.subTo(r, r);
       return r;
     }
     function montRevert(x) {
@@ -3223,8 +3146,7 @@ var require_clipper = __commonJS({
       }
       x.clamp();
       x.drShiftTo(this.m.t, x);
-      if (x.compareTo(this.m) >= 0)
-        x.subTo(this.m, x);
+      if (x.compareTo(this.m) >= 0) x.subTo(this.m, x);
     }
     function montSqrTo(x, r) {
       x.squareTo(r);
@@ -3243,14 +3165,12 @@ var require_clipper = __commonJS({
       return (this.t > 0 ? this[0] & 1 : this.s) == 0;
     }
     function bnpExp(e2, z) {
-      if (e2 > 4294967295 || e2 < 1)
-        return BigInteger.ONE;
+      if (e2 > 4294967295 || e2 < 1) return BigInteger.ONE;
       var r = nbi(), r2 = nbi(), g2 = z.convert(this), i = nbits(e2) - 1;
       g2.copyTo(r);
       while (--i >= 0) {
         z.sqrTo(r, r2);
-        if ((e2 & 1 << i) > 0)
-          z.mulTo(r2, g2, r);
+        if ((e2 & 1 << i) > 0) z.mulTo(r2, g2, r);
         else {
           var t = r;
           r = r2;
@@ -3261,10 +3181,8 @@ var require_clipper = __commonJS({
     }
     function bnModPowInt(e2, m) {
       var z;
-      if (e2 < 256 || m.isEven())
-        z = new Classic(m);
-      else
-        z = new Montgomery(m);
+      if (e2 < 256 || m.isEven()) z = new Classic(m);
+      else z = new Montgomery(m);
       return this.exp(e2, z);
     }
     BigInteger.prototype.copyTo = bnpCopyTo;
@@ -3298,14 +3216,10 @@ var require_clipper = __commonJS({
     }
     function bnIntValue() {
       if (this.s < 0) {
-        if (this.t == 1)
-          return this[0] - this.DV;
-        else if (this.t == 0)
-          return -1;
-      } else if (this.t == 1)
-        return this[0];
-      else if (this.t == 0)
-        return 0;
+        if (this.t == 1) return this[0] - this.DV;
+        else if (this.t == 0) return -1;
+      } else if (this.t == 1) return this[0];
+      else if (this.t == 0) return 0;
       return (this[1] & (1 << 32 - this.DB) - 1) << this.DB | this[0];
     }
     function bnByteValue() {
@@ -3318,18 +3232,13 @@ var require_clipper = __commonJS({
       return Math.floor(Math.LN2 * this.DB / Math.log(r));
     }
     function bnSigNum() {
-      if (this.s < 0)
-        return -1;
-      else if (this.t <= 0 || this.t == 1 && this[0] <= 0)
-        return 0;
-      else
-        return 1;
+      if (this.s < 0) return -1;
+      else if (this.t <= 0 || this.t == 1 && this[0] <= 0) return 0;
+      else return 1;
     }
     function bnpToRadix(b) {
-      if (b == null)
-        b = 10;
-      if (this.signum() == 0 || b < 2 || b > 36)
-        return "0";
+      if (b == null) b = 10;
+      if (this.signum() == 0 || b < 2 || b > 36) return "0";
       var cs = this.chunkSize(b);
       var a = Math.pow(b, cs);
       var d = nbv(a), y = nbi(), z = nbi(), r = "";
@@ -3342,15 +3251,13 @@ var require_clipper = __commonJS({
     }
     function bnpFromRadix(s, b) {
       this.fromInt(0);
-      if (b == null)
-        b = 10;
+      if (b == null) b = 10;
       var cs = this.chunkSize(b);
       var d = Math.pow(b, cs), mi = false, j = 0, w = 0;
       for (var i = 0; i < s.length; ++i) {
         var x = intAt(s, i);
         if (x < 0) {
-          if (s.charAt(i) == "-" && this.signum() == 0)
-            mi = true;
+          if (s.charAt(i) == "-" && this.signum() == 0) mi = true;
           continue;
         }
         w = b * w + x;
@@ -3365,33 +3272,27 @@ var require_clipper = __commonJS({
         this.dMultiply(Math.pow(b, j));
         this.dAddOffset(w, 0);
       }
-      if (mi)
-        BigInteger.ZERO.subTo(this, this);
+      if (mi) BigInteger.ZERO.subTo(this, this);
     }
     function bnpFromNumber(a, b, c) {
       if ("number" == typeof b) {
-        if (a < 2)
-          this.fromInt(1);
+        if (a < 2) this.fromInt(1);
         else {
           this.fromNumber(a, c);
           if (!this.testBit(a - 1))
             this.bitwiseTo(BigInteger.ONE.shiftLeft(a - 1), op_or, this);
-          if (this.isEven())
-            this.dAddOffset(1, 0);
+          if (this.isEven()) this.dAddOffset(1, 0);
           while (!this.isProbablePrime(b)) {
             this.dAddOffset(2, 0);
-            if (this.bitLength() > a)
-              this.subTo(BigInteger.ONE.shiftLeft(a - 1), this);
+            if (this.bitLength() > a) this.subTo(BigInteger.ONE.shiftLeft(a - 1), this);
           }
         }
       } else {
         var x = new Array(), t = a & 7;
         x.length = (a >> 3) + 1;
         b.nextBytes(x);
-        if (t > 0)
-          x[0] &= (1 << t) - 1;
-        else
-          x[0] = 0;
+        if (t > 0) x[0] &= (1 << t) - 1;
+        else x[0] = 0;
         this.fromString(x, 256);
       }
     }
@@ -3413,12 +3314,9 @@ var require_clipper = __commonJS({
               --i;
             }
           }
-          if ((d & 128) != 0)
-            d |= -256;
-          if (k == 0 && (this.s & 128) != (d & 128))
-            ++k;
-          if (k > 0 || d != this.s)
-            r[k++] = d;
+          if ((d & 128) != 0) d |= -256;
+          if (k == 0 && (this.s & 128) != (d & 128)) ++k;
+          if (k > 0 || d != this.s) r[k++] = d;
         }
       }
       return r;
@@ -3434,17 +3332,14 @@ var require_clipper = __commonJS({
     }
     function bnpBitwiseTo(a, op, r) {
       var i, f, m = Math.min(a.t, this.t);
-      for (i = 0; i < m; ++i)
-        r[i] = op(this[i], a[i]);
+      for (i = 0; i < m; ++i) r[i] = op(this[i], a[i]);
       if (a.t < this.t) {
         f = a.s & this.DM;
-        for (i = m; i < this.t; ++i)
-          r[i] = op(this[i], f);
+        for (i = m; i < this.t; ++i) r[i] = op(this[i], f);
         r.t = this.t;
       } else {
         f = this.s & this.DM;
-        for (i = m; i < a.t; ++i)
-          r[i] = op(f, a[i]);
+        for (i = m; i < a.t; ++i) r[i] = op(f, a[i]);
         r.t = a.t;
       }
       r.s = op(this.s, a.s);
@@ -3484,31 +3379,25 @@ var require_clipper = __commonJS({
     }
     function bnNot() {
       var r = nbi();
-      for (var i = 0; i < this.t; ++i)
-        r[i] = this.DM & ~this[i];
+      for (var i = 0; i < this.t; ++i) r[i] = this.DM & ~this[i];
       r.t = this.t;
       r.s = ~this.s;
       return r;
     }
     function bnShiftLeft(n) {
       var r = nbi();
-      if (n < 0)
-        this.rShiftTo(-n, r);
-      else
-        this.lShiftTo(n, r);
+      if (n < 0) this.rShiftTo(-n, r);
+      else this.lShiftTo(n, r);
       return r;
     }
     function bnShiftRight(n) {
       var r = nbi();
-      if (n < 0)
-        this.lShiftTo(-n, r);
-      else
-        this.rShiftTo(n, r);
+      if (n < 0) this.lShiftTo(-n, r);
+      else this.rShiftTo(n, r);
       return r;
     }
     function lbit(x) {
-      if (x == 0)
-        return -1;
+      if (x == 0) return -1;
       var r = 0;
       if ((x & 65535) == 0) {
         x >>= 16;
@@ -3526,16 +3415,13 @@ var require_clipper = __commonJS({
         x >>= 2;
         r += 2;
       }
-      if ((x & 1) == 0)
-        ++r;
+      if ((x & 1) == 0) ++r;
       return r;
     }
     function bnGetLowestSetBit() {
       for (var i = 0; i < this.t; ++i)
-        if (this[i] != 0)
-          return i * this.DB + lbit(this[i]);
-      if (this.s < 0)
-        return this.t * this.DB;
+        if (this[i] != 0) return i * this.DB + lbit(this[i]);
+      if (this.s < 0) return this.t * this.DB;
       return -1;
     }
     function cbit(x) {
@@ -3548,14 +3434,12 @@ var require_clipper = __commonJS({
     }
     function bnBitCount() {
       var r = 0, x = this.s & this.DM;
-      for (var i = 0; i < this.t; ++i)
-        r += cbit(this[i] ^ x);
+      for (var i = 0; i < this.t; ++i) r += cbit(this[i] ^ x);
       return r;
     }
     function bnTestBit(n) {
       var j = Math.floor(n / this.DB);
-      if (j >= this.t)
-        return this.s != 0;
+      if (j >= this.t) return this.s != 0;
       return (this[j] & 1 << n % this.DB) != 0;
     }
     function bnpChangeBit(n, op) {
@@ -3597,10 +3481,8 @@ var require_clipper = __commonJS({
         c += a.s;
       }
       r.s = c < 0 ? -1 : 0;
-      if (c > 0)
-        r[i++] = c;
-      else if (c < -1)
-        r[i++] = this.DV + c;
+      if (c > 0) r[i++] = c;
+      else if (c < -1) r[i++] = this.DV + c;
       r.t = i;
       r.clamp();
     }
@@ -3645,15 +3527,12 @@ var require_clipper = __commonJS({
       this.clamp();
     }
     function bnpDAddOffset(n, w) {
-      if (n == 0)
-        return;
-      while (this.t <= w)
-        this[this.t++] = 0;
+      if (n == 0) return;
+      while (this.t <= w) this[this.t++] = 0;
       this[w] += n;
       while (this[w] >= this.DV) {
         this[w] -= this.DV;
-        if (++w >= this.t)
-          this[this.t++] = 0;
+        if (++w >= this.t) this[this.t++] = 0;
         ++this[w];
       }
     }
@@ -3679,21 +3558,17 @@ var require_clipper = __commonJS({
       var i = Math.min(this.t + a.t, n);
       r.s = 0;
       r.t = i;
-      while (i > 0)
-        r[--i] = 0;
+      while (i > 0) r[--i] = 0;
       var j;
-      for (j = r.t - this.t; i < j; ++i)
-        r[i + this.t] = this.am(0, a[i], r, i, 0, this.t);
-      for (j = Math.min(a.t, n); i < j; ++i)
-        this.am(0, a[i], r, i, 0, n - i);
+      for (j = r.t - this.t; i < j; ++i) r[i + this.t] = this.am(0, a[i], r, i, 0, this.t);
+      for (j = Math.min(a.t, n); i < j; ++i) this.am(0, a[i], r, i, 0, n - i);
       r.clamp();
     }
     function bnpMultiplyUpperTo(a, n, r) {
       --n;
       var i = r.t = this.t + a.t - n;
       r.s = 0;
-      while (--i >= 0)
-        r[i] = 0;
+      while (--i >= 0) r[i] = 0;
       for (i = Math.max(n - this.t, 0); i < a.t; ++i)
         r[this.t + i - n] = this.am(n - i, a[i], r, 0, 0, this.t + i - n);
       r.clamp();
@@ -3707,10 +3582,8 @@ var require_clipper = __commonJS({
       this.m = m;
     }
     function barrettConvert(x) {
-      if (x.s < 0 || x.t > 2 * this.m.t)
-        return x.mod(this.m);
-      else if (x.compareTo(this.m) < 0)
-        return x;
+      if (x.s < 0 || x.t > 2 * this.m.t) return x.mod(this.m);
+      else if (x.compareTo(this.m) < 0) return x;
       else {
         var r = nbi();
         x.copyTo(r);
@@ -3729,11 +3602,9 @@ var require_clipper = __commonJS({
       }
       this.mu.multiplyUpperTo(this.r2, this.m.t + 1, this.q3);
       this.m.multiplyLowerTo(this.q3, this.m.t + 1, this.r2);
-      while (x.compareTo(this.r2) < 0)
-        x.dAddOffset(1, this.m.t + 1);
+      while (x.compareTo(this.r2) < 0) x.dAddOffset(1, this.m.t + 1);
       x.subTo(this.r2, x);
-      while (x.compareTo(this.m) >= 0)
-        x.subTo(this.m, x);
+      while (x.compareTo(this.m) >= 0) x.subTo(this.m, x);
     }
     function barrettSqrTo(x, r) {
       x.squareTo(r);
@@ -3750,18 +3621,12 @@ var require_clipper = __commonJS({
     Barrett.prototype.sqrTo = barrettSqrTo;
     function bnModPow(e2, m) {
       var i = e2.bitLength(), k, r = nbv(1), z;
-      if (i <= 0)
-        return r;
-      else if (i < 18)
-        k = 1;
-      else if (i < 48)
-        k = 3;
-      else if (i < 144)
-        k = 4;
-      else if (i < 768)
-        k = 5;
-      else
-        k = 6;
+      if (i <= 0) return r;
+      else if (i < 18) k = 1;
+      else if (i < 48) k = 3;
+      else if (i < 144) k = 4;
+      else if (i < 768) k = 5;
+      else k = 6;
       if (i < 8)
         z = new Classic(m);
       else if (m.isEven())
@@ -3782,12 +3647,10 @@ var require_clipper = __commonJS({
       var j = e2.t - 1, w, is1 = true, r2 = nbi(), t;
       i = nbits(e2[j]) - 1;
       while (j >= 0) {
-        if (i >= k1)
-          w = e2[j] >> i - k1 & km;
+        if (i >= k1) w = e2[j] >> i - k1 & km;
         else {
           w = (e2[j] & (1 << i + 1) - 1) << k1 - i;
-          if (j > 0)
-            w |= e2[j - 1] >> this.DB + i - k1;
+          if (j > 0) w |= e2[j - 1] >> this.DB + i - k1;
         }
         n = k;
         while ((w & 1) == 0) {
@@ -3807,8 +3670,7 @@ var require_clipper = __commonJS({
             z.sqrTo(r2, r);
             n -= 2;
           }
-          if (n > 0)
-            z.sqrTo(r, r2);
+          if (n > 0) z.sqrTo(r, r2);
           else {
             t = r;
             r = r2;
@@ -3838,19 +3700,15 @@ var require_clipper = __commonJS({
         y = t;
       }
       var i = x.getLowestSetBit(), g2 = y.getLowestSetBit();
-      if (g2 < 0)
-        return x;
-      if (i < g2)
-        g2 = i;
+      if (g2 < 0) return x;
+      if (i < g2) g2 = i;
       if (g2 > 0) {
         x.rShiftTo(g2, x);
         y.rShiftTo(g2, y);
       }
       while (x.signum() > 0) {
-        if ((i = x.getLowestSetBit()) > 0)
-          x.rShiftTo(i, x);
-        if ((i = y.getLowestSetBit()) > 0)
-          y.rShiftTo(i, y);
+        if ((i = x.getLowestSetBit()) > 0) x.rShiftTo(i, x);
+        if ((i = y.getLowestSetBit()) > 0) y.rShiftTo(i, y);
         if (x.compareTo(y) >= 0) {
           x.subTo(y, x);
           x.rShiftTo(1, x);
@@ -3859,26 +3717,21 @@ var require_clipper = __commonJS({
           y.rShiftTo(1, y);
         }
       }
-      if (g2 > 0)
-        y.lShiftTo(g2, y);
+      if (g2 > 0) y.lShiftTo(g2, y);
       return y;
     }
     function bnpModInt(n) {
-      if (n <= 0)
-        return 0;
+      if (n <= 0) return 0;
       var d = this.DV % n, r = this.s < 0 ? n - 1 : 0;
       if (this.t > 0)
-        if (d == 0)
-          r = this[0] % n;
+        if (d == 0) r = this[0] % n;
         else
-          for (var i = this.t - 1; i >= 0; --i)
-            r = (d * r + this[i]) % n;
+          for (var i = this.t - 1; i >= 0; --i) r = (d * r + this[i]) % n;
       return r;
     }
     function bnModInverse(m) {
       var ac = m.isEven();
-      if (this.isEven() && ac || m.signum() == 0)
-        return BigInteger.ZERO;
+      if (this.isEven() && ac || m.signum() == 0) return BigInteger.ZERO;
       var u = m.clone(), v = this.clone();
       var a = nbv(1), b = nbv(0), c = nbv(0), d = nbv(1);
       while (u.signum() != 0) {
@@ -3890,8 +3743,7 @@ var require_clipper = __commonJS({
               b.subTo(m, b);
             }
             a.rShiftTo(1, a);
-          } else if (!b.isEven())
-            b.subTo(m, b);
+          } else if (!b.isEven()) b.subTo(m, b);
           b.rShiftTo(1, b);
         }
         while (v.isEven()) {
@@ -3902,34 +3754,25 @@ var require_clipper = __commonJS({
               d.subTo(m, d);
             }
             c.rShiftTo(1, c);
-          } else if (!d.isEven())
-            d.subTo(m, d);
+          } else if (!d.isEven()) d.subTo(m, d);
           d.rShiftTo(1, d);
         }
         if (u.compareTo(v) >= 0) {
           u.subTo(v, u);
-          if (ac)
-            a.subTo(c, a);
+          if (ac) a.subTo(c, a);
           b.subTo(d, b);
         } else {
           v.subTo(u, v);
-          if (ac)
-            c.subTo(a, c);
+          if (ac) c.subTo(a, c);
           d.subTo(b, d);
         }
       }
-      if (v.compareTo(BigInteger.ONE) != 0)
-        return BigInteger.ZERO;
-      if (d.compareTo(m) >= 0)
-        return d.subtract(m);
-      if (d.signum() < 0)
-        d.addTo(m, d);
-      else
-        return d;
-      if (d.signum() < 0)
-        return d.add(m);
-      else
-        return d;
+      if (v.compareTo(BigInteger.ONE) != 0) return BigInteger.ZERO;
+      if (d.compareTo(m) >= 0) return d.subtract(m);
+      if (d.signum() < 0) d.addTo(m, d);
+      else return d;
+      if (d.signum() < 0) return d.add(m);
+      else return d;
     }
     var lowprimes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227, 229, 233, 239, 241, 251, 257, 263, 269, 271, 277, 281, 283, 293, 307, 311, 313, 317, 331, 337, 347, 349, 353, 359, 367, 373, 379, 383, 389, 397, 401, 409, 419, 421, 431, 433, 439, 443, 449, 457, 461, 463, 467, 479, 487, 491, 499, 503, 509, 521, 523, 541, 547, 557, 563, 569, 571, 577, 587, 593, 599, 601, 607, 613, 617, 619, 631, 641, 643, 647, 653, 659, 661, 673, 677, 683, 691, 701, 709, 719, 727, 733, 739, 743, 751, 757, 761, 769, 773, 787, 797, 809, 811, 821, 823, 827, 829, 839, 853, 857, 859, 863, 877, 881, 883, 887, 907, 911, 919, 929, 937, 941, 947, 953, 967, 971, 977, 983, 991, 997];
     var lplim = (1 << 26) / lowprimes[lowprimes.length - 1];
@@ -3937,33 +3780,27 @@ var require_clipper = __commonJS({
       var i, x = this.abs();
       if (x.t == 1 && x[0] <= lowprimes[lowprimes.length - 1]) {
         for (i = 0; i < lowprimes.length; ++i)
-          if (x[0] == lowprimes[i])
-            return true;
+          if (x[0] == lowprimes[i]) return true;
         return false;
       }
-      if (x.isEven())
-        return false;
+      if (x.isEven()) return false;
       i = 1;
       while (i < lowprimes.length) {
         var m = lowprimes[i], j = i + 1;
-        while (j < lowprimes.length && m < lplim)
-          m *= lowprimes[j++];
+        while (j < lowprimes.length && m < lplim) m *= lowprimes[j++];
         m = x.modInt(m);
         while (i < j)
-          if (m % lowprimes[i++] == 0)
-            return false;
+          if (m % lowprimes[i++] == 0) return false;
       }
       return x.millerRabin(t);
     }
     function bnpMillerRabin(t) {
       var n1 = this.subtract(BigInteger.ONE);
       var k = n1.getLowestSetBit();
-      if (k <= 0)
-        return false;
+      if (k <= 0) return false;
       var r = n1.shiftRight(k);
       t = t + 1 >> 1;
-      if (t > lowprimes.length)
-        t = lowprimes.length;
+      if (t > lowprimes.length) t = lowprimes.length;
       var a = nbi();
       for (var i = 0; i < t; ++i) {
         a.fromInt(lowprimes[Math.floor(Math.random() * lowprimes.length)]);
@@ -3972,11 +3809,9 @@ var require_clipper = __commonJS({
           var j = 1;
           while (j++ < k && y.compareTo(n1) != 0) {
             y = y.modPowInt(2, this);
-            if (y.compareTo(BigInteger.ONE) == 0)
-              return false;
+            if (y.compareTo(BigInteger.ONE) == 0) return false;
           }
-          if (y.compareTo(n1) != 0)
-            return false;
+          if (y.compareTo(n1) != 0) return false;
         }
       }
       return true;
@@ -4030,34 +3865,24 @@ var require_clipper = __commonJS({
     BigInteger.prototype.square = bnSquare;
     var Int128 = BigInteger;
     Int128.prototype.IsNegative = function() {
-      if (this.compareTo(Int128.ZERO) == -1)
-        return true;
-      else
-        return false;
+      if (this.compareTo(Int128.ZERO) == -1) return true;
+      else return false;
     };
     Int128.op_Equality = function(val1, val2) {
-      if (val1.compareTo(val2) == 0)
-        return true;
-      else
-        return false;
+      if (val1.compareTo(val2) == 0) return true;
+      else return false;
     };
     Int128.op_Inequality = function(val1, val2) {
-      if (val1.compareTo(val2) != 0)
-        return true;
-      else
-        return false;
+      if (val1.compareTo(val2) != 0) return true;
+      else return false;
     };
     Int128.op_GreaterThan = function(val1, val2) {
-      if (val1.compareTo(val2) > 0)
-        return true;
-      else
-        return false;
+      if (val1.compareTo(val2) > 0) return true;
+      else return false;
     };
     Int128.op_LessThan = function(val1, val2) {
-      if (val1.compareTo(val2) < 0)
-        return true;
-      else
-        return false;
+      if (val1.compareTo(val2) < 0) return true;
+      else return false;
     };
     Int128.op_Addition = function(lhs, rhs) {
       return new Int128(lhs).add(new Int128(rhs));
@@ -4079,20 +3904,16 @@ var require_clipper = __commonJS({
         var p;
         if (typeof Object.getOwnPropertyNames == "undefined") {
           for (p in ce2.prototype)
-            if (typeof ce.prototype[p] == "undefined" || ce.prototype[p] == Object.prototype[p])
-              ce.prototype[p] = ce2.prototype[p];
+            if (typeof ce.prototype[p] == "undefined" || ce.prototype[p] == Object.prototype[p]) ce.prototype[p] = ce2.prototype[p];
           for (p in ce2)
-            if (typeof ce[p] == "undefined")
-              ce[p] = ce2[p];
+            if (typeof ce[p] == "undefined") ce[p] = ce2[p];
           ce.$baseCtor = ce2;
         } else {
           var props = Object.getOwnPropertyNames(ce2.prototype);
           for (var i = 0; i < props.length; i++)
-            if (typeof Object.getOwnPropertyDescriptor(ce.prototype, props[i]) == "undefined")
-              Object.defineProperty(ce.prototype, props[i], Object.getOwnPropertyDescriptor(ce2.prototype, props[i]));
+            if (typeof Object.getOwnPropertyDescriptor(ce.prototype, props[i]) == "undefined") Object.defineProperty(ce.prototype, props[i], Object.getOwnPropertyDescriptor(ce2.prototype, props[i]));
           for (p in ce2)
-            if (typeof ce[p] == "undefined")
-              ce[p] = ce2[p];
+            if (typeof ce[p] == "undefined") ce[p] = ce2[p];
           ce.$baseCtor = ce2;
         }
       };
@@ -4207,39 +4028,31 @@ var require_clipper = __commonJS({
     ClipperLib2.Math_Max_Int32_Int32 = function(a, b) {
       return Math.max(a, b);
     };
-    if (browser.msie || browser.opera || browser.safari)
-      ClipperLib2.Cast_Int32 = function(a) {
-        return a | 0;
-      };
-    else
-      ClipperLib2.Cast_Int32 = function(a) {
-        return ~~a;
-      };
-    if (browser.chrome)
-      ClipperLib2.Cast_Int64 = function(a) {
-        if (a < -2147483648 || a > 2147483647)
-          return a < 0 ? Math.ceil(a) : Math.floor(a);
-        else
-          return ~~a;
-      };
-    else if (browser.firefox && typeof Number.toInteger == "function")
-      ClipperLib2.Cast_Int64 = function(a) {
-        return Number.toInteger(a);
-      };
-    else if (browser.msie7 || browser.msie8)
-      ClipperLib2.Cast_Int64 = function(a) {
-        return parseInt(a, 10);
-      };
-    else if (browser.msie)
-      ClipperLib2.Cast_Int64 = function(a) {
-        if (a < -2147483648 || a > 2147483647)
-          return a < 0 ? Math.ceil(a) : Math.floor(a);
-        return a | 0;
-      };
-    else
-      ClipperLib2.Cast_Int64 = function(a) {
+    if (browser.msie || browser.opera || browser.safari) ClipperLib2.Cast_Int32 = function(a) {
+      return a | 0;
+    };
+    else ClipperLib2.Cast_Int32 = function(a) {
+      return ~~a;
+    };
+    if (browser.chrome) ClipperLib2.Cast_Int64 = function(a) {
+      if (a < -2147483648 || a > 2147483647)
         return a < 0 ? Math.ceil(a) : Math.floor(a);
-      };
+      else return ~~a;
+    };
+    else if (browser.firefox && typeof Number.toInteger == "function") ClipperLib2.Cast_Int64 = function(a) {
+      return Number.toInteger(a);
+    };
+    else if (browser.msie7 || browser.msie8) ClipperLib2.Cast_Int64 = function(a) {
+      return parseInt(a, 10);
+    };
+    else if (browser.msie) ClipperLib2.Cast_Int64 = function(a) {
+      if (a < -2147483648 || a > 2147483647)
+        return a < 0 ? Math.ceil(a) : Math.floor(a);
+      return a | 0;
+    };
+    else ClipperLib2.Cast_Int64 = function(a) {
+      return a < 0 ? Math.ceil(a) : Math.floor(a);
+    };
     ClipperLib2.Clear = function(a) {
       a.length = 0;
     };
@@ -4267,8 +4080,7 @@ var require_clipper = __commonJS({
             this.Z = 0;
           } else {
             var pt = a[0];
-            if (typeof pt.Z == "undefined")
-              pt.Z = 0;
+            if (typeof pt.Z == "undefined") pt.Z = 0;
             this.X = pt.X;
             this.Y = pt.Y;
             this.Z = pt.Z;
@@ -4926,10 +4738,8 @@ var require_clipper = __commonJS({
     ClipperLib2.ClipperBase.prototype.SetDx = function(e2) {
       e2.Delta.X = e2.Top.X - e2.Bot.X;
       e2.Delta.Y = e2.Top.Y - e2.Bot.Y;
-      if (e2.Delta.Y === 0)
-        e2.Dx = ClipperLib2.ClipperBase.horizontal;
-      else
-        e2.Dx = e2.Delta.X / e2.Delta.Y;
+      if (e2.Delta.Y === 0) e2.Dx = ClipperLib2.ClipperBase.horizontal;
+      else e2.Dx = e2.Delta.X / e2.Delta.Y;
     };
     ClipperLib2.ClipperBase.prototype.InsertLocalMinima = function(newLm) {
       if (this.m_MinimaList === null) {
@@ -4984,8 +4794,7 @@ var require_clipper = __commonJS({
       }
     };
     ClipperLib2.Clipper = function(InitOptions) {
-      if (typeof InitOptions == "undefined")
-        InitOptions = 0;
+      if (typeof InitOptions == "undefined") InitOptions = 0;
       this.m_PolyOuts = null;
       this.m_ClipType = ClipperLib2.ClipType.ctIntersection;
       this.m_Scanbeam = null;
@@ -5084,8 +4893,7 @@ var require_clipper = __commonJS({
         this.m_UsingPolyTree = false;
         try {
           var succeeded = this.ExecuteInternal();
-          if (succeeded)
-            this.BuildResult(solution);
+          if (succeeded) this.BuildResult(solution);
         } finally {
           this.DisposeAllPolyPts();
           this.m_ExecuteLocked = false;
@@ -5102,8 +4910,7 @@ var require_clipper = __commonJS({
         this.m_UsingPolyTree = true;
         try {
           var succeeded = this.ExecuteInternal();
-          if (succeeded)
-            this.BuildResult2(polytree);
+          if (succeeded) this.BuildResult2(polytree);
         } finally {
           this.DisposeAllPolyPts();
           this.m_ExecuteLocked = false;
@@ -5253,8 +5060,7 @@ var require_clipper = __commonJS({
           else
             this.InsertScanbeam(rb.Top.Y);
         }
-        if (lb == null || rb == null)
-          continue;
+        if (lb == null || rb == null) continue;
         if (Op1 !== null && ClipperLib2.ClipperBase.IsHorizontal(rb) && this.m_GhostJoins.length > 0 && rb.WindDelta !== 0) {
           for (var i = 0, ilen = this.m_GhostJoins.length; i < ilen; i++) {
             var j = this.m_GhostJoins[i];
@@ -5585,8 +5391,7 @@ var require_clipper = __commonJS({
     };
     ClipperLib2.Clipper.prototype.AddLocalMaxPoly = function(e1, e2, pt) {
       this.AddOutPt(e1, pt);
-      if (e2.WindDelta == 0)
-        this.AddOutPt(e2, pt);
+      if (e2.WindDelta == 0) this.AddOutPt(e2, pt);
       if (e1.OutIdx == e2.OutIdx) {
         e1.OutIdx = -1;
         e2.OutIdx = -1;
@@ -6277,8 +6082,7 @@ var require_clipper = __commonJS({
             var op2 = this.AddOutPt(eNext, horzEdge.Bot);
             this.AddJoin(op1, op2, horzEdge.Top);
           }
-        } else
-          horzEdge = this.UpdateEdgeIntoAEL(horzEdge);
+        } else horzEdge = this.UpdateEdgeIntoAEL(horzEdge);
       } else if (eMaxPair !== null) {
         if (eMaxPair.OutIdx >= 0) {
           if (dir2 == ClipperLib2.Direction.dLeftToRight)
@@ -6436,14 +6240,10 @@ var require_clipper = __commonJS({
         return a > 2147483647 ? Math.floor(a) : a | 0;
       }
     };
-    if (browser.msie)
-      ClipperLib2.Clipper.Round = R1;
-    else if (browser.chromium)
-      ClipperLib2.Clipper.Round = R3;
-    else if (browser.safari)
-      ClipperLib2.Clipper.Round = R4;
-    else
-      ClipperLib2.Clipper.Round = R2;
+    if (browser.msie) ClipperLib2.Clipper.Round = R1;
+    else if (browser.chromium) ClipperLib2.Clipper.Round = R3;
+    else if (browser.safari) ClipperLib2.Clipper.Round = R4;
+    else ClipperLib2.Clipper.Round = R2;
     ClipperLib2.Clipper.TopX = function(edge, currentY) {
       if (currentY == edge.Top.Y)
         return edge.Top.X;
@@ -6921,10 +6721,8 @@ var require_clipper = __commonJS({
     };
     ClipperLib2.Clipper.GetBounds = function(paths) {
       var i = 0, cnt = paths.length;
-      while (i < cnt && paths[i].length == 0)
-        i++;
-      if (i == cnt)
-        return new ClipperLib2.IntRect(0, 0, 0, 0);
+      while (i < cnt && paths[i].length == 0) i++;
+      if (i == cnt) return new ClipperLib2.IntRect(0, 0, 0, 0);
       var result = new ClipperLib2.IntRect();
       result.left = paths[i][0].X;
       result.right = result.left;
@@ -6932,14 +6730,10 @@ var require_clipper = __commonJS({
       result.bottom = result.top;
       for (; i < cnt; i++)
         for (var j = 0, jlen = paths[i].length; j < jlen; j++) {
-          if (paths[i][j].X < result.left)
-            result.left = paths[i][j].X;
-          else if (paths[i][j].X > result.right)
-            result.right = paths[i][j].X;
-          if (paths[i][j].Y < result.top)
-            result.top = paths[i][j].Y;
-          else if (paths[i][j].Y > result.bottom)
-            result.bottom = paths[i][j].Y;
+          if (paths[i][j].X < result.left) result.left = paths[i][j].X;
+          else if (paths[i][j].X > result.right) result.right = paths[i][j].X;
+          if (paths[i][j].Y < result.top) result.top = paths[i][j].Y;
+          else if (paths[i][j].Y > result.bottom) result.bottom = paths[i][j].Y;
         }
       return result;
     };
@@ -7082,8 +6876,7 @@ var require_clipper = __commonJS({
           holeStateRec = outRec1;
         else
           holeStateRec = this.GetLowermostRec(outRec1, outRec2);
-        if (!this.JoinPoints(join, outRec1, outRec2))
-          continue;
+        if (!this.JoinPoints(join, outRec1, outRec2)) continue;
         if (outRec1 == outRec2) {
           outRec1.Pts = join.OutPt1;
           outRec1.BottomPt = null;
@@ -7221,8 +7014,7 @@ var require_clipper = __commonJS({
       return result;
     };
     ClipperLib2.Clipper.SimplifyPolygons = function(polys, fillType) {
-      if (typeof fillType == "undefined")
-        fillType = ClipperLib2.PolyFillType.pftEvenOdd;
+      if (typeof fillType == "undefined") fillType = ClipperLib2.PolyFillType.pftEvenOdd;
       var result = new Array();
       var c = new ClipperLib2.Clipper(0);
       c.StrictlySimple = true;
@@ -7258,8 +7050,7 @@ var require_clipper = __commonJS({
       return result;
     };
     ClipperLib2.Clipper.CleanPolygon = function(path, distance4) {
-      if (typeof distance4 == "undefined")
-        distance4 = 1.415;
+      if (typeof distance4 == "undefined") distance4 = 1.415;
       var cnt = path.length;
       if (cnt == 0)
         return new Array();
@@ -7354,8 +7145,7 @@ var require_clipper = __commonJS({
           var tmp = ClipperLib2.Clipper.Minkowski(pattern, paths[i], true, pathIsClosed);
           c.AddPaths(tmp, ClipperLib2.PolyType.ptSubject, true);
         }
-        if (pathIsClosed)
-          c.AddPaths(paths, ClipperLib2.PolyType.ptClip, true);
+        if (pathIsClosed) c.AddPaths(paths, ClipperLib2.PolyType.ptClip, true);
         var solution = new ClipperLib2.Paths();
         c.Execute(ClipperLib2.ClipType.ctUnion, solution, pathFillType, pathFillType);
         return solution;
@@ -7404,10 +7194,8 @@ var require_clipper = __commonJS({
       ntClosed: 2
     };
     ClipperLib2.ClipperOffset = function(miterLimit, arcTolerance) {
-      if (typeof miterLimit == "undefined")
-        miterLimit = 2;
-      if (typeof arcTolerance == "undefined")
-        arcTolerance = ClipperLib2.ClipperOffset.def_arc_tolerance;
+      if (typeof miterLimit == "undefined") miterLimit = 2;
+      if (typeof arcTolerance == "undefined") arcTolerance = ClipperLib2.ClipperOffset.def_arc_tolerance;
       this.m_destPolys = new ClipperLib2.Paths();
       this.m_srcPoly = new ClipperLib2.Path();
       this.m_destPoly = new ClipperLib2.Path();
@@ -7763,13 +7551,11 @@ var require_clipper = __commonJS({
     };
     ClipperLib2.JS = {};
     ClipperLib2.JS.AreaOfPolygon = function(poly, scale2) {
-      if (!scale2)
-        scale2 = 1;
+      if (!scale2) scale2 = 1;
       return ClipperLib2.Clipper.Area(poly) / (scale2 * scale2);
     };
     ClipperLib2.JS.AreaOfPolygons = function(poly, scale2) {
-      if (!scale2)
-        scale2 = 1;
+      if (!scale2) scale2 = 1;
       var area = 0;
       for (var i = 0; i < poly.length; i++) {
         area += ClipperLib2.Clipper.Area(poly[i]);
@@ -7780,8 +7566,7 @@ var require_clipper = __commonJS({
       return ClipperLib2.JS.BoundsOfPaths([path], scale2);
     };
     ClipperLib2.JS.BoundsOfPaths = function(paths, scale2) {
-      if (!scale2)
-        scale2 = 1;
+      if (!scale2) scale2 = 1;
       var bounds2 = ClipperLib2.Clipper.GetBounds(paths);
       bounds2.left /= scale2;
       bounds2.bottom /= scale2;
@@ -7790,26 +7575,22 @@ var require_clipper = __commonJS({
       return bounds2;
     };
     ClipperLib2.JS.Clean = function(polygon2, delta) {
-      if (!(polygon2 instanceof Array))
-        return [];
+      if (!(polygon2 instanceof Array)) return [];
       var isPolygons = polygon2[0] instanceof Array;
       var polygon2 = ClipperLib2.JS.Clone(polygon2);
       if (typeof delta != "number" || delta === null) {
         ClipperLib2.Error("Delta is not a number in Clean().");
         return polygon2;
       }
-      if (polygon2.length === 0 || polygon2.length == 1 && polygon2[0].length === 0 || delta < 0)
-        return polygon2;
-      if (!isPolygons)
-        polygon2 = [polygon2];
+      if (polygon2.length === 0 || polygon2.length == 1 && polygon2[0].length === 0 || delta < 0) return polygon2;
+      if (!isPolygons) polygon2 = [polygon2];
       var k_length = polygon2.length;
       var len, poly, result, d, p, j, i;
       var results = [];
       for (var k = 0; k < k_length; k++) {
         poly = polygon2[k];
         len = poly.length;
-        if (len === 0)
-          continue;
+        if (len === 0) continue;
         else if (len < 3) {
           result = poly;
           results.push(result);
@@ -7831,29 +7612,21 @@ var require_clipper = __commonJS({
           j--;
         if (j < len)
           result.splice(j, len - j);
-        if (result.length)
-          results.push(result);
+        if (result.length) results.push(result);
       }
-      if (!isPolygons && results.length)
-        results = results[0];
-      else if (!isPolygons && results.length === 0)
-        results = [];
-      else if (isPolygons && results.length === 0)
-        results = [
-          []
-        ];
+      if (!isPolygons && results.length) results = results[0];
+      else if (!isPolygons && results.length === 0) results = [];
+      else if (isPolygons && results.length === 0) results = [
+        []
+      ];
       return results;
     };
     ClipperLib2.JS.Clone = function(polygon2) {
-      if (!(polygon2 instanceof Array))
-        return [];
-      if (polygon2.length === 0)
-        return [];
-      else if (polygon2.length == 1 && polygon2[0].length === 0)
-        return [[]];
+      if (!(polygon2 instanceof Array)) return [];
+      if (polygon2.length === 0) return [];
+      else if (polygon2.length == 1 && polygon2[0].length === 0) return [[]];
       var isPolygons = polygon2[0] instanceof Array;
-      if (!isPolygons)
-        polygon2 = [polygon2];
+      if (!isPolygons) polygon2 = [polygon2];
       var len = polygon2.length, plen, i, j, result;
       var results = new Array(len);
       for (i = 0; i < len; i++) {
@@ -7867,13 +7640,11 @@ var require_clipper = __commonJS({
         }
         results[i] = result;
       }
-      if (!isPolygons)
-        results = results[0];
+      if (!isPolygons) results = results[0];
       return results;
     };
     ClipperLib2.JS.Lighten = function(polygon2, tolerance) {
-      if (!(polygon2 instanceof Array))
-        return [];
+      if (!(polygon2 instanceof Array)) return [];
       if (typeof tolerance != "number" || tolerance === null) {
         ClipperLib2.Error("Tolerance is not a number in Lighten().");
         return ClipperLib2.JS.Clone(polygon2);
@@ -7881,8 +7652,7 @@ var require_clipper = __commonJS({
       if (polygon2.length === 0 || polygon2.length == 1 && polygon2[0].length === 0 || tolerance < 0) {
         return ClipperLib2.JS.Clone(polygon2);
       }
-      if (!(polygon2[0] instanceof Array))
-        polygon2 = [polygon2];
+      if (!(polygon2[0] instanceof Array)) polygon2 = [polygon2];
       var i, j, poly, k, poly2, plen, A, B, P, d, rem, addlast;
       var bxax, byay, l, ax, ay;
       var len = polygon2.length;
@@ -7891,8 +7661,7 @@ var require_clipper = __commonJS({
       for (i = 0; i < len; i++) {
         poly = polygon2[i];
         plen = poly.length;
-        if (plen == 0)
-          continue;
+        if (plen == 0) continue;
         for (k = 0; k < 1e6; k++) {
           poly2 = [];
           plen = poly.length;
@@ -7905,8 +7674,7 @@ var require_clipper = __commonJS({
               }
             );
             plen = poly.length;
-          } else
-            addlast = 0;
+          } else addlast = 0;
           rem = [];
           for (j = 0; j < plen - 2; j++) {
             A = poly[j];
@@ -7941,25 +7709,21 @@ var require_clipper = __commonJS({
             }
           );
           for (j = 1; j < plen - 1; j++)
-            if (!rem[j])
-              poly2.push(
-                {
-                  X: poly[j].X,
-                  Y: poly[j].Y
-                }
-              );
+            if (!rem[j]) poly2.push(
+              {
+                X: poly[j].X,
+                Y: poly[j].Y
+              }
+            );
           poly2.push(
             {
               X: poly[plen - 1].X,
               Y: poly[plen - 1].Y
             }
           );
-          if (addlast)
-            poly.pop();
-          if (!rem.length)
-            break;
-          else
-            poly = poly2;
+          if (addlast) poly.pop();
+          if (!rem.length) break;
+          else poly = poly2;
         }
         plen = poly2.length;
         if (poly2[plen - 1].X == poly2[0].X && poly2[plen - 1].Y == poly2[0].Y) {
@@ -7968,23 +7732,19 @@ var require_clipper = __commonJS({
         if (poly2.length > 2)
           results.push(poly2);
       }
-      if (!polygon2[0] instanceof Array)
-        results = results[0];
-      if (typeof results == "undefined")
-        results = [
-          []
-        ];
+      if (!polygon2[0] instanceof Array) results = results[0];
+      if (typeof results == "undefined") results = [
+        []
+      ];
       return results;
     };
     ClipperLib2.JS.PerimeterOfPath = function(path, closed, scale2) {
-      if (typeof path == "undefined")
-        return 0;
+      if (typeof path == "undefined") return 0;
       var sqrt2 = Math.sqrt;
       var perimeter = 0;
       var p1, p2, p1x = 0, p1y = 0, p2x = 0, p2y = 0;
       var j = path.length;
-      if (j < 2)
-        return 0;
+      if (j < 2) return 0;
       if (closed) {
         path[j] = path[0];
         j++;
@@ -7998,13 +7758,11 @@ var require_clipper = __commonJS({
         p2y = p2.Y;
         perimeter += sqrt2((p1x - p2x) * (p1x - p2x) + (p1y - p2y) * (p1y - p2y));
       }
-      if (closed)
-        path.pop();
+      if (closed) path.pop();
       return perimeter / scale2;
     };
     ClipperLib2.JS.PerimeterOfPaths = function(paths, closed, scale2) {
-      if (!scale2)
-        scale2 = 1;
+      if (!scale2) scale2 = 1;
       var perimeter = 0;
       for (var i = 0; i < paths.length; i++) {
         perimeter += ClipperLib2.JS.PerimeterOfPath(paths[i], closed, scale2);
@@ -8013,8 +7771,7 @@ var require_clipper = __commonJS({
     };
     ClipperLib2.JS.ScaleDownPath = function(path, scale2) {
       var i, p;
-      if (!scale2)
-        scale2 = 1;
+      if (!scale2) scale2 = 1;
       i = path.length;
       while (i--) {
         p = path[i];
@@ -8024,8 +7781,7 @@ var require_clipper = __commonJS({
     };
     ClipperLib2.JS.ScaleDownPaths = function(paths, scale2) {
       var i, j, p, round3 = Math.round;
-      if (!scale2)
-        scale2 = 1;
+      if (!scale2) scale2 = 1;
       i = paths.length;
       while (i--) {
         j = paths[i].length;
@@ -8038,8 +7794,7 @@ var require_clipper = __commonJS({
     };
     ClipperLib2.JS.ScaleUpPath = function(path, scale2) {
       var i, p, round3 = Math.round;
-      if (!scale2)
-        scale2 = 1;
+      if (!scale2) scale2 = 1;
       i = path.length;
       while (i--) {
         p = path[i];
@@ -8049,8 +7804,7 @@ var require_clipper = __commonJS({
     };
     ClipperLib2.JS.ScaleUpPaths = function(paths, scale2) {
       var i, j, p, round3 = Math.round;
-      if (!scale2)
-        scale2 = 1;
+      if (!scale2) scale2 = 1;
       i = paths.length;
       while (i--) {
         j = paths[i].length;
@@ -8627,8 +8381,7 @@ var require_stackblur = __commonJS({
       24
     ];
     function blur(pixels, width, height, radius) {
-      if (isNaN(radius) || radius < 1)
-        return;
+      if (isNaN(radius) || radius < 1) return;
       radius |= 0;
       var x, y, i, p, yp, yi, yw, r_sum, g_sum, b_sum, a_sum, r_out_sum, g_out_sum, b_out_sum, a_out_sum, r_in_sum, g_in_sum, b_in_sum, a_in_sum, pr, pg, pb, pa, rbs;
       var div = radius + radius + 1;
@@ -8641,8 +8394,7 @@ var require_stackblur = __commonJS({
       var stack2 = stackStart;
       for (i = 1; i < div; i++) {
         stack2 = stack2.next = new BlurStack();
-        if (i == radiusPlus1)
-          var stackEnd = stack2;
+        if (i == radiusPlus1) var stackEnd = stack2;
       }
       stack2.next = stackStart;
       var stackIn = null;
@@ -9013,7 +8765,7 @@ function _grad(hash, x, y, z) {
 function _scale(n) {
   return (1 + n) / 2;
 }
-var _permutation = function() {
+var _permutation = (function() {
   let permutation, p, i;
   permutation = [
     151,
@@ -9278,7 +9030,7 @@ var _permutation = function() {
     p[256 + i] = p[i] = permutation[i];
   }
   return p;
-}();
+})();
 function noise(x, y, z) {
   const p = _permutation;
   const X = Math.floor(x) & 255;
@@ -9322,47 +9074,47 @@ function noise(x, y, z) {
 }
 
 // src/libraries/vg/objects/point.js
-var Point = class {
+var Point = class _Point {
   constructor(x, y) {
     this.x = x !== void 0 ? x : 0;
     this.y = y !== void 0 ? y : 0;
   }
   static read(x, y) {
     if (arguments.length === 2) {
-      return new Point(x, y);
+      return new _Point(x, y);
     }
     const arg = x;
-    if (arg instanceof Point) {
+    if (arg instanceof _Point) {
       return arg;
     } else if (typeof arg === "number") {
-      return new Point(arg, arg);
+      return new _Point(arg, arg);
     } else if (Array.isArray(arg)) {
       if (arg.length === 0) {
-        return Point.ZERO;
+        return _Point.ZERO;
       }
       x = arg[0];
       y = arg.length > 1 ? arg[1] : x;
-      return new Point(x, y);
+      return new _Point(x, y);
     } else if (arg.x !== void 0 && arg.y !== void 0) {
-      return new Point(arg.x, arg.y);
+      return new _Point(arg.x, arg.y);
     } else {
-      return Point.ZERO;
+      return _Point.ZERO;
     }
   }
   clone() {
-    return new Point(this.x, this.y);
+    return new _Point(this.x, this.y);
   }
   add(v) {
-    return new Point(this.x + v.x, this.y + v.y);
+    return new _Point(this.x + v.x, this.y + v.y);
   }
   sub(v) {
-    return new Point(this.x - v.x, this.y - v.y);
+    return new _Point(this.x - v.x, this.y - v.y);
   }
   divide(n) {
-    return new Point(this.x / n, this.y / n);
+    return new _Point(this.x / n, this.y / n);
   }
   multiply(n) {
-    return new Point(this.x * n, this.y * n);
+    return new _Point(this.x * n, this.y * n);
   }
   magnitude() {
     return Math.sqrt(this.x * this.x + this.y * this.y);
@@ -9382,7 +9134,7 @@ var Point = class {
     if (m !== 0) {
       return this.divide(m);
     } else {
-      return Point.ZERO;
+      return _Point.ZERO;
     }
   }
   limit(speed) {
@@ -9392,11 +9144,11 @@ var Point = class {
     return this;
   }
   translate(tx, ty) {
-    return new Point(this.x + tx, this.y + ty);
+    return new _Point(this.x + tx, this.y + ty);
   }
   scale(sx, sy) {
     sy = sy !== void 0 ? sy : sx;
-    return new Point(this.x * sx, this.y * sy);
+    return new _Point(this.x * sx, this.y * sy);
   }
   toString() {
     return "[" + this.x + ", " + this.y + "]";
@@ -9411,7 +9163,7 @@ Point.ZERO = new Point(0, 0);
 Point.prototype.subtract = Point.prototype.sub;
 
 // src/libraries/vg/objects/rect.js
-var Rect = class {
+var Rect = class _Rect {
   constructor(x, y, width, height) {
     this.x = x !== void 0 ? x : 0;
     this.y = y !== void 0 ? y : 0;
@@ -9429,7 +9181,7 @@ var Rect = class {
       y += height;
       height = -height;
     }
-    return new Rect(x, y, width, height);
+    return new _Rect(x, y, width, height);
   }
   containsPoint(x, y) {
     if (arguments.length === 1) {
@@ -9443,11 +9195,11 @@ var Rect = class {
   }
   grow(dx, dy) {
     const x = this.x - dx, y = this.y - dy, width = this.width + dx * 2, height = this.height + dy * 2;
-    return new Rect(x, y, width, height);
+    return new _Rect(x, y, width, height);
   }
   unite(r) {
     const x = Math.min(this.x, r.x), y = Math.min(this.y, r.y), width = Math.max(this.x + this.width, r.x + r.width) - x, height = Math.max(this.y + this.height, r.y + r.height) - y;
-    return new Rect(x, y, width, height);
+    return new _Rect(x, y, width, height);
   }
   addPoint(x, y) {
     let dx, dy, _x2 = this.x, _y2 = this.y, width = this.width, height = this.height;
@@ -9467,7 +9219,7 @@ var Rect = class {
       dy = y - (this.y + this.height);
       height += dy;
     }
-    return new Rect(_x2, _y2, width, height);
+    return new _Rect(_x2, _y2, width, height);
   }
   centerPoint() {
     return new Point(this.x + this.width / 2, this.y + this.height / 2);
@@ -10489,7 +10241,7 @@ function defineGetter(cls, property, getterFn) {
 var HSB = "HSB";
 var HSL = "HSL";
 var HEX = "HEX";
-var Color = class {
+var Color = class _Color {
   constructor(v1, v2, v3, v4, v5) {
     let _r, _g, _b, _a, rgb, options;
     if (v1 === void 0) {
@@ -10600,7 +10352,7 @@ var Color = class {
     } else if (typeof c === "string") {
       return c;
     } else {
-      return new Color(c.r, c.g, c.b, c.a);
+      return new _Color(c.r, c.g, c.b, c.a);
     }
   }
   static toCSS(c) {
@@ -10610,7 +10362,7 @@ var Color = class {
       return "black";
     } else if (typeof c === "string") {
       return c;
-    } else if (c instanceof Color) {
+    } else if (c instanceof _Color) {
       const r255 = Math.round(c.r * 255), g255 = Math.round(c.g * 255), b255 = Math.round(c.b * 255);
       return "rgba(" + r255 + ", " + g255 + ", " + b255 + ", " + c.a + ")";
     } else if (c.r !== void 0 && c.g !== void 0 && c.b !== void 0) {
@@ -10625,10 +10377,10 @@ var Color = class {
     }
   }
   static toHex(c, ignoreAlpha) {
-    return Color.parse(c, ignoreAlpha).toHex();
+    return _Color.parse(c, ignoreAlpha).toHex();
   }
   static make(...args) {
-    return new Color(...args);
+    return new _Color(...args);
   }
   static parse(s) {
     function startsWith2(s2, value) {
@@ -10640,19 +10392,19 @@ var Color = class {
     }
     let m;
     if (s === void 0 || s === null) {
-      return new Color(0, 0, 0, 0);
-    } else if (s instanceof Color) {
+      return new _Color(0, 0, 0, 0);
+    } else if (s instanceof _Color) {
       return s;
     } else if (namedColors[s]) {
-      return Color.make.apply(null, namedColors[s]);
+      return _Color.make.apply(null, namedColors[s]);
     } else if (s[0] === "#") {
-      return new Color(s, 0, 0, 0, { mode: HEX });
+      return new _Color(s, 0, 0, 0, { mode: HEX });
     } else if (startsWith2(s, "rgba")) {
       m = s.match(
         /^rgba\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+|\d+.\d+)\s*\)$/i
       );
       if (m) {
-        return new Color(
+        return new _Color(
           parseInt(m[1]) / 255,
           parseInt(m[2]) / 255,
           parseInt(m[3]) / 255,
@@ -10663,7 +10415,7 @@ var Color = class {
           /^rgba\s*\(\s*(\d+|\d+.\d+)%\s*,\s*(\d+|\d+.\d+)%\s*,\s*(\d+|\d+.\d+)%\s*,\s*(\d+|\d+.\d+)\s*\)$/i
         );
         if (m) {
-          return new Color(
+          return new _Color(
             parseFloat(m[1]) / 100,
             parseFloat(m[2]) / 100,
             parseFloat(m[3]) / 100,
@@ -10671,11 +10423,11 @@ var Color = class {
           );
         }
       }
-      return new Color(0, 0, 0, 0);
+      return new _Color(0, 0, 0, 0);
     } else if (startsWith2(s, "rgb")) {
       m = s.match(/^rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/i);
       if (m) {
-        return new Color(
+        return new _Color(
           parseInt(m[1]) / 255,
           parseInt(m[2]) / 255,
           parseInt(m[3]) / 255
@@ -10685,56 +10437,56 @@ var Color = class {
           /^rgb\s*\(\s*(\d+|\d+.\d+)%\s*,\s*(\d+|\d+.\d+)%\s*,\s*(\d+|\d+.\d+)%\s*\)$/i
         );
         if (m) {
-          return new Color(
+          return new _Color(
             parseFloat(m[1]) / 100,
             parseFloat(m[2]) / 100,
             parseFloat(m[3]) / 100
           );
         }
       }
-      return new Color(0, 0, 0, 0);
+      return new _Color(0, 0, 0, 0);
     } else if (startsWith2(s, "hsla")) {
       m = s.match(
         /^hsla\s*\(\s*(\d+|\d+.\d+)\s*,\s*(\d+|\d+.\d+)%\s*,\s*(\d+|\d+.\d+)%\s*,\s*(\d+|\d+.\d+)\s*\)$/i
       );
       if (m) {
-        return new Color(
+        return new _Color(
           parseFloat(m[1]) / 360,
           parseFloat(m[2]) / 100,
           parseFloat(m[3]) / 100,
           parseFloat(m[4])
         );
       }
-      return new Color(0, 0, 0, 0);
+      return new _Color(0, 0, 0, 0);
     } else if (startsWith2(s, "hsl")) {
       m = s.match(
         /^hsl\s*\(\s*(\d+|\d+.\d+)\s*,\s*(\d+|\d+.\d+)%\s*,\s*(\d+|\d+.\d+)%\s*\)$/i
       );
       if (m) {
-        return new Color(
+        return new _Color(
           parseFloat(m[1]) / 360,
           parseFloat(m[2]) / 100,
           parseFloat(m[3]) / 100
         );
       }
-      return new Color(0, 0, 0, 0);
+      return new _Color(0, 0, 0, 0);
     } else if (s === "none" || s === "null" || startsWith2(s, "url(")) {
-      return new Color(0, 0, 0, 0);
+      return new _Color(0, 0, 0, 0);
     } else {
       throw new Error("Color " + s + "can not be parsed");
     }
   }
   static gray(gray, alpha, range3) {
     range3 = Math.max(range3, 1);
-    return new Color(gray / range3, gray / range3, gray / range3, alpha / range3);
+    return new _Color(gray / range3, gray / range3, gray / range3, alpha / range3);
   }
   static rgb(red, green, blue, alpha, range3) {
     range3 = Math.max(range3, 1);
-    return new Color(red / range3, green / range3, blue / range3, alpha / range3);
+    return new _Color(red / range3, green / range3, blue / range3, alpha / range3);
   }
   static hsb(hue, saturation, brightness, alpha, range3) {
     range3 = Math.max(range3, 1);
-    return new Color(
+    return new _Color(
       hue / range3,
       saturation / range3,
       brightness / range3,
@@ -10744,7 +10496,7 @@ var Color = class {
   }
   static hsl(hue, saturation, lightness, alpha, range3) {
     range3 = Math.max(range3, 1);
-    return new Color(
+    return new _Color(
       hue / range3,
       saturation / range3,
       lightness / range3,
@@ -10767,10 +10519,10 @@ var Color = class {
       bCoeff = 0.0721;
     }
     const gray = this.r * rCoeff + this.g * gCoeff + this.b * bCoeff;
-    return new Color(gray, gray, gray, this.a);
+    return new _Color(gray, gray, gray, this.a);
   }
   invert() {
-    return new Color(1 - this.r, 1 - this.g, 1 - this.b, this.a);
+    return new _Color(1 - this.r, 1 - this.g, 1 - this.b, this.a);
   }
 };
 Color.BLACK = new Color(0);
@@ -10867,7 +10619,7 @@ function _cloneCommand(cmd) {
   }
   return newCmd;
 }
-var Path = class {
+var Path = class _Path {
   constructor(commands, fill, stroke, strokeWidth) {
     this.commands = commands !== void 0 ? commands : [];
     this.fill = fill !== void 0 ? fill : "black";
@@ -10882,13 +10634,13 @@ var Path = class {
       if (shape.commands) {
         commands = commands.concat(shape.commands);
       } else if (shape.shapes) {
-        commands = commands.concat(Path.combine(shape.shapes).commands);
+        commands = commands.concat(_Path.combine(shape.shapes).commands);
       }
     }
-    return new Path(commands);
+    return new _Path(commands);
   }
   clone() {
-    let p = new Path(), n = this.commands.length, i;
+    let p = new _Path(), n = this.commands.length, i;
     p.commands.length = this.commands.length;
     for (i = 0; i < n; i += 1) {
       p.commands[i] = _cloneCommand(this.commands[i]);
@@ -11073,7 +10825,7 @@ var Path = class {
         coords.push(y + (relY - cv * relX) * h);
         coords.push(x + relX * w);
         coords.push(y + relY * h);
-        Path.prototype.curveTo.apply(this, coords);
+        _Path.prototype.curveTo.apply(this, coords);
       }
       index2 += 1;
     }
@@ -11251,9 +11003,9 @@ var Path = class {
   }
   resampleByAmount(points, perContour) {
     const subPaths = perContour ? this.contours() : [this.commands];
-    const p = new Path([], this.fill, this.stroke, this.strokeWidth);
+    const p = new _Path([], this.fill, this.stroke, this.strokeWidth);
     for (let j = 0; j < subPaths.length; j += 1) {
-      const subPath = new Path(subPaths[j]);
+      const subPath = new _Path(subPaths[j]);
       const options = {};
       if (subPath.isClosed()) {
         options.closed = true;
@@ -11281,12 +11033,12 @@ var Path = class {
       segmentLength = Math.max(segmentLength, 1);
     }
     for (let i = 0; i < subPaths.length; i += 1) {
-      const subPath = new Path(subPaths[i]);
+      const subPath = new _Path(subPaths[i]);
       const contourLength = subPath.length();
       const amount = Math.ceil(contourLength / segmentLength);
       commands = commands.concat(subPath.resampleByAmount(amount).commands);
     }
-    return new Path(commands, this.fill, this.stroke, this.strokeWidth);
+    return new _Path(commands, this.fill, this.stroke, this.strokeWidth);
   }
   toPathData(fractionDigits = 3) {
     let i, d, cmd, x, y, x1, y1, x2, y2;
@@ -11407,7 +11159,7 @@ var Path = class {
 Path.prototype.closePath = Path.prototype.close;
 
 // src/libraries/vg/objects/group.js
-var Group = class {
+var Group = class _Group {
   constructor(shapes) {
     if (!shapes) {
       this.shapes = [];
@@ -11426,7 +11178,7 @@ var Group = class {
     for (i = 0; i < n; i += 1) {
       newShapes[i] = this.shapes[i].clone();
     }
-    return new Group(newShapes);
+    return new _Group(newShapes);
   }
   colorize(options) {
     const args = arguments;
@@ -11447,7 +11199,7 @@ var Group = class {
     for (let i = 0; i < this.shapes.length; i += 1) {
       shapes[i] = this.shapes[i].colorize(options);
     }
-    return new Group(shapes);
+    return new _Group(shapes);
   }
   desaturate(options) {
     const shapes = [];
@@ -11455,7 +11207,7 @@ var Group = class {
     for (let i = 0; i < this.shapes.length; i += 1) {
       shapes[i] = this.shapes[i].desaturate(options);
     }
-    return new Group(shapes);
+    return new _Group(shapes);
   }
   invert() {
     const shapes = [];
@@ -11463,7 +11215,7 @@ var Group = class {
     for (let i = 0; i < this.shapes.length; i += 1) {
       shapes[i] = this.shapes[i].invert();
     }
-    return new Group(shapes);
+    return new _Group(shapes);
   }
   bounds() {
     if (this.shapes.length === 0) {
@@ -11516,7 +11268,7 @@ var Group = class {
     for (let i = 0; i < this.shapes.length; i += 1) {
       shapes[i] = this.shapes[i].resampleByAmount(points, perContour);
     }
-    return new Group(shapes);
+    return new _Group(shapes);
   }
   resampleByLength(length2) {
     const shapes = [];
@@ -11524,7 +11276,7 @@ var Group = class {
     for (let i = 0; i < this.shapes.length; i += 1) {
       shapes[i] = this.shapes[i].resampleByLength(length2);
     }
-    return new Group(shapes);
+    return new _Group(shapes);
   }
   toSVG() {
     const l = [];
@@ -11544,7 +11296,7 @@ var Group = class {
 };
 
 // src/libraries/vg/objects/transform.js
-var Transform = class {
+var Transform = class _Transform {
   constructor(m) {
     if (m !== void 0) {
       this.m = m;
@@ -11553,7 +11305,7 @@ var Transform = class {
     }
   }
   static identity() {
-    return new Transform();
+    return new _Transform();
   }
   // Returns the 3x3 matrix multiplication of A and B.
   // Note that scale(), translate(), rotate() work with premultiplication,
@@ -11565,7 +11317,7 @@ var Transform = class {
     if (b.m !== void 0) {
       b = b.m;
     }
-    return new Transform([
+    return new _Transform([
       a[0] * b[0] + a[1] * b[2],
       a[0] * b[1] + a[1] * b[3],
       a[2] * b[0] + a[3] * b[2],
@@ -11579,14 +11331,14 @@ var Transform = class {
     return m[0] === 1 && m[1] === 0 && m[2] === 0 && m[3] === 1 && m[4] === 0 && m[5] === 0;
   }
   prepend(matrix) {
-    return Transform._mmult(this.m, matrix.m);
+    return _Transform._mmult(this.m, matrix.m);
   }
   append(matrix) {
-    return Transform._mmult(matrix.m, this.m);
+    return _Transform._mmult(matrix.m, this.m);
   }
   inverse() {
     const m = this.m, d = m[0] * m[3] - m[1] * m[2];
-    return new Transform([
+    return new _Transform([
       m[3] / d,
       -m[1] / d,
       -m[2] / d,
@@ -11599,18 +11351,18 @@ var Transform = class {
     if (y === void 0) {
       y = x;
     }
-    return Transform._mmult([x, 0, 0, y, 0, 0], this.m);
+    return _Transform._mmult([x, 0, 0, y, 0, 0], this.m);
   }
   translate(x, y) {
-    return Transform._mmult([1, 0, 0, 1, x, y], this.m);
+    return _Transform._mmult([1, 0, 0, 1, x, y], this.m);
   }
   rotate(angle3) {
     const c = Math.cos(radians(angle3)), s = Math.sin(radians(angle3));
-    return Transform._mmult([c, s, -s, c, 0, 0], this.m);
+    return _Transform._mmult([c, s, -s, c, 0, 0], this.m);
   }
   skew(x, y) {
     const kx = Math.PI * x / 180, ky = Math.PI * y / 180;
-    return Transform._mmult([1, Math.tan(ky), -Math.tan(kx), 1, 0, 0], this.m);
+    return _Transform._mmult([1, Math.tan(ky), -Math.tan(kx), 1, 0, 0], this.m);
   }
   // Returns the new coordinates of the given point (x,y) after transformation.
   transformPoint(point2) {
@@ -12416,14 +12168,14 @@ function parseString(s) {
 }
 
 // src/libraries/vg/objects/vec3.js
-var Vec3 = class {
+var Vec3 = class _Vec3 {
   constructor(x, y, z) {
     this.x = x === void 0 ? 0 : x;
     this.y = y === void 0 ? 0 : y;
     this.z = z === void 0 ? 0 : z;
   }
   static up() {
-    return new Vec3(0, 1, 0);
+    return new _Vec3(0, 1, 0);
   }
   // Generate the dot product of two vectors.
   static dot(a, b) {
@@ -12431,7 +12183,7 @@ var Vec3 = class {
   }
   // Generate the cross product of two vectors.
   static cross(a, b) {
-    return new Vec3(
+    return new _Vec3(
       a.y * b.z - a.z * b.y,
       a.z * b.x - a.x * b.z,
       a.x * b.y - a.y * b.x
@@ -12461,15 +12213,15 @@ var Vec3 = class {
       return this;
     }
     c = 1 / len;
-    return new Vec3(this.x * c, this.y * c, this.z * c);
+    return new _Vec3(this.x * c, this.y * c, this.z * c);
   }
   // Create a new vector that is the addition of this vector and the given vector.
   add(o) {
-    return new Vec3(this.x + o.x, this.y + o.y, this.z + o.z);
+    return new _Vec3(this.x + o.x, this.y + o.y, this.z + o.z);
   }
   // Create a new vector that is the subtraction of this vector and the given vector.
   subtract(o) {
-    return new Vec3(this.x - o.x, this.y - o.y, this.z - o.z);
+    return new _Vec3(this.x - o.x, this.y - o.y, this.z - o.z);
   }
   // Transform the vector according to the matrix and return the result.
   // A new vector is created, nothing is modified.
@@ -12480,13 +12232,13 @@ var Vec3 = class {
     y = this.x * matrix.m[1] + this.y * matrix.m[5] + this.z * matrix.m[9] + matrix.m[13];
     z = this.x * matrix.m[2] + this.y * matrix.m[6] + this.z * matrix.m[10] + matrix.m[14];
     w = this.x * matrix.m[3] + this.y * matrix.m[7] + this.z * matrix.m[11] + matrix.m[15];
-    return new Vec3(x / w, y / w, z / w);
+    return new _Vec3(x / w, y / w, z / w);
   }
 };
 Vec3.ZERO = new Vec3(0, 0, 0);
 
 // src/libraries/vg/objects/matrix4.js
-var Matrix4 = class {
+var Matrix4 = class _Matrix4 {
   constructor(m) {
     if (m !== void 0) {
       this.m = m;
@@ -12513,7 +12265,7 @@ var Matrix4 = class {
   }
   // Create a perspective matrix transformation.
   static perspective(fov, aspect, zNear, zFar) {
-    const m = new Float32Array(Matrix4.IDENTITY.m), tan2 = 1 / Math.tan(fov * 0.5);
+    const m = new Float32Array(_Matrix4.IDENTITY.m), tan2 = 1 / Math.tan(fov * 0.5);
     m[0] = tan2 / aspect;
     m[1] = m[2] = m[3] = 0;
     m[5] = tan2;
@@ -12523,7 +12275,7 @@ var Matrix4 = class {
     m[11] = 1;
     m[12] = m[13] = m[15] = 0;
     m[14] = zNear * zFar / (zNear - zFar);
-    return new Matrix4(m);
+    return new _Matrix4(m);
   }
   static lookAt(eye, target, up) {
     let m, zAxis, xAxis, yAxis, ex, ey, ez;
@@ -12550,7 +12302,7 @@ var Matrix4 = class {
     m[13] = ey;
     m[14] = ez;
     m[15] = 1;
-    return new Matrix4(m);
+    return new _Matrix4(m);
   }
   // Return a new matrix with the inversion of this matrix.
   invert() {
@@ -12611,7 +12363,7 @@ var Matrix4 = class {
     m[7] = (l1 * l34 - l3 * l37 + l4 * l38) * l27;
     m[11] = -(l1 * l35 - l2 * l37 + l4 * l39) * l27;
     m[15] = (l1 * l36 - l2 * l38 + l3 * l39) * l27;
-    return new Matrix4(m);
+    return new _Matrix4(m);
   }
   multiply(other) {
     const m = new Float32Array(16);
@@ -12631,21 +12383,21 @@ var Matrix4 = class {
     m[13] = this.m[12] * other.m[1] + this.m[13] * other.m[5] + this.m[14] * other.m[9] + this.m[15] * other.m[13];
     m[14] = this.m[12] * other.m[2] + this.m[13] * other.m[6] + this.m[14] * other.m[10] + this.m[15] * other.m[14];
     m[15] = this.m[12] * other.m[3] + this.m[13] * other.m[7] + this.m[14] * other.m[11] + this.m[15] * other.m[15];
-    return new Matrix4(m);
+    return new _Matrix4(m);
   }
   translate(tx, ty, tz) {
     const m = new Float32Array(this.m);
     m[12] += tx;
     m[13] += ty;
     m[14] += tz;
-    return new Matrix4(m);
+    return new _Matrix4(m);
   }
 };
 Matrix4.IDENTITY = new Matrix4();
 
 // src/libraries/vg/objects/text.js
 var _dummyContext = null;
-var Text = class {
+var Text = class _Text {
   constructor(text2) {
     let args = Array.prototype.slice.call(arguments, 1), secondArg = arguments[1], thirdArg = arguments[2], lastArg = arguments[arguments.length - 1], options;
     this.text = String(text2);
@@ -12714,7 +12466,7 @@ var Text = class {
     return _dummyContext;
   }
   clone() {
-    const t = new Text();
+    const t = new _Text();
     t.text = this.text;
     t._x = this._x;
     t._y = this._y;
@@ -12744,7 +12496,7 @@ var Text = class {
     ctx.restore();
   }
   bounds() {
-    let ctx = Text._getDummyContext(), metrics, x = this._x;
+    let ctx = _Text._getDummyContext(), metrics, x = this._x;
     ctx.font = this._getFont();
     metrics = ctx.measureText(this.text);
     if (this.textAlign === "center") {
@@ -15087,23 +14839,19 @@ function isAsyncIterable(obj) {
   return typeof obj[Symbol.asyncIterator] === "function";
 }
 function wrapAsync(asyncFn) {
-  if (typeof asyncFn !== "function")
-    throw new Error("expected a function");
+  if (typeof asyncFn !== "function") throw new Error("expected a function");
   return isAsync(asyncFn) ? asyncify(asyncFn) : asyncFn;
 }
 function awaitify(asyncFn, arity) {
-  if (!arity)
-    arity = asyncFn.length;
-  if (!arity)
-    throw new Error("arity is undefined");
+  if (!arity) arity = asyncFn.length;
+  if (!arity) throw new Error("arity is undefined");
   function awaitable(...args) {
     if (typeof args[arity - 1] === "function") {
       return asyncFn.apply(this, args);
     }
     return new Promise((resolve, reject2) => {
       args[arity - 1] = (err, ...cbArgs) => {
-        if (err)
-          return reject2(err);
+        if (err) return reject2(err);
         resolve(cbArgs.length > 1 ? cbArgs : cbArgs[0]);
       };
       asyncFn.apply(this, args);
@@ -15143,8 +14891,7 @@ function isArrayLike(value) {
 var breakLoop = {};
 function once(fn) {
   function wrapper(...args) {
-    if (fn === null)
-      return;
+    if (fn === null) return;
     var callFn = fn;
     fn = null;
     callFn.apply(this, args);
@@ -15193,8 +14940,7 @@ function createIterator(coll) {
 }
 function onlyOnce(fn) {
   return function(...args) {
-    if (fn === null)
-      throw new Error("Callback was already called.");
+    if (fn === null) throw new Error("Callback was already called.");
     var callFn = fn;
     fn = null;
     callFn.apply(this, args);
@@ -15207,12 +14953,10 @@ function asyncEachOfLimit(generator2, limit, iteratee, callback) {
   let running = 0;
   let idx = 0;
   function replenish() {
-    if (running >= limit || awaiting || done)
-      return;
+    if (running >= limit || awaiting || done) return;
     awaiting = true;
     generator2.next().then(({ value, done: iterDone }) => {
-      if (canceled || done)
-        return;
+      if (canceled || done) return;
       awaiting = false;
       if (iterDone) {
         done = true;
@@ -15229,10 +14973,8 @@ function asyncEachOfLimit(generator2, limit, iteratee, callback) {
   }
   function iterateeCallback(err, result) {
     running -= 1;
-    if (canceled)
-      return;
-    if (err)
-      return handleError(err);
+    if (canceled) return;
+    if (err) return handleError(err);
     if (err === false) {
       done = true;
       canceled = true;
@@ -15245,8 +14987,7 @@ function asyncEachOfLimit(generator2, limit, iteratee, callback) {
     replenish();
   }
   function handleError(err) {
-    if (canceled)
-      return;
+    if (canceled) return;
     awaiting = false;
     done = true;
     callback(err);
@@ -15274,8 +15015,7 @@ var eachOfLimit$2 = (limit) => {
     var running = 0;
     var looping = false;
     function iterateeCallback(err, value) {
-      if (canceled)
-        return;
+      if (canceled) return;
       running -= 1;
       if (err) {
         done = true;
@@ -15323,8 +15063,7 @@ function eachOfArrayLike(coll, iteratee, callback) {
     if (err === false) {
       canceled = true;
     }
-    if (canceled === true)
-      return;
+    if (canceled === true) return;
     if (err) {
       callback(err);
     } else if (++completed === length2 || value === breakLoop) {
@@ -15357,12 +15096,11 @@ function mapSeries(coll, iteratee, callback) {
 }
 var mapSeries$1 = awaitify(mapSeries, 3);
 var applyEachSeries = applyEach$1(mapSeries$1);
-var PROMISE_SYMBOL = Symbol("promiseCallback");
+var PROMISE_SYMBOL = /* @__PURE__ */ Symbol("promiseCallback");
 function promiseCallback() {
   let resolve, reject2;
   function callback(err, ...args) {
-    if (err)
-      return reject2(err);
+    if (err) return reject2(err);
     resolve(args.length > 1 ? args : args[0]);
   }
   callback[PROMISE_SYMBOL] = new Promise((res, rej) => {
@@ -15424,8 +15162,7 @@ function auto(tasks, concurrency, callback) {
     readyTasks.push(() => runTask(key, task));
   }
   function processQueue() {
-    if (canceled)
-      return;
+    if (canceled) return;
     if (readyTasks.length === 0 && runningTasks === 0) {
       return callback(null, results);
     }
@@ -15447,8 +15184,7 @@ function auto(tasks, concurrency, callback) {
     processQueue();
   }
   function runTask(key, task) {
-    if (hasError)
-      return;
+    if (hasError) return;
     var taskCallback = onlyOnce((err, ...result) => {
       runningTasks--;
       if (err === false) {
@@ -15466,8 +15202,7 @@ function auto(tasks, concurrency, callback) {
         safeResults[key] = result;
         hasError = true;
         listeners = /* @__PURE__ */ Object.create(null);
-        if (canceled)
-          return;
+        if (canceled) return;
         callback(err, safeResults);
       } else {
         results[key] = result;
@@ -15546,8 +15281,7 @@ function parseParams(func) {
   if (!match) {
     match = src.match(ARROW_FN_ARGS);
   }
-  if (!match)
-    throw new Error("could not parse args in autoInject\nSource:\n" + src);
+  if (!match) throw new Error("could not parse args in autoInject\nSource:\n" + src);
   let [, args] = match;
   return args.replace(/\s/g, "").split(FN_ARG_SPLIT).map((arg) => arg.replace(FN_ARG, "").trim());
 }
@@ -15569,8 +15303,7 @@ function autoInject(tasks, callback) {
       if (taskFn.length === 0 && !fnIsAsync && params.length === 0) {
         throw new Error("autoInject task functions require explicit parameters.");
       }
-      if (!fnIsAsync)
-        params.pop();
+      if (!fnIsAsync) params.pop();
       newTasks[key] = params.concat(newTask);
     }
     function newTask(results, taskCb) {
@@ -15587,54 +15320,41 @@ var DLL = class {
     this.length = 0;
   }
   removeLink(node) {
-    if (node.prev)
-      node.prev.next = node.next;
-    else
-      this.head = node.next;
-    if (node.next)
-      node.next.prev = node.prev;
-    else
-      this.tail = node.prev;
+    if (node.prev) node.prev.next = node.next;
+    else this.head = node.next;
+    if (node.next) node.next.prev = node.prev;
+    else this.tail = node.prev;
     node.prev = node.next = null;
     this.length -= 1;
     return node;
   }
   empty() {
-    while (this.head)
-      this.shift();
+    while (this.head) this.shift();
     return this;
   }
   insertAfter(node, newNode) {
     newNode.prev = node;
     newNode.next = node.next;
-    if (node.next)
-      node.next.prev = newNode;
-    else
-      this.tail = newNode;
+    if (node.next) node.next.prev = newNode;
+    else this.tail = newNode;
     node.next = newNode;
     this.length += 1;
   }
   insertBefore(node, newNode) {
     newNode.prev = node.prev;
     newNode.next = node;
-    if (node.prev)
-      node.prev.next = newNode;
-    else
-      this.head = newNode;
+    if (node.prev) node.prev.next = newNode;
+    else this.head = newNode;
     node.prev = newNode;
     this.length += 1;
   }
   unshift(node) {
-    if (this.head)
-      this.insertBefore(this.head, node);
-    else
-      setInitial(this, node);
+    if (this.head) this.insertBefore(this.head, node);
+    else setInitial(this, node);
   }
   push(node) {
-    if (this.tail)
-      this.insertAfter(this.tail, node);
-    else
-      setInitial(this, node);
+    if (this.tail) this.insertAfter(this.tail, node);
+    else setInitial(this, node);
   }
   shift() {
     return this.head && this.removeLink(this.head);
@@ -15695,10 +15415,8 @@ function queue$1(worker, concurrency, payload) {
     events[event].push(handleAndRemove);
   }
   function off(event, handler) {
-    if (!event)
-      return Object.keys(events).forEach((ev) => events[ev] = []);
-    if (!handler)
-      return events[event] = [];
+    if (!event) return Object.keys(events).forEach((ev) => events[ev] = []);
+    if (!handler) return events[event] = [];
     events[event] = events[event].filter((ev) => ev !== handler);
   }
   function trigger(event, ...args) {
@@ -15712,10 +15430,8 @@ function queue$1(worker, concurrency, payload) {
     q.started = true;
     var res, rej;
     function promiseCallback2(err, ...args) {
-      if (err)
-        return rejectOnError ? rej(err) : res();
-      if (args.length <= 1)
-        return res(args[0]);
+      if (err) return rejectOnError ? rej(err) : res();
+      if (args.length <= 1) return res(args[0]);
       res(args);
     }
     var item = q._createTaskItem(
@@ -15777,8 +15493,7 @@ function queue$1(worker, concurrency, payload) {
     if (!handler) {
       return new Promise((resolve, reject2) => {
         once2(name, (err, data) => {
-          if (err)
-            return reject2(err);
+          if (err) return reject2(err);
           resolve(data);
         });
       });
@@ -15805,16 +15520,14 @@ function queue$1(worker, concurrency, payload) {
     paused: false,
     push(data, callback) {
       if (Array.isArray(data)) {
-        if (_maybeDrain(data))
-          return;
+        if (_maybeDrain(data)) return;
         return data.map((datum) => _insert(datum, false, false, callback));
       }
       return _insert(data, false, false, callback);
     },
     pushAsync(data, callback) {
       if (Array.isArray(data)) {
-        if (_maybeDrain(data))
-          return;
+        if (_maybeDrain(data)) return;
         return data.map((datum) => _insert(datum, false, true, callback));
       }
       return _insert(data, false, true, callback);
@@ -15825,16 +15538,14 @@ function queue$1(worker, concurrency, payload) {
     },
     unshift(data, callback) {
       if (Array.isArray(data)) {
-        if (_maybeDrain(data))
-          return;
+        if (_maybeDrain(data)) return;
         return data.map((datum) => _insert(datum, true, false, callback));
       }
       return _insert(data, true, false, callback);
     },
     unshiftAsync(data, callback) {
       if (Array.isArray(data)) {
-        if (_maybeDrain(data))
-          return;
+        if (_maybeDrain(data)) return;
         return data.map((datum) => _insert(datum, true, true, callback));
       }
       return _insert(data, true, true, callback);
@@ -15850,8 +15561,7 @@ function queue$1(worker, concurrency, payload) {
       while (!q.paused && numRunning < q.concurrency && q._tasks.length) {
         var tasks = [], data = [];
         var l = q._tasks.length;
-        if (q.payload)
-          l = Math.min(l, q.payload);
+        if (q.payload) l = Math.min(l, q.payload);
         for (var i = 0; i < l; i++) {
           var node = q._tasks.shift();
           tasks.push(node);
@@ -15968,8 +15678,7 @@ function concatLimit(coll, limit, iteratee, callback) {
   var _iteratee = wrapAsync(iteratee);
   return mapLimit$1(coll, limit, (val, iterCb) => {
     _iteratee(val, (err, ...args) => {
-      if (err)
-        return iterCb(err);
+      if (err) return iterCb(err);
       return iterCb(err, args);
     });
   }, (err, mapResults) => {
@@ -16004,8 +15713,7 @@ function _createTester(check, getResult) {
     const iteratee = wrapAsync(_iteratee);
     eachfn(arr, (value, _, callback) => {
       iteratee(value, (err, result) => {
-        if (err || err === false)
-          return callback(err);
+        if (err || err === false) return callback(err);
         if (check(result) && !testResult) {
           testPassed = true;
           testResult = getResult(true, value);
@@ -16014,8 +15722,7 @@ function _createTester(check, getResult) {
         callback();
       });
     }, (err) => {
-      if (err)
-        return cb(err);
+      if (err) return cb(err);
       cb(null, testPassed ? testResult : getResult(false));
     });
   };
@@ -16052,20 +15759,15 @@ function doWhilst(iteratee, test, callback) {
   var _test = wrapAsync(test);
   var results;
   function next(err, ...args) {
-    if (err)
-      return callback(err);
-    if (err === false)
-      return;
+    if (err) return callback(err);
+    if (err === false) return;
     results = args;
     _test(...args, check);
   }
   function check(err, truth) {
-    if (err)
-      return callback(err);
-    if (err === false)
-      return;
-    if (!truth)
-      return callback(null, ...results);
+    if (err) return callback(err);
+    if (err === false) return;
+    if (!truth) return callback(null, ...results);
     _fn(next);
   }
   return check(null, true);
@@ -16094,8 +15796,7 @@ function eachSeries(coll, iteratee, callback) {
 }
 var eachSeries$1 = awaitify(eachSeries, 3);
 function ensureAsync(fn) {
-  if (isAsync(fn))
-    return fn;
+  if (isAsync(fn)) return fn;
   return function(...args) {
     var callback = args.pop();
     var sync = true;
@@ -16130,12 +15831,10 @@ function filterArray(eachfn, arr, iteratee, callback) {
       iterCb(err);
     });
   }, (err) => {
-    if (err)
-      return callback(err);
+    if (err) return callback(err);
     var results = [];
     for (var i = 0; i < arr.length; i++) {
-      if (truthValues[i])
-        results.push(arr[i]);
+      if (truthValues[i]) results.push(arr[i]);
     }
     callback(null, results);
   });
@@ -16144,16 +15843,14 @@ function filterGeneric(eachfn, coll, iteratee, callback) {
   var results = [];
   eachfn(coll, (x, index2, iterCb) => {
     iteratee(x, (err, v) => {
-      if (err)
-        return iterCb(err);
+      if (err) return iterCb(err);
       if (v) {
         results.push({ index: index2, value: x });
       }
       iterCb(err);
     });
   }, (err) => {
-    if (err)
-      return callback(err);
+    if (err) return callback(err);
     callback(null, results.sort((a, b) => a.index - b.index).map((v) => v.value));
   });
 }
@@ -16177,10 +15874,8 @@ function forever(fn, errback) {
   var done = onlyOnce(errback);
   var task = wrapAsync(ensureAsync(fn));
   function next(err) {
-    if (err)
-      return done(err);
-    if (err === false)
-      return;
+    if (err) return done(err);
+    if (err === false) return;
     task(next);
   }
   return next();
@@ -16190,8 +15885,7 @@ function groupByLimit(coll, limit, iteratee, callback) {
   var _iteratee = wrapAsync(iteratee);
   return mapLimit$1(coll, limit, (val, iterCb) => {
     _iteratee(val, (err, key) => {
-      if (err)
-        return iterCb(err);
+      if (err) return iterCb(err);
       return iterCb(err, { key, val });
     });
   }, (err, mapResults) => {
@@ -16225,8 +15919,7 @@ function mapValuesLimit(obj, limit, iteratee, callback) {
   var _iteratee = wrapAsync(iteratee);
   return eachOfLimit$2(limit)(obj, (val, key, next) => {
     _iteratee(val, key, (err, result) => {
-      if (err)
-        return next(err);
+      if (err) return next(err);
       newObj[key] = result;
       next(err);
     });
@@ -16421,10 +16114,8 @@ function priorityQueue(worker, concurrency) {
 }
 function race(tasks, callback) {
   callback = once(callback);
-  if (!Array.isArray(tasks))
-    return callback(new TypeError("First argument to race must be an array of functions"));
-  if (!tasks.length)
-    return callback();
+  if (!Array.isArray(tasks)) return callback(new TypeError("First argument to race must be an array of functions"));
+  if (!tasks.length) return callback();
   for (var i = 0, l = tasks.length; i < l; i++) {
     wrapAsync(tasks[i])(callback);
   }
@@ -16512,8 +16203,7 @@ function retry(opts, task, callback) {
   var attempt = 1;
   function retryAttempt() {
     _task((err, ...args) => {
-      if (err === false)
-        return;
+      if (err === false) return;
       if (err && attempt++ < options.times && (typeof options.errorFilter != "function" || options.errorFilter(err))) {
         setTimeout(retryAttempt, options.intervalFunc(attempt - 1));
       } else {
@@ -16553,10 +16243,8 @@ function retryable(opts, task) {
     function taskFn(cb) {
       _task(...args, cb);
     }
-    if (opts)
-      retry(opts, taskFn, callback);
-    else
-      retry(taskFn, callback);
+    if (opts) retry(opts, taskFn, callback);
+    else retry(taskFn, callback);
     return callback[PROMISE_SYMBOL];
   });
 }
@@ -16579,13 +16267,11 @@ function sortBy(coll, iteratee, callback) {
   var _iteratee = wrapAsync(iteratee);
   return map$1(coll, (x, iterCb) => {
     _iteratee(x, (err, criteria) => {
-      if (err)
-        return iterCb(err);
+      if (err) return iterCb(err);
       iterCb(err, { value: x, criteria });
     });
   }, (err, results) => {
-    if (err)
-      return callback(err);
+    if (err) return callback(err);
     callback(null, results.sort(comparator).map((v) => v.value));
   });
   function comparator(left, right) {
@@ -16654,8 +16340,7 @@ function tryEach(tasks, callback) {
   var result;
   return eachSeries$1(tasks, (task, taskCb) => {
     wrapAsync(task)((err, ...args) => {
-      if (err === false)
-        return taskCb(err);
+      if (err === false) return taskCb(err);
       if (args.length < 2) {
         [result] = args;
       } else {
@@ -16678,20 +16363,15 @@ function whilst(test, iteratee, callback) {
   var _test = wrapAsync(test);
   var results = [];
   function next(err, ...rest2) {
-    if (err)
-      return callback(err);
+    if (err) return callback(err);
     results = rest2;
-    if (err === false)
-      return;
+    if (err === false) return;
     _test(check);
   }
   function check(err, truth) {
-    if (err)
-      return callback(err);
-    if (err === false)
-      return;
-    if (!truth)
-      return callback(null, ...results);
+    if (err) return callback(err);
+    if (err === false) return;
+    if (!truth) return callback(null, ...results);
     _fn(next);
   }
   return _test(check);
@@ -16703,18 +16383,15 @@ function until(test, iteratee, callback) {
 }
 function waterfall(tasks, callback) {
   callback = once(callback);
-  if (!Array.isArray(tasks))
-    return callback(new Error("First argument to waterfall must be an array of functions"));
-  if (!tasks.length)
-    return callback();
+  if (!Array.isArray(tasks)) return callback(new Error("First argument to waterfall must be an array of functions"));
+  if (!tasks.length) return callback();
   var taskIndex = 0;
   function nextTask(args) {
     var task = wrapAsync(tasks[taskIndex++]);
     task(...args, onlyOnce(next));
   }
   function next(err, ...args) {
-    if (err === false)
-      return;
+    if (err === false) return;
     if (err || taskIndex === tasks.length) {
       return callback(err, ...args);
     }
@@ -17558,7 +17235,7 @@ function _wrap(type) {
     _blend(inData, outData, width, height, options);
   };
 }
-var blend = function() {
+var blend = (function() {
   let mode;
   const d = { blend: _blend };
   let modes = [
@@ -17597,7 +17274,7 @@ var blend = function() {
   d.getNativeModes = getNativeModes;
   d.realBlendMode = realBlendMode;
   return d;
-}();
+})();
 var blend_default = blend;
 
 // src/libraries/img/process.js
@@ -19655,7 +19332,7 @@ function findType(data) {
   }
   throw new Error("Cannot establish type for data ", data);
 }
-var Layer = class {
+var Layer = class _Layer {
   constructor(data, type) {
     if (!type) {
       type = findType(data);
@@ -19695,7 +19372,7 @@ var Layer = class {
       }
       return f;
     }
-    const d = Object.create(Layer.prototype);
+    const d = Object.create(_Layer.prototype);
     d.data = this.data;
     d.type = this.type;
     d.width = this.width;
@@ -19794,28 +19471,28 @@ var Layer = class {
     return canvas;
   }
   static fromFile(filename) {
-    return new Layer(filename, TYPE_PATH);
+    return new _Layer(filename, TYPE_PATH);
   }
   static fromImage(image) {
-    return new Layer(image, TYPE_IMAGE);
+    return new _Layer(image, TYPE_IMAGE);
   }
   static fromCanvas(canvas) {
     if (canvas instanceof HTMLCanvasElement) {
-      return Layer.fromHtmlCanvas(canvas);
+      return _Layer.fromHtmlCanvas(canvas);
     }
-    return Layer.fromImageCanvas(canvas);
+    return _Layer.fromImageCanvas(canvas);
   }
   static fromHtmlCanvas(canvas) {
-    return new Layer(canvas, TYPE_HTML_CANVAS);
+    return new _Layer(canvas, TYPE_HTML_CANVAS);
   }
   static fromImageCanvas(iCanvas) {
-    return new Layer(iCanvas, TYPE_IMAGE_CANVAS);
+    return new _Layer(iCanvas, TYPE_IMAGE_CANVAS);
   }
   static fromColor(color) {
-    return new Layer(toColor(color), TYPE_FILL);
+    return new _Layer(toColor(color), TYPE_FILL);
   }
   static fromGradient() {
-    return new Layer(toGradientData.apply(null, arguments), TYPE_GRADIENT);
+    return new _Layer(toGradientData.apply(null, arguments), TYPE_GRADIENT);
   }
   isPath() {
     return this.type === TYPE_PATH;
@@ -19867,7 +19544,7 @@ var Pixels = class {
     return canvas;
   }
 };
-var ImageCanvas = class {
+var ImageCanvas = class _ImageCanvas {
   constructor(width, height) {
     if (!width) {
       width = DEFAULT_WIDTH;
@@ -19881,7 +19558,7 @@ var ImageCanvas = class {
   }
   // Copies the ImageCanvas.
   clone() {
-    const c = new ImageCanvas(this.width, this.height);
+    const c = new _ImageCanvas(this.width, this.height);
     for (let i = 0; i < this.layers.length; i += 1) {
       c.layers.push(this.layers[i].clone());
     }
@@ -19907,7 +19584,7 @@ var ImageCanvas = class {
         layer = new Layer(arg0, TYPE_HTML_CANVAS);
       } else if (arg0 instanceof Image) {
         layer = new Layer(arg0, TYPE_IMAGE);
-      } else if (arg0 instanceof ImageCanvas) {
+      } else if (arg0 instanceof _ImageCanvas) {
         layer = new Layer(arg0, TYPE_IMAGE_CANVAS);
       }
     }
@@ -19974,7 +19651,7 @@ function convertArg(arg) {
     return arg;
   }
 }
-var Img = class {
+var Img = class _Img {
   constructor(canvas, x, y) {
     this.canvas = canvas;
     this.originalWidth = canvas ? canvas.width : 0;
@@ -19982,7 +19659,7 @@ var Img = class {
     this.transform = x || y ? Transform2.translate(x, y) : Layer.IDENTITY_TRANSFORM;
   }
   clone() {
-    const n = new Img();
+    const n = new _Img();
     n.canvas = this.canvas;
     n.originalWidth = this.originalWidth;
     n.originalHeight = this.originalHeight;
@@ -20114,7 +19791,7 @@ var Img = class {
     const colorLayer = Layer.fromColor(color);
     colorLayer.width = this.originalWidth;
     colorLayer.height = this.originalHeight;
-    let i = new Img(colorLayer.toCanvas());
+    let i = new _Img(colorLayer.toCanvas());
     i = i._transform(this.transform.matrix());
     return merge2([this, i]);
   }
@@ -20148,7 +19825,7 @@ var Img = class {
     if (height < bounds2.height && ri.y > iBounds.y) {
       l1.translate(0, bounds2.height - height);
     }
-    return new Img(canvas.render(), ri.x + width / 2, ri.y + height / 2);
+    return new _Img(canvas.render(), ri.x + width / 2, ri.y + height / 2);
   }
   draw(ctx) {
     ctx.save();
