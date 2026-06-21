@@ -1,4 +1,5 @@
 // Bézier path object
+/* jshint module: true */
 
 import {
   MOVETO,
@@ -10,15 +11,13 @@ import {
   segmentLengths as bezierSegmentLengths,
   length as bezierLength,
   point as bezierPoint,
-} from "../util/bezier";
-import Rect from "../objects/rect";
-import Color from "../objects/color";
+} from '../util/bezier';
+import Rect from '../objects/rect';
+import Color from '../objects/color';
 
-import { flatten } from "../../util";
-import { pointInPolygon } from "../util/geo";
-import { radians, clamp } from "../util/math";
-
-var math = require("../util/math");
+import { flatten } from '../../util';
+import { pointInPolygon } from '../util/geo';
+import { radians, clamp } from '../util/math';
 
 var CLOSE_COMMAND = Object.freeze({ type: CLOSE });
 
@@ -50,7 +49,7 @@ function _cloneCommand(cmd) {
 export default class Path {
   constructor(commands, fill, stroke, strokeWidth) {
     this.commands = commands !== undefined ? commands : [];
-    this.fill = fill !== undefined ? fill : "black";
+    this.fill = fill !== undefined ? fill : 'black';
     this.stroke = stroke !== undefined ? stroke : null;
     this.strokeWidth = strokeWidth !== undefined ? strokeWidth : 1;
   }
@@ -214,7 +213,7 @@ export default class Path {
     this.close();
   }
   addArc(x, y, width, height, startAngle, degrees, arcType) {
-    arcType = arcType || "pie";
+    arcType = arcType || 'pie';
     var w,
       h,
       angStRad,
@@ -252,11 +251,11 @@ export default class Path {
       }
     }
 
-    if (arcType === "open") {
+    if (arcType === 'open') {
       lineSegs = 0;
-    } else if (arcType === "chord") {
+    } else if (arcType === 'chord') {
       lineSegs = 1;
-    } else if (arcType === "pie") {
+    } else if (arcType === 'pie') {
       lineSegs = 2;
     }
 
@@ -296,7 +295,7 @@ export default class Path {
   }
   colorize(options) {
     var args = arguments;
-    if (typeof options !== "object" || options instanceof Color) {
+    if (typeof options !== 'object' || options instanceof Color) {
       options = {};
       if (args[0] !== undefined) {
         options.fill = args[0];
@@ -528,7 +527,7 @@ export default class Path {
   }
   toPathData(fractionDigits = 3) {
     var i, d, cmd, x, y, x1, y1, x2, y2;
-    d = "";
+    d = '';
     for (i = 0; i < this.commands.length; i += 1) {
       cmd = this.commands[i];
       if (cmd.x !== undefined) {
@@ -545,15 +544,15 @@ export default class Path {
       }
       if (cmd.type === MOVETO) {
         if (!isNaN(x) && !isNaN(y)) {
-          d += "M" + x + " " + y;
+          d += 'M' + x + ' ' + y;
         }
       } else if (cmd.type === LINETO) {
         if (!isNaN(x) && !isNaN(y)) {
-          d += "L" + x + " " + y;
+          d += 'L' + x + ' ' + y;
         }
       } else if (cmd.type === QUADTO) {
         if (!isNaN(x) && !isNaN(y) && !isNaN(x1) && !isNaN(y1)) {
-          d += "Q" + x1 + " " + y1 + " " + x + " " + y;
+          d += 'Q' + x1 + ' ' + y1 + ' ' + x + ' ' + y;
         }
       } else if (cmd.type === CURVETO) {
         if (
@@ -564,10 +563,10 @@ export default class Path {
           !isNaN(x2) &&
           !isNaN(y2)
         ) {
-          d += "C" + x1 + " " + y1 + " " + x2 + " " + y2 + " " + x + " " + y;
+          d += 'C' + x1 + ' ' + y1 + ' ' + x2 + ' ' + y2 + ' ' + x + ' ' + y;
         }
       } else if (cmd.type === CLOSE) {
-        d += "Z";
+        d += 'Z';
       }
     }
     return d;
@@ -578,7 +577,7 @@ export default class Path {
     svg += this.toPathData();
     svg += '"';
 
-    var style = "";
+    var style = '';
 
     var fill;
     var fillOpacity;
@@ -590,16 +589,16 @@ export default class Path {
       fill = Color.toHex(fill).substring(0, 7);
     }
 
-    if (fill !== "black" && fill !== "#000000") {
+    if (fill !== 'black' && fill !== '#000000') {
       if (fill === null || fill === undefined) {
-        style += "fill:none;";
+        style += 'fill:none;';
       } else {
-        style += "fill:" + fill + ";";
+        style += 'fill:' + fill + ';';
       }
     }
 
     if (fillOpacity !== undefined) {
-      style += "fill-opacity:" + fillOpacity + ";";
+      style += 'fill-opacity:' + fillOpacity + ';';
     }
 
     var stroke;
@@ -613,16 +612,16 @@ export default class Path {
       stroke = Color.toHex(stroke).substring(0, 7);
     }
     if (stroke) {
-      style += "stroke:" + stroke + ";";
-      style += "stroke-width:" + this.strokeWidth + ";";
+      style += 'stroke:' + stroke + ';';
+      style += 'stroke-width:' + this.strokeWidth + ';';
     }
     if (strokeOpacity !== undefined) {
-      style += "stroke-opacity:" + strokeOpacity + ";";
+      style += 'stroke-opacity:' + strokeOpacity + ';';
     }
     if (style) {
       svg += ' style="' + style + '"';
     }
-    svg += "/>";
+    svg += '/>';
     return svg;
   }
   // Draw the path to a 2D context.
