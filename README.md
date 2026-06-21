@@ -2,7 +2,7 @@ g.js
 ====
 g.js is a JavaScript library for working with graphical objects. It provides a unified API for working with vector graphics (rectangles, paths, and text) and images.
 
-[![CI](https://github.com/nodebox/g.js/actions/workflows/ci.yml/badge.svg)](https://github.com/nodebox/g.js/actions/workflows/ci.yml)
+[![CI](https://github.com/stebanos/g.js/actions/workflows/ci.yml/badge.svg)](https://github.com/stebanos/g.js/actions/workflows/ci.yml)
 
 g.js is distributed as an ES module.
 
