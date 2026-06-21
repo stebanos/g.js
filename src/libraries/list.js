@@ -2,6 +2,8 @@
 
 import randomGenerator from './random.js';
 import deepEqual from './deepequal.js';
+// Self-import so functions can call this module's own exports by name.
+import * as g from './list.js';
 
 export function combine() {
     let i,

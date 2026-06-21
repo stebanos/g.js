@@ -768,7 +768,7 @@ export class Img {
     }
 
     transformed() {
-        return img.merge([this]);
+        return merge([this]);
     }
 
     bounds() {
@@ -812,7 +812,7 @@ export class Img {
         colorLayer.height = this.originalHeight;
         let i = new Img(colorLayer.toCanvas());
         i = i._transform(this.transform.matrix());
-        return img.merge([this, i]);
+        return merge([this, i]);
     }
 
     desaturate(options) {
@@ -845,7 +845,7 @@ export class Img {
             throw new Error('Resulting image has no dimensions');
         }
 
-        const canvas = new img.ImageCanvas(width, height);
+        const canvas = new ImageCanvas(width, height);
         const l1 = canvas.addLayer(this.toLayer());
         l1.translate(
             width / 2 - bounds.width - bounds.x,
@@ -876,7 +876,7 @@ export class Img {
         canvas.height = this.canvas.height;
         const ctx = canvas.getContext('2d');
         ctx.drawImage(this.canvas, 0, 0);
-        const layer = img.Layer.fromHtmlCanvas(canvas);
+        const layer = Layer.fromHtmlCanvas(canvas);
         if (copyTransformations === undefined) {
             copyTransformations = true;
         }

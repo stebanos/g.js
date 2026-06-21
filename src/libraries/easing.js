@@ -2,6 +2,9 @@
 // https://github.com/gdsmith/jquery.easing
 // t: current time, b: beginning value, c: change in value, d: duration
 
+// Self-import so easing() can dispatch over this module's own exports by name.
+import * as easingFns from './easing.js';
+
 export function easeInQuad(t, b, c, d) {
     return c * (t /= d) * t + b;
 }
@@ -244,7 +247,7 @@ export function easeInOutBounce(t, b, c, d) {
 }
 
 export function easing(f) {
-    const fn = g[f];
+    const fn = easingFns[f];
     const args = Array.prototype.slice.call(arguments, 1);
     return fn.apply(null, args);
 }

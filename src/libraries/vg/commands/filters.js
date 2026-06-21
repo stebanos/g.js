@@ -804,9 +804,9 @@ export function shapeOnPath(
 
         p1 = path.point(pos);
         p2 = path.point(pos + 0.0000001);
-        a = geo.angle(p1.x, p1.y, p2.x, p2.y);
+        a = angle(p1.x, p1.y, p2.x, p2.y);
         if (baselineOffset) {
-            p1 = geo.coordinates(p1.x, p1.y, a - 90, baselineOffset);
+            p1 = coordinates(p1.x, p1.y, a - 90, baselineOffset);
         }
         t = new Transform();
         t = t.translate(p1.x, p1.y);
@@ -816,7 +816,7 @@ export function shapeOnPath(
     }
 
     for (i = 0; i < amount; i += 1) {
-        _.each(shapes, putOnPath);
+        shapes.forEach(putOnPath);
     }
     return newShapes;
 }

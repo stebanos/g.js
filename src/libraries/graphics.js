@@ -186,16 +186,16 @@ export function flip(shape, axis) {
       shape[0].x !== undefined &&
       shape[0].y !== undefined)
     ) {
-        const x = axis === g.HORIZONTAL || axis === g.BOTH ? -1 : 1;
-        const y = axis === g.VERTICAL || axis === g.BOTH ? -1 : 1;
+        const x = axis === HORIZONTAL || axis === BOTH ? -1 : 1;
+        const y = axis === VERTICAL || axis === BOTH ? -1 : 1;
         return scale(shape, new Point(x, y), centerPoint(shape));
     } else if (shape instanceof Img) {
         const image = shape;
         const layer = image.toLayer(false);
-        if (axis === g.HORIZONTAL || axis === g.BOTH) {
+        if (axis === HORIZONTAL || axis === BOTH) {
             layer.flipHorizontal();
         }
-        if (axis === g.VERTICAL || axis === g.BOTH) {
+        if (axis === VERTICAL || axis === BOTH) {
             layer.flipVertical();
         }
         return image.withCanvas(layer.toCanvas());
@@ -253,7 +253,7 @@ export function fitTo(shape, bounding, stretch) {
         bw = bnds.width,
         bh = bnds.height;
 
-    return g.fit(shape, { x: bx + bw / 2, y: by + bh / 2 }, bw, bh, stretch);
+    return fit(shape, { x: bx + bw / 2, y: by + bh / 2 }, bw, bh, stretch);
 }
 
 export function hslAdjust(v, hue, saturation, lightness, alpha) {
