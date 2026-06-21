@@ -62,7 +62,6 @@ function convolve3x3(
 ) {
     let x,
         y,
-        n = width * height * 4,
         idx,
         r,
         g,
@@ -206,7 +205,6 @@ function convolve5x5(
 ) {
     let x,
         y,
-        n = width * height * 4,
         idx,
         r,
         g,
@@ -345,110 +343,110 @@ function convolve5x5(
         inData[p00] * k00 +
         inData[p01] * k01 +
         inData[p02] * k02 +
-        inData[p03] * k04 +
-        inData[p02] * k04 +
+        inData[p03] * k03 +
+        inData[p04] * k04 +
         inData[p10] * k10 +
         inData[p11] * k11 +
         inData[p12] * k12 +
-        inData[p13] * k14 +
-        inData[p12] * k14 +
+        inData[p13] * k13 +
+        inData[p14] * k14 +
         inData[p20] * k20 +
         inData[p21] * k21 +
         inData[p22] * k22 +
-        inData[p23] * k24 +
-        inData[p22] * k24 +
+        inData[p23] * k23 +
+        inData[p24] * k24 +
         inData[p30] * k30 +
         inData[p31] * k31 +
         inData[p32] * k32 +
-        inData[p33] * k34 +
-        inData[p32] * k34 +
+        inData[p33] * k33 +
+        inData[p34] * k34 +
         inData[p40] * k40 +
         inData[p41] * k41 +
         inData[p42] * k42 +
-        inData[p43] * k44 +
-        inData[p42] * k44;
+        inData[p43] * k43 +
+        inData[p44] * k44;
 
             g =
         inData[p00 + 1] * k00 +
         inData[p01 + 1] * k01 +
         inData[p02 + 1] * k02 +
-        inData[p03 + 1] * k04 +
-        inData[p02 + 1] * k04 +
+        inData[p03 + 1] * k03 +
+        inData[p04 + 1] * k04 +
         inData[p10 + 1] * k10 +
         inData[p11 + 1] * k11 +
         inData[p12 + 1] * k12 +
-        inData[p13 + 1] * k14 +
-        inData[p12 + 1] * k14 +
+        inData[p13 + 1] * k13 +
+        inData[p14 + 1] * k14 +
         inData[p20 + 1] * k20 +
         inData[p21 + 1] * k21 +
         inData[p22 + 1] * k22 +
-        inData[p23 + 1] * k24 +
-        inData[p22 + 1] * k24 +
+        inData[p23 + 1] * k23 +
+        inData[p24 + 1] * k24 +
         inData[p30 + 1] * k30 +
         inData[p31 + 1] * k31 +
         inData[p32 + 1] * k32 +
-        inData[p33 + 1] * k34 +
-        inData[p32 + 1] * k34 +
+        inData[p33 + 1] * k33 +
+        inData[p34 + 1] * k34 +
         inData[p40 + 1] * k40 +
         inData[p41 + 1] * k41 +
         inData[p42 + 1] * k42 +
-        inData[p43 + 1] * k44 +
-        inData[p42 + 1] * k44;
+        inData[p43 + 1] * k43 +
+        inData[p44 + 1] * k44;
 
             b =
         inData[p00 + 2] * k00 +
         inData[p01 + 2] * k01 +
         inData[p02 + 2] * k02 +
-        inData[p03 + 2] * k04 +
-        inData[p02 + 2] * k04 +
+        inData[p03 + 2] * k03 +
+        inData[p04 + 2] * k04 +
         inData[p10 + 2] * k10 +
         inData[p11 + 2] * k11 +
         inData[p12 + 2] * k12 +
-        inData[p13 + 2] * k14 +
-        inData[p12 + 2] * k14 +
+        inData[p13 + 2] * k13 +
+        inData[p14 + 2] * k14 +
         inData[p20 + 2] * k20 +
         inData[p21 + 2] * k21 +
         inData[p22 + 2] * k22 +
-        inData[p23 + 2] * k24 +
-        inData[p22 + 2] * k24 +
+        inData[p23 + 2] * k23 +
+        inData[p24 + 2] * k24 +
         inData[p30 + 2] * k30 +
         inData[p31 + 2] * k31 +
         inData[p32 + 2] * k32 +
-        inData[p33 + 2] * k34 +
-        inData[p32 + 2] * k34 +
+        inData[p33 + 2] * k33 +
+        inData[p34 + 2] * k34 +
         inData[p40 + 2] * k40 +
         inData[p41 + 2] * k41 +
         inData[p42 + 2] * k42 +
-        inData[p43 + 2] * k44 +
-        inData[p42 + 2] * k44;
+        inData[p43 + 2] * k43 +
+        inData[p44 + 2] * k44;
 
             if (alpha) {
                 a =
           inData[p00 + 3] * k00 +
           inData[p01 + 3] * k01 +
           inData[p02 + 3] * k02 +
-          inData[p03 + 3] * k04 +
-          inData[p02 + 3] * k04 +
+          inData[p03 + 3] * k03 +
+          inData[p04 + 3] * k04 +
           inData[p10 + 3] * k10 +
           inData[p11 + 3] * k11 +
           inData[p12 + 3] * k12 +
-          inData[p13 + 3] * k14 +
-          inData[p12 + 3] * k14 +
+          inData[p13 + 3] * k13 +
+          inData[p14 + 3] * k14 +
           inData[p20 + 3] * k20 +
           inData[p21 + 3] * k21 +
           inData[p22 + 3] * k22 +
-          inData[p23 + 3] * k24 +
-          inData[p22 + 3] * k24 +
+          inData[p23 + 3] * k23 +
+          inData[p24 + 3] * k24 +
           inData[p30 + 3] * k30 +
           inData[p31 + 3] * k31 +
           inData[p32 + 3] * k32 +
-          inData[p33 + 3] * k34 +
-          inData[p32 + 3] * k34 +
+          inData[p33 + 3] * k33 +
+          inData[p34 + 3] * k34 +
           inData[p40 + 3] * k40 +
           inData[p41 + 3] * k41 +
           inData[p42 + 3] * k42 +
-          inData[p43 + 3] * k44 +
-          inData[p42 + 3] * k44;
+          inData[p43 + 3] * k43 +
+          inData[p44 + 3] * k44;
             } else {
                 a = inData[idx + 3];
             }
@@ -476,7 +474,6 @@ function gaussian(inData, outData, width, height, kernelSize) {
         y,
         i,
         j,
-        n = width * height * 4,
         r,
         g,
         b,
@@ -807,7 +804,6 @@ const process = {
     flipv: function (inData, outData, width, height) {
         let x,
             y,
-            n = width * height * 4,
             inPix,
             outPix;
 
@@ -827,7 +823,6 @@ const process = {
     fliph: function (inData, outData, width, height) {
         let x,
             y,
-            n = width * height * 4,
             inPix,
             outPix;
 
@@ -1419,9 +1414,6 @@ const process = {
         options = defaultOptions(options, { levels: 5 });
         let i,
             n = width * height * 4,
-            r,
-            g,
-            b,
             numLevels = clamp(options.levels, 2, 256),
             numAreas = 256 / numLevels,
             numValues = 256 / (numLevels - 1);
@@ -1437,7 +1429,6 @@ const process = {
     removenoise: function (inData, outData, width, height) {
         let x,
             y,
-            n = width * height * 4,
             r,
             g,
             b,
@@ -1595,18 +1586,13 @@ const process = {
             pidx,
             i,
             j,
-            bidx,
             r,
             g,
             b,
             bi,
-            bj,
-            n = yBlocks * xBlocks,
-            prog,
-            lastProg = 0;
+            bj;
 
         y0 = 0;
-        bidx = 0;
         for (i = 0; i < yBlocks; i += 1) {
             y1 = clamp(y0 + blockSize, 0, height);
             x0 = 0;
@@ -1628,7 +1614,6 @@ const process = {
                     }
                 }
                 x0 = x1;
-                bidx += 1;
             }
             y0 = y1;
         }
@@ -1639,9 +1624,7 @@ const process = {
             p,
             i,
             level,
-            ratio,
-            prog,
-            lastProg;
+            ratio;
         const round = Math.round;
         // build histogram
         const pdf = new Array(256);
