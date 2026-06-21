@@ -3,6 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <title>g.js notebook</title>
+	<script type="text/javascript" charset="utf-8">
+		// PathKit is optional: it enables smooth (curve-based) boolean path ops.
+		// It ships via `npm install`, so it may be absent (no install / static
+		// hosting). Load it dynamically and swallow a missing file via onerror,
+		// so there's no thrown error and no hard 404 for the static <script>.
+		// When absent, g.js falls back to the ClipperLib path.
+		if (window.location.protocol.startsWith('http')) {
+			const base = '/node_modules/pathkit-wasm/bin/';
+			const script = document.createElement('script');
+			script.src = base + 'pathkit.js';
+			script.onload = () => {
+				PathKitInit({ locateFile: (file) => base + file }).then((PathKit) => {
+					window.PathKit = PathKit;
+				});
+			};
+			script.onerror = () => {
+				console.info('PathKit not found (run `npm install`); using ClipperLib fallback for boolean ops.');
+			};
+			document.head.appendChild(script);
+		}
+    </script>
 	<script src="build/g.js"></script>
 
 	<script type="text/javascript">

@@ -37,6 +37,7 @@
     "@xmldom/xmldom": "0.8.7",
     "async": "^3.2.6",
     "js-clipper": "1.0.1",
+    "pathkit-wasm": "1.0.0",
     "stackblur": "^1.0.0"
   },
   "devDependencies": {
