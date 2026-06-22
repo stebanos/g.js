@@ -11,15 +11,16 @@ import {
     align as vgAlign,
     colorize as vgColorize,
     copy as vgCopy,
-    fit as vgFit
+    fit as vgFit,
+    HORIZONTAL,
+    VERTICAL
 } from './vg/index.js';
 import { coordinates as geoCoordinates } from './vg/util/geo.js';
 import { Img } from './img/index.js';
 import { degrees, clamp } from './math.js';
 
-export const HORIZONTAL = 'horizontal';
-export const VERTICAL = 'vertical';
 export const BOTH = 'both';
+export { HORIZONTAL, VERTICAL };
 
 export const LEFT = 'left';
 export const RIGHT = 'right';
