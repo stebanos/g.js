@@ -17,10 +17,6 @@ import Transformable from '../objects/transformable.js';
 import ClipperLib from 'js-clipper';
 // var ClipperLib = require("../../../../third_party/clipper");
 
-// The vg namespace re-exports everything in this package; commands reference
-// sibling commands and objects through it (e.g. vg.bounds, vg.Rect). The import
-// is circular but only used inside function bodies, so it resolves lazily.
-import * as vg from '../index.js';
 
 function _cloneCommand(cmd) {
     const newCmd = { type: cmd.type };
@@ -61,7 +57,7 @@ export function bounds(o) {
             return new Rect(o.x, o.y, 0, 0);
         }
     } else if (o.r !== undefined && o.g !== undefined && o.b !== undefined) {
-        return new vg.Rect(0, 0, 30, 30);
+        return new Rect(0, 0, 30, 30);
     } else if (Array.isArray(o)) {
         r = null;
         n = o.length;
@@ -76,9 +72,9 @@ export function bounds(o) {
         }
         for (i = 0; i < n; i += 1) {
             if (!r) {
-                r = vg.bounds(o[i]);
+                r = bounds(o[i]);
             } else {
-                r = r.unite(vg.bounds(o[i]));
+                r = r.unite(bounds(o[i]));
             }
         }
         return r || new Rect();
@@ -137,7 +133,7 @@ export function toPoints(shape) {
     }
     let points = [];
     for (i = 0; i < shape.shapes.length; i += 1) {
-        points = points.concat(vg.shapePoints(shape.shapes[i]));
+        points = points.concat(shapePoints(shape.shapes[i]));
     }
     return points;
 }
@@ -231,11 +227,11 @@ export function fit(shape, position, width, height, stretch) {
     let t,
         sx,
         sy,
-        bounds = vg.bounds(shape),
-        bx = bounds.x,
-        by = bounds.y,
-        bw = bounds.width,
-        bh = bounds.height;
+        bbox = bounds(shape),
+        bx = bbox.x,
+        by = bbox.y,
+        bw = bbox.width,
+        bh = bbox.height;
 
     // Make sure bw and bh aren't infinitely small numbers.
     // This will lead to incorrect transformations with for examples lines.
@@ -267,13 +263,13 @@ export function fitTo(shape, bounding, stretch) {
     if (!shape) { return null; }
     if (!bounding) { return shape; }
 
-    const bounds = vg.bounds(bounding),
-        bx = bounds.x,
-        by = bounds.y,
-        bw = bounds.width,
-        bh = bounds.height;
+    const bbox = bounds(bounding),
+        bx = bbox.x,
+        by = bbox.y,
+        bw = bbox.width,
+        bh = bbox.height;
 
-    return vg.fit(shape, { x: bx + bw / 2, y: by + bh / 2 }, bw, bh, stretch);
+    return fit(shape, { x: bx + bw / 2, y: by + bh / 2 }, bw, bh, stretch);
 }
 
 export function mirror(shape, angle, origin, keepOriginal) {
@@ -314,7 +310,7 @@ export function resampleByAmount(shape, amount, perContour) {
     return shape.resampleByAmount(amount, perContour);
 }
 
-export function _wigglePoints(shape, offset, rand) {
+function _wigglePoints(shape, offset, rand) {
     let i, dx, dy;
     if (shape.commands) {
         const p = new Path([], shape.fill, shape.stroke, shape.strokeWidth);
@@ -337,7 +333,7 @@ export function _wigglePoints(shape, offset, rand) {
         const wShapes = [];
         wShapes.length = shape.shapes.length;
         for (i = 0; i < shape.shapes.length; i += 1) {
-            wShapes[i] = vg._wigglePoints(shape.shapes[i], offset, rand);
+            wShapes[i] = _wigglePoints(shape.shapes[i], offset, rand);
         }
         return new Group(wShapes);
     } else if (
@@ -358,7 +354,7 @@ export function _wigglePoints(shape, offset, rand) {
         const w = [];
         w.length = shape.length;
         for (i = 0; i < shape.length; i += 1) {
-            w[i] = vg._wigglePoints(shape[i], offset, rand);
+            w[i] = _wigglePoints(shape[i], offset, rand);
         }
         return w;
     }
@@ -373,10 +369,10 @@ export function wigglePoints(shape, offset, seed) {
     } else if (typeof offset === 'number') {
         offset = { x: offset, y: offset };
     }
-    return vg._wigglePoints(shape, offset, rand);
+    return _wigglePoints(shape, offset, rand);
 }
 
-export function _wiggleContours(shape, offset, rand) {
+function _wiggleContours(shape, offset, rand) {
     let i;
     if (shape.commands) {
         let dx,
@@ -397,14 +393,14 @@ export function _wiggleContours(shape, offset, rand) {
         const wShapes = [];
         wShapes.length = shape.shapes.length;
         for (i = 0; i < shape.shapes.length; i += 1) {
-            wShapes[i] = vg._wiggleContours(shape.shapes[i], offset, rand);
+            wShapes[i] = _wiggleContours(shape.shapes[i], offset, rand);
         }
         return new Group(wShapes);
     } else {
         const w = [];
         w.length = shape.length;
         for (i = 0; i < shape.length; i += 1) {
-            w[i] = vg._wiggleContours(shape[i], offset, rand);
+            w[i] = _wiggleContours(shape[i], offset, rand);
         }
         return w;
     }
@@ -419,14 +415,14 @@ export function wiggleContours(shape, offset, seed) {
     } else if (typeof offset === 'number') {
         offset = { x: offset, y: offset };
     }
-    return vg._wiggleContours(shape, offset, rand);
+    return _wiggleContours(shape, offset, rand);
 }
 
-export function _wigglePaths(shape, offset, rand) {
+function _wigglePaths(shape, offset, rand) {
     if (shape.commands) {
         return shape;
     } else if (shape.shapes) {
-        return new Group(vg._wigglePaths(shape.shapes, offset, rand));
+        return new Group(_wigglePaths(shape.shapes, offset, rand));
     } else if (Array.isArray(shape)) {
         let subShape,
             dx,
@@ -441,7 +437,7 @@ export function _wigglePaths(shape, offset, rand) {
                 t = new Transform().translate(dx, dy);
                 newShapes.push(t.transformShape(subShape));
             } else if (subShape.shapes) {
-                newShapes.push(vg._wigglePaths(subShape, offset, rand));
+                newShapes.push(_wigglePaths(subShape, offset, rand));
             }
         }
         return newShapes;
@@ -457,7 +453,7 @@ export function wigglePaths(shape, offset, seed) {
     } else if (typeof offset === 'number') {
         offset = { x: offset, y: offset };
     }
-    return vg._wigglePaths(shape, offset, rand);
+    return _wigglePaths(shape, offset, rand);
 }
 
 // Generate points within the boundaries of a shape.
@@ -539,22 +535,22 @@ export function align(shape, position, hAlign, vAlign) {
         t,
         x = position.x,
         y = position.y,
-        bounds = vg.bounds(shape);
+        bbox = bounds(shape);
     if (hAlign === 'left') {
-        dx = x - bounds.x;
+        dx = x - bbox.x;
     } else if (hAlign === 'right') {
-        dx = x - bounds.x - bounds.width;
+        dx = x - bbox.x - bbox.width;
     } else if (hAlign === 'center') {
-        dx = x - bounds.x - bounds.width / 2;
+        dx = x - bbox.x - bbox.width / 2;
     } else {
         dx = 0;
     }
     if (vAlign === 'top') {
-        dy = y - bounds.y;
+        dy = y - bbox.y;
     } else if (vAlign === 'bottom') {
-        dy = y - bounds.y - bounds.height;
+        dy = y - bbox.y - bbox.height;
     } else if (vAlign === 'middle') {
-        dy = y - bounds.y - bounds.height / 2;
+        dy = y - bbox.y - bbox.height / 2;
     } else {
         dy = 0;
     }
@@ -600,7 +596,7 @@ export function snap(shape, distance, strength, center) {
         const sShapes = [];
         sShapes.length = shape.shapes.length;
         for (i = 0; i < shape.shapes.length; i += 1) {
-            sShapes[i] = vg.snap(shape.shapes[i], distance, strength, center);
+            sShapes[i] = snap(shape.shapes[i], distance, strength, center);
         }
         return new Group(sShapes);
     } else if (
@@ -623,7 +619,7 @@ export function snap(shape, distance, strength, center) {
         const s = [];
         s.length = shape.length;
         for (i = 0; i < shape.length; i += 1) {
-            s[i] = vg.snap(shape[i], distance, strength, center);
+            s[i] = snap(shape[i], distance, strength, center);
         }
         return s;
     }
@@ -662,7 +658,7 @@ export function deletePoints(shape, bounding, invert) {
         const dShapes = [];
         dShapes.length = shape.shapes.length;
         for (i = 0; i < shape.shapes.length; i += 1) {
-            dShapes[i] = vg.deletePoints(shape.shapes[i], bounding, invert);
+            dShapes[i] = deletePoints(shape.shapes[i], bounding, invert);
         }
         return new Group(dShapes);
     } else if (
@@ -685,7 +681,7 @@ export function deletePoints(shape, bounding, invert) {
         const d = [];
         d.length = shape.length;
         for (i = 0; i < shape.length; i += 1) {
-            d[i] = vg.deletePoints(shape[i], bounding, invert);
+            d[i] = deletePoints(shape[i], bounding, invert);
         }
         return d;
     }
@@ -695,7 +691,7 @@ export function deletePaths(shape, bounding, invert) {
     if (!shape || shape.commands) {
         return null;
     } else if (shape.shapes) {
-        return new Group(vg.deletePaths(shape.shapes, bounding, invert));
+        return new Group(deletePaths(shape.shapes, bounding, invert));
     } else if (Array.isArray(shape)) {
         if (!bounding) { return shape; }
         let j,
@@ -720,7 +716,7 @@ export function deletePaths(shape, bounding, invert) {
                     newShapes.push(s);
                 }
             } else if (s.shapes) {
-                subShapes = vg.deletePaths(s, bounding, invert);
+                subShapes = deletePaths(s, bounding, invert);
                 if (subShapes.length !== 0) {
                     newShapes.push(subShapes);
                 }
@@ -735,10 +731,10 @@ export function delete_(shape, bounding, scope, invert) {
         return null;
     }
     if (scope === 'points') {
-        return vg.deletePoints(shape, bounding, invert);
+        return deletePoints(shape, bounding, invert);
     }
     if (scope === 'paths') {
-        return vg.deletePaths(shape, bounding, invert);
+        return deletePaths(shape, bounding, invert);
     }
     throw new Error('Invalid scope.');
 }
@@ -746,7 +742,7 @@ export function delete_(shape, bounding, scope, invert) {
 export function pointOnPath(shape, t) {
     if (!shape) { return Point.ZERO; }
     if (shape.shapes) {
-        shape = new Path(vg.combinePaths(shape));
+        shape = new Path(combinePaths(shape));
     }
     t = t % 1;
     if (t < 0) {
@@ -821,7 +817,7 @@ export function shapeOnPath(
     return newShapes;
 }
 
-export function _x(shape) {
+function _x(shape) {
     if (shape.x !== undefined) {
         return shape.x;
     } else {
@@ -829,7 +825,7 @@ export function _x(shape) {
     }
 }
 
-export function _y(shape) {
+function _y(shape) {
     if (shape.y !== undefined) {
         return shape.y;
     } else {
@@ -837,7 +833,7 @@ export function _y(shape) {
     }
 }
 
-export function _angleToPoint(point) {
+function _angleToPoint(point) {
     return function (shape) {
         if (shape.x !== undefined && shape.y !== undefined) {
             return angle(shape.x, shape.y, point.x, point.y);
@@ -848,7 +844,7 @@ export function _angleToPoint(point) {
     };
 }
 
-export function _distanceToPoint(point) {
+function _distanceToPoint(point) {
     return function (shape) {
         if (shape.x !== undefined && shape.y !== undefined) {
             return distance(shape.x, shape.y, point.x, point.y);
@@ -864,10 +860,10 @@ export function shapeSort(shapes, method, origin) {
     origin = origin || Point.ZERO;
 
     const methods = {
-        x: vg._x,
-        y: vg._y,
-        angle: vg._angleToPoint(origin),
-        distance: vg._distanceToPoint(origin)
+        x: _x,
+        y: _y,
+        angle: _angleToPoint(origin),
+        distance: _distanceToPoint(origin)
     };
     method = methods[method];
     if (method === undefined) {
@@ -904,7 +900,7 @@ export function ungroup(shape) {
             if (s.commands) {
                 shapes.push(s);
             } else if (s.shapes) {
-                shapes = shapes.concat(vg.ungroup(s));
+                shapes = shapes.concat(ungroup(s));
             }
         }
         return shapes;
@@ -917,7 +913,7 @@ export function ungroup(shape) {
 
 export function centerPoint(shape) {
     if (!shape) { return Point.ZERO; }
-    const r = vg.bounds(shape);
+    const r = bounds(shape);
     return new Point(r.x + r.width / 2, r.y + r.height / 2);
 }
 
@@ -926,7 +922,7 @@ export function link(shape1, shape2, orientation) {
     const p = new Path();
     const a = shape1.bounds();
     const b = shape2.bounds();
-    if (orientation === vg.HORIZONTAL) {
+    if (orientation === HORIZONTAL) {
         const hw = (b.x - (a.x + a.width)) / 2;
         p.moveTo(a.x + a.width, a.y);
         p.curveTo(a.x + a.width + hw, a.y, b.x - hw, b.y, b.x, b.y);
@@ -965,7 +961,7 @@ const compoundMethods = {
     xor: ClipperLib.ClipType.ctXor
 };
 
-export function _compoundToPoints(shape) {
+function _compoundToPoints(shape) {
     const l1 = [];
     let i, l, s, j, pt;
     for (i = 0; i < shape.length; i += 1) {
@@ -1000,7 +996,7 @@ function cmdToPathKit(cmd) {
 
 let compoundOpsPathKit;
 
-export function _compoundPathKit(shape1, shape2, method) {
+function _compoundPathKit(shape1, shape2, method) {
     if (!window.PathKit) {
         throw new Error('PathKit module not found.');
     }
@@ -1054,13 +1050,13 @@ export function compound(shape1, shape2, method) {
     window.PathKit &&
     window.PathKit.NewPath
     ) {
-        return vg._compoundPathKit(shape1, shape2, method);
+        return _compoundPathKit(shape1, shape2, method);
     }
     const contours1 = shape1.resampleByLength(1).contours();
     const contours2 = shape2.resampleByLength(1).contours();
 
-    const subjPaths = vg._compoundToPoints(contours1);
-    const clipPaths = vg._compoundToPoints(contours2);
+    const subjPaths = _compoundToPoints(contours1);
+    const clipPaths = _compoundToPoints(contours2);
     const scale = 100;
     ClipperLib.JS.ScaleUpPaths(subjPaths, scale);
     ClipperLib.JS.ScaleUpPaths(clipPaths, scale);
@@ -1156,7 +1152,7 @@ export function roundedSegments(shape, d) {
     if (!d || d.length === 0) {
         return shape;
     }
-    const points = vg.toPoints(shape);
+    const points = toPoints(shape);
     const newPoints = [];
     for (let i = 0; i < points.length; i += 1) {
         const pt = points[i];
