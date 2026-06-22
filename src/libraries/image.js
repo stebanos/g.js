@@ -1,9 +1,7 @@
 import { Rect, Color } from './vg/index.js';
 import { Img, Layer, ImageCanvas } from './img/index.js';
 
-const g = {};
-
-g.blend = function (image1, image2, mode) {
+export function blend(image1, image2, mode) {
     const b1 = image1.bounds();
     const b2 = image2.bounds();
 
@@ -20,24 +18,24 @@ g.blend = function (image1, image2, mode) {
     l2.translate(-dx, -dy);
     l2.blendmode = mode;
     return new Img(canvas.render(), dx, dy);
-};
+}
 
-g.blur = function (image, radius) {
+export function blur(image, radius) {
     const layer = image.toLayer(false);
     layer.addFilter('blur', { radius: radius });
     return image.withCanvas(layer.toCanvas());
-};
+}
 
-g.brighten = function (image, brightness, contrast) {
+export function brighten(image, brightness, contrast) {
     const layer = image.toLayer(false);
     layer.addFilter('brightness', {
         brightness: brightness / 100,
         contrast: contrast / 100
     });
     return image.withCanvas(layer.toCanvas());
-};
+}
 
-g.bump = function (image, position, radius, zoom) {
+export function bump(image, position, radius, zoom) {
     const layer = image.toLayer(false);
     layer.addFilter('bump', {
         dx: position.x,
@@ -46,26 +44,26 @@ g.bump = function (image, position, radius, zoom) {
         zoom: zoom / 100
     });
     return image.withCanvas(layer.toCanvas());
-};
+}
 
-g.colorImage = function (width, height, color) {
+export function colorImage(width, height, color) {
     const layer = Layer.fromColor(color);
     layer.width = width;
     layer.height = height;
     return new Img(layer.toCanvas());
-};
+}
 
-g.crop = function (image, bounding) {
+export function crop(image, bounding) {
     return image.crop(bounding);
-};
+}
 
-g.crossEdges = function (image, strength) {
+export function crossEdges(image, strength) {
     const layer = image.toLayer(false);
     layer.addFilter('crossedges', { strength: strength / 100 });
     return image.withCanvas(layer.toCanvas());
-};
+}
 
-g.dent = function (image, position, radius, zoom) {
+export function dent(image, position, radius, zoom) {
     const layer = image.toLayer(false);
     layer.addFilter('dent', {
         dx: position.x,
@@ -74,33 +72,33 @@ g.dent = function (image, position, radius, zoom) {
         zoom: zoom / 100
     });
     return image.withCanvas(layer.toCanvas());
-};
+}
 
-g.emboss = function (image, amount, angle) {
+export function emboss(image, amount, angle) {
     const layer = image.toLayer(false);
     layer.addFilter('emboss', { amount: amount / 100, angle: angle });
     return image.withCanvas(layer.toCanvas());
-};
+}
 
-g.equalize = function (image) {
+export function equalize(image) {
     const layer = image.toLayer(false);
     layer.addFilter('equalize');
     return image.withCanvas(layer.toCanvas());
-};
+}
 
-g.findEdges = function (image) {
+export function findEdges(image) {
     const layer = image.toLayer(false);
     layer.addFilter('findedges');
     return image.withCanvas(layer.toCanvas());
-};
+}
 
-g.glow = function (image, amount, kernelSize) {
+export function glow(image, amount, kernelSize) {
     const layer = image.toLayer(false);
     layer.addFilter('glow', { amount: amount / 100, kernelSize: kernelSize });
     return image.withCanvas(layer.toCanvas());
-};
+}
 
-g.gradientImage = function (
+export function gradientImage(
     width,
     height,
     startColor,
@@ -119,9 +117,9 @@ g.gradientImage = function (
     layer.width = width;
     layer.height = height;
     return new Img(layer.toCanvas());
-};
+}
 
-g.histogram = function (image, channel, relative) {
+export function histogram(image, channel, relative) {
     const pixels = image.getPixels();
     const vals = new Array(256);
     let i, c, pixel, comp;
@@ -159,21 +157,21 @@ g.histogram = function (image, channel, relative) {
         }
     }
     return vals;
-};
+}
 
-g.lightTunnel = function (image, position, radius) {
+export function lightTunnel(image, position, radius) {
     const layer = image.toLayer(false);
     layer.addFilter('splash', { dx: position.x, dy: position.y, radius: radius });
     return image.withCanvas(layer.toCanvas());
-};
+}
 
-g.luminanceBW = function (image) {
+export function luminanceBW(image) {
     const layer = image.toLayer(false);
     layer.addFilter('luminancebw');
     return image.withCanvas(layer.toCanvas());
-};
+}
 
-g.mask = function (image, mask) {
+export function mask(image, mask) {
     image = image.transformed();
     mask = mask.transformed();
 
@@ -195,15 +193,15 @@ g.mask = function (image, mask) {
     l.height = layer.height;
     layer.mask.addLayer(maskLayer);
     return image.withCanvas(layer.toCanvas());
-};
+}
 
-g.mosaic = function (image, blockSize) {
+export function mosaic(image, blockSize) {
     const layer = image.toLayer(false);
     layer.addFilter('mosaic', { blockSize: blockSize });
     return image.withCanvas(layer.toCanvas());
-};
+}
 
-g.pinch = function (image, position, zoom) {
+export function pinch(image, position, zoom) {
     const layer = image.toLayer(false);
     layer.addFilter('pinch', {
         dx: position.x,
@@ -211,27 +209,27 @@ g.pinch = function (image, position, zoom) {
         zoom: zoom / 100
     });
     return image.withCanvas(layer.toCanvas());
-};
+}
 
-g.posterize = function (image, levels) {
+export function posterize(image, levels) {
     const layer = image.toLayer(false);
     layer.addFilter('posterize', { levels: levels });
     return image.withCanvas(layer.toCanvas());
-};
+}
 
-g.removeNoise = function (image) {
+export function removeNoise(image) {
     const layer = image.toLayer(false);
     layer.addFilter('removenoise');
     return image.withCanvas(layer.toCanvas());
-};
+}
 
-g.solarize = function (image) {
+export function solarize(image) {
     const layer = image.toLayer(false);
     layer.addFilter('solarize');
     return image.withCanvas(layer.toCanvas());
-};
+}
 
-g.toBitmap = function (shape, bounding) {
+export function toBitmap(shape, bounding) {
     const canvas = document.createElement('canvas');
     let bounds;
     if (bounding) {
@@ -247,9 +245,9 @@ g.toBitmap = function (shape, bounding) {
     ctx.translate(-x, -y);
     shape.draw(ctx);
     return new Img(canvas, width / 2 + x, height / 2 + y);
-};
+}
 
-g.toPixels = function (image, step) {
+export function toPixels(image, step) {
     step = step > 1 ? step : 1;
     const canvas = image.canvas;
     const imgWidth = canvas.width;
@@ -279,9 +277,9 @@ g.toPixels = function (image, step) {
         }
     }
     return outPixels;
-};
+}
 
-g.twirl = function (image, position, radius, angle) {
+export function twirl(image, position, radius, angle) {
     const layer = image.toLayer(false);
     layer.addFilter('twirl', {
         dx: position.x,
@@ -290,6 +288,4 @@ g.twirl = function (image, position, radius, angle) {
         angle: angle
     });
     return image.withCanvas(layer.toCanvas());
-};
-
-export default g;
+}

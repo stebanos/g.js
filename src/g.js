@@ -8,7 +8,7 @@ import * as mathCommands from './libraries/math.js';
 import * as stringCommands from './libraries/string.js';
 import * as listCommands from './libraries/list.js';
 import * as dataCommands from './libraries/data.js';
-import imageCommands from './libraries/image.js';
+import * as imageCommands from './libraries/image.js';
 import * as graphicsCommands from './libraries/graphics.js';
 import * as easingCommands from './libraries/easing.js';
 
