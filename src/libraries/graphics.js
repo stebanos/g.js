@@ -7,7 +7,11 @@ import {
     Color,
     bounds,
     scale,
-    centerPoint
+    centerPoint,
+    align as vgAlign,
+    colorize as vgColorize,
+    copy as vgCopy,
+    fit as vgFit
 } from './vg/index.js';
 import { coordinates as geoCoordinates } from './vg/util/geo.js';
 import { Img } from './img/index.js';
@@ -56,114 +60,55 @@ function transform(shape, t) {
 }
 
 export function align(shape, position, hAlign, vAlign) {
-    if (!shape) {
-        return;
+    if (!shape) { return null; }
+    if (!(shape instanceof Img)) {
+        return vgAlign(shape, position, hAlign, vAlign);
     }
-    let dx,
-        dy,
-        t,
-        x = position.x,
-        y = position.y,
-        bnds = bounds(shape);
-    if (hAlign === LEFT) {
-        dx = x - bnds.x;
-    } else if (hAlign === RIGHT) {
-        dx = x - bnds.x - bnds.width;
-    } else if (hAlign === CENTER) {
-        dx = x - bnds.x - bnds.width / 2;
-    } else {
-        dx = 0;
-    }
-    if (vAlign === TOP) {
-        dy = y - bnds.y;
-    } else if (vAlign === BOTTOM) {
-        dy = y - bnds.y - bnds.height;
-    } else if (vAlign === MIDDLE) {
-        dy = y - bnds.y - bnds.height / 2;
-    } else {
-        dy = 0;
-    }
-
-    t = new Transform().translate(dx, dy);
-    return transform(shape, t);
+    const bnds = shape.bounds();
+    const x = position.x, y = position.y;
+    let dx = 0, dy = 0;
+    if (hAlign === LEFT)        { dx = x - bnds.x; }
+    else if (hAlign === RIGHT)  { dx = x - bnds.x - bnds.width; }
+    else if (hAlign === CENTER) { dx = x - bnds.x - bnds.width / 2; }
+    if (vAlign === TOP)         { dy = y - bnds.y; }
+    else if (vAlign === BOTTOM) { dy = y - bnds.y - bnds.height; }
+    else if (vAlign === MIDDLE) { dy = y - bnds.y - bnds.height / 2; }
+    return transformImage(shape, new Transform().translate(dx, dy));
 }
 
 export function colorize(shape, options) {
     const args = arguments;
     if (typeof options !== 'object' || options instanceof Color) {
         options = {};
-        if (args[1] !== undefined) {
-            options.fill = args[1];
-        }
-        if (args[2] !== undefined) {
-            options.stroke = args[2];
-        }
-        if (args[3] !== undefined) {
-            options.strokeWidth = args[3];
-        }
+        if (args[1] !== undefined) { options.fill = args[1]; }
+        if (args[2] !== undefined) { options.stroke = args[2]; }
+        if (args[3] !== undefined) { options.strokeWidth = args[3]; }
     }
-    if (shape instanceof Path || shape instanceof Group) {
-        return shape.colorize(options);
-    } else if (shape instanceof Img || shape instanceof Text) {
+    if (shape instanceof Img || shape instanceof Text) {
         if (options.fill || options.fill === 0) {
             return shape.colorize(options.fill);
-        } else {
-            throw new Error('No color given');
         }
+        throw new Error('No color given');
     }
+    return vgColorize(shape, options);
 }
 
 export function copy(shape, copies, order, translate, rotate, scale) {
     if (!shape) { return []; }
-    let i,
-        t,
-        j,
-        op,
-        fn,
-        shapes = [],
-        tx = 0,
-        ty = 0,
-        r = 0,
-        sx = 1.0,
-        sy = 1.0,
-        isListOfPoints = false;
-
-    if (
-        shape instanceof Path ||
-    shape instanceof Group ||
-    shape instanceof Text
-    ) {
-        fn = transformShape;
-    } else if (
-        Array.isArray(shape) &&
-    shape.length > 0 &&
-    shape[0].x !== undefined &&
-    shape[0].y !== undefined
-    ) {
-        isListOfPoints = true;
-        fn = transformShape;
-    } else if (shape instanceof Img) {
-        fn = transformImage;
+    if (!(shape instanceof Img)) {
+        return vgCopy(shape, copies, order, translate, rotate, scale);
     }
-
-    for (i = 0; i < copies; i += 1) {
-        t = new Transform();
-        for (j = 0; j < order.length; j += 1) {
-            op = order[j];
-            if (op === 't') {
-                t = t.translate(tx, ty);
-            } else if (op === 'r') {
-                t = t.rotate(r);
-            } else if (op === 's') {
-                t = t.scale(sx, sy);
-            }
+    const shapes = [];
+    let tx = 0, ty = 0, r = 0, sx = 1.0, sy = 1.0;
+    for (let i = 0; i < copies; i += 1) {
+        let t = new Transform();
+        for (let j = 0; j < order.length; j += 1) {
+            const op = order[j];
+            if (op === 't') { t = t.translate(tx, ty); }
+            else if (op === 'r') { t = t.rotate(r); }
+            else if (op === 's') { t = t.scale(sx, sy); }
         }
-        if (isListOfPoints) {
-            shapes = shapes.concat(fn(shape, t));
-        } else {
-            shapes.push(fn(shape, t));
-        }
-
+        shapes.push(transformImage(shape, t));
         tx += translate.x;
         ty += translate.y;
         r += rotate;
@@ -203,29 +148,19 @@ export function flip(shape, axis) {
 }
 
 export function fit(shape, position, width, height, stretch) {
-    if (!shape) {
-        return;
+    if (!shape) { return null; }
+    if (!(shape instanceof Img)) {
+        return vgFit(shape, position, width, height, stretch);
     }
     stretch = stretch !== undefined ? stretch : false;
-    let t,
-        sx,
-        sy,
-        bnds = bounds(shape),
-        bx = bnds.x,
-        by = bnds.y,
-        bw = bnds.width,
-        bh = bnds.height;
-
+    const bnds = shape.bounds();
     // Make sure bw and bh aren't infinitely small numbers.
     // This will lead to incorrect transformations with for examples lines.
-    bw = bw > 0.000000000001 ? bw : 0;
-    bh = bh > 0.000000000001 ? bh : 0;
-
-    t = new Transform();
-    t = t.translate(position.x, position.y);
-
+    let bw = bnds.width > 0.000000000001 ? bnds.width : 0;
+    let bh = bnds.height > 0.000000000001 ? bnds.height : 0;
+    let sx, sy;
+    let t = new Transform().translate(position.x, position.y);
     if (!stretch) {
-    // don't scale widths or heights that are equal to zero.
         sx = bw > 0 ? width / bw : Number.MAX_VALUE;
         sy = bh > 0 ? height / bh : Number.MAX_VALUE;
         sx = sy = Math.min(sx, sy);
@@ -233,10 +168,9 @@ export function fit(shape, position, width, height, stretch) {
         sx = bw > 0 ? width / bw : 1;
         sy = bh > 0 ? height / bh : 1;
     }
-
     t = t.scale(sx, sy);
-    t = t.translate(-bw / 2 - bx, -bh / 2 - by);
-    return transform(shape, t);
+    t = t.translate(-bw / 2 - bnds.x, -bh / 2 - bnds.y);
+    return transformImage(shape, t);
 }
 
 export function fitTo(shape, bounding, stretch) {
