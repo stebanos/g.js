@@ -15,7 +15,7 @@ import {
 } from './vg/index.js';
 import { coordinates as geoCoordinates } from './vg/util/geo.js';
 import { Img } from './img/index.js';
-import { degrees } from './math.js';
+import { degrees, clamp } from './math.js';
 
 export const HORIZONTAL = 'horizontal';
 export const VERTICAL = 'vertical';
@@ -27,10 +27,6 @@ export const CENTER = 'center';
 export const TOP = 'top';
 export const BOTTOM = 'bottom';
 export const MIDDLE = 'middle';
-
-function clamp(val, min, max) {
-    return Math.min(max, Math.max(min, val));
-}
 
 function transformShape(shape, t) {
     return t.transformShape(shape);

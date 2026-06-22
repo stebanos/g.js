@@ -1,20 +1,6 @@
-// UTILITIES.
-
-export function degrees(radians) {
-    return (radians * 180) / Math.PI;
-}
-
-export function radians(degrees) {
-    return (degrees / 180) * Math.PI;
-}
-
-export function distance(x0, y0, x1, y1) {
-    return Math.sqrt(Math.pow(x1 - x0, 2) + Math.pow(y1 - y0, 2));
-}
-
-export function clamp(val, min, max) {
-    return Math.min(max, Math.max(min, val));
-}
+import { degrees, radians, clamp } from '../vg/util/math.js';
+import { distance } from '../vg/util/geo.js';
+export { degrees, radians, clamp, distance };
 
 // Basic affine transform functionality.
 export function transform(m) {
