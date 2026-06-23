@@ -55,14 +55,13 @@ export default class Path {
     }
     static combine() {
         const shapes = flatten(arguments);
-        let shape,
-            commands = [];
+        const commands = [];
         for (let i = 0; i < shapes.length; i += 1) {
-            shape = shapes[i];
+            const shape = shapes[i];
             if (shape.commands) {
-                commands = commands.concat(shape.commands);
+                commands.push(...shape.commands);
             } else if (shape.shapes) {
-                commands = commands.concat(Path.combine(shape.shapes).commands);
+                commands.push(...Path.combine(shape.shapes).commands);
             }
         }
         return new Path(commands);
