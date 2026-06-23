@@ -124,9 +124,9 @@ export function legend  (scale, position, direction, nTicks) {
 }; */
 
 export function keys(data) {
-    let allKeys = [];
+    const allKeys = [];
     for (let i = 0; i < data.length; i++) {
-        allKeys = allKeys.concat(Object.keys(data[i]));
+        allKeys.push(...Object.keys(data[i]));
     }
     return distinct(allKeys);
 }
