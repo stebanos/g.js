@@ -78,16 +78,12 @@ export function distinct(l) {
     if (!l) {
         return [];
     }
-    let i,
-        length,
-        value,
-        result = [],
-        seen = [];
+    let i, length, value;
+    const result = [];
     for (i = 0, length = l.length; i < length; i += 1) {
         value = l[i];
-        if (!g.contains(seen, value)) {
-            seen.push(value);
-            result.push(l[i]);
+        if (!g.contains(result, value)) {
+            result.push(value);
         }
     }
     return result;
