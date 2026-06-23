@@ -107,6 +107,136 @@ describe('A point', function () {
         assert.deepEqual(new vg.Point(3, 5).xy, [3, 5]);
     });
 
+    it('has a static read factory', function () {
+        assert.deepEqual(vg.Point.read(3, 5).xy, [3, 5]);
+        assert.deepEqual(vg.Point.read(5).xy, [5, 5]);
+        assert.deepEqual(vg.Point.read([3, 5]).xy, [3, 5]);
+        assert.deepEqual(vg.Point.read({ x: 3, y: 5 }).xy, [3, 5]);
+        assert.deepEqual(vg.Point.read([]).xy, [0, 0]);
+        const p = new vg.Point(3, 5);
+        assert.strictEqual(vg.Point.read(p), p);
+    });
+
+    it('has a ZERO constant', function () {
+        assert.deepEqual(vg.Point.ZERO.xy, [0, 0]);
+    });
+
+    it('can clone itself', function () {
+        const p = new vg.Point(3, 5);
+        const c = p.clone();
+        assert.deepEqual(c.xy, [3, 5]);
+        assert.notStrictEqual(p, c);
+    });
+
+    it('supports arithmetic operations', function () {
+        const p = new vg.Point(3, 4);
+        assert.deepEqual(p.add(new vg.Point(1, 2)).xy, [4, 6]);
+        assert.deepEqual(p.sub(new vg.Point(1, 2)).xy, [2, 2]);
+        assert.deepEqual(p.subtract(new vg.Point(1, 2)).xy, [2, 2]);
+        assert.deepEqual(p.multiply(2).xy, [6, 8]);
+        assert.deepEqual(p.divide(2).xy, [1.5, 2]);
+    });
+
+    it('computes magnitude', function () {
+        assert.equal(new vg.Point(3, 4).magnitude(), 5);
+        assert.equal(new vg.Point(3, 4).magnitudeSquared(), 25);
+        assert.equal(new vg.Point(0, 0).magnitude(), 0);
+    });
+
+    it('computes heading', function () {
+        assertAlmostEqual(new vg.Point(1, 0).heading(), 0);
+        assertAlmostEqual(new vg.Point(0, 1).heading(), Math.PI / 2);
+        assertAlmostEqual(new vg.Point(-1, 0).heading(), Math.PI);
+    });
+
+    it('computes distance to another point', function () {
+        assert.equal(new vg.Point(0, 0).distanceTo(new vg.Point(3, 4)), 5);
+        assert.equal(new vg.Point(0, 0).distanceTo(new vg.Point(0, 0)), 0);
+    });
+
+    it('can normalize', function () {
+        const n = new vg.Point(3, 4).normalize();
+        assertAlmostEqual(n.x, 0.6);
+        assertAlmostEqual(n.y, 0.8);
+        assertAlmostEqual(n.magnitude(), 1);
+        assert.strictEqual(new vg.Point(0, 0).normalize(), vg.Point.ZERO);
+    });
+
+    it('can limit its magnitude', function () {
+        const p = new vg.Point(3, 4);
+        assert.strictEqual(p.limit(10), p);
+        const limited = p.limit(2.5);
+        assertAlmostEqual(limited.x, 1.5);
+        assertAlmostEqual(limited.y, 2);
+    });
+
+    it('can translate', function () {
+        // translate is overridden by the Transformable mixin and takes a Point/position object
+        const moved = new vg.Point(1, 2).translate(new vg.Point(3, 4));
+        assertAlmostEqual(moved.x, 4);
+        assertAlmostEqual(moved.y, 6);
+    });
+
+    it('has a toString', function () {
+        assert.equal(new vg.Point(3, 5).toString(), '[3, 5]');
+    });
+
+});
+
+describe('A rect', function () {
+
+    it('has a sane constructor', function () {
+        const r = new vg.Rect();
+        assert.deepEqual(r.xywh, [0, 0, 0, 0]);
+        const r2 = new vg.Rect(10, 20, 30, 40);
+        assert.deepEqual(r2.xywh, [10, 20, 30, 40]);
+    });
+
+    it('can normalize negative dimensions', function () {
+        const r = new vg.Rect(10, 20, -30, 40).normalize();
+        assert.deepEqual(r.xywh, [-20, 20, 30, 40]);
+        const r2 = new vg.Rect(10, 20, 30, -40).normalize();
+        assert.deepEqual(r2.xywh, [10, -20, 30, 40]);
+    });
+
+    it('can check if it contains a point', function () {
+        const r = new vg.Rect(0, 0, 100, 100);
+        assert.equal(r.containsPoint(50, 50), true);
+        assert.equal(r.containsPoint(150, 50), false);
+        assert.equal(r.containsPoint(0, 0), true);
+        assert.equal(r.containsPoint(100, 100), true);
+        assert.equal(r.containsPoint(new vg.Point(50, 50)), true);
+    });
+
+    it('can check if it contains another rect', function () {
+        const r = new vg.Rect(0, 0, 100, 100);
+        assert.equal(r.containsRect(new vg.Rect(10, 10, 80, 80)), true);
+        assert.equal(r.containsRect(new vg.Rect(-10, 10, 80, 80)), false);
+        assert.equal(r.containsRect(new vg.Rect(0, 0, 100, 100)), true);
+    });
+
+    it('can grow', function () {
+        assert.deepEqual(new vg.Rect(10, 20, 100, 80).grow(5, 5).xywh, [5, 15, 110, 90]);
+        assert.deepEqual(new vg.Rect(10, 20, 100, 80).grow(-5, -5).xywh, [15, 25, 90, 70]);
+    });
+
+    it('can unite with another rect', function () {
+        const r = new vg.Rect(0, 0, 100, 100).unite(new vg.Rect(50, 50, 100, 100));
+        assert.deepEqual(r.xywh, [0, 0, 150, 150]);
+    });
+
+    it('can expand to include a point', function () {
+        const r = new vg.Rect(10, 10, 80, 80);
+        assert.deepEqual(r.addPoint(0, 0).xywh, [0, 0, 90, 90]);
+        assert.deepEqual(r.addPoint(100, 100).xywh, [10, 10, 90, 90]);
+        assert.deepEqual(r.addPoint(50, 50).xywh, [10, 10, 80, 80]);
+    });
+
+    it('computes its center point', function () {
+        assert.deepEqual(new vg.Rect(0, 0, 100, 100).centerPoint().xy, [50, 50]);
+        assert.deepEqual(new vg.Rect(10, 20, 30, 40).centerPoint().xy, [25, 40]);
+    });
+
 });
 
 describe('A path', function () {

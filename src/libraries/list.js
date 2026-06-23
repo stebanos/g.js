@@ -23,7 +23,7 @@ export function contains(l, value) {
         return false;
     }
     for (let i = 0; i < l.length; i += 1) {
-        if (deepEqual.deepEqual(l[i], value)) {
+        if (deepEqual(l[i], value)) {
             return true;
         }
     }
@@ -43,7 +43,7 @@ export function cycle(l, length) {
 }
 
 export function equals(o1, o2) {
-    return deepEqual.deepEqual(o1, o2);
+    return deepEqual(o1, o2);
 }
 
 export function count(l) {

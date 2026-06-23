@@ -257,3 +257,310 @@ describe('The total function', function () {
     });
 
 });
+
+describe('The abs function', function () {
+
+    it('returns the absolute value', function () {
+        assert.equal(g.abs(5), 5);
+        assert.equal(g.abs(-5), 5);
+        assert.equal(g.abs(0), 0);
+    });
+
+});
+
+describe('The and function', function () {
+
+    it('does logical AND', function () {
+        assert.equal(g.and(true, true), true);
+        assert.equal(g.and(true, false), false);
+        assert.equal(g.and(false, false), false);
+        assert.equal(g.and(1), true);
+        assert.equal(g.and(0), false);
+        assert.equal(g.and(true, true, false), false);
+        assert.throws(() => g.and());
+    });
+
+});
+
+describe('The boolean function', function () {
+
+    it('converts a value to boolean', function () {
+        assert.equal(g.boolean(true), true);
+        assert.equal(g.boolean(false), false);
+        assert.equal(g.boolean(1), true);
+        assert.equal(g.boolean(0), false);
+        assert.equal(g.boolean(''), false);
+        assert.equal(g.boolean('hello'), true);
+    });
+
+});
+
+describe('The ceil function', function () {
+
+    it('rounds up', function () {
+        assert.equal(g.ceil(1.1), 2);
+        assert.equal(g.ceil(1.9), 2);
+        assert.equal(g.ceil(-1.9), -1);
+    });
+
+});
+
+describe('The compare function', function () {
+
+    it('compares two values with an operator', function () {
+        assert.equal(g.compare(3, 5, '<'), true);
+        assert.equal(g.compare(5, 3, '<'), false);
+        assert.equal(g.compare(5, 3, '>'), true);
+        assert.equal(g.compare(3, 3, '<='), true);
+        assert.equal(g.compare(4, 3, '<='), false);
+        assert.equal(g.compare(3, 3, '>='), true);
+        assert.equal(g.compare(3, 3, '=='), true);
+        assert.equal(g.compare(3, 4, '!='), true);
+        assert.throws(() => g.compare(1, 2, 'unknown'));
+    });
+
+});
+
+describe('The cos function', function () {
+
+    it('returns the cosine', function () {
+        assert.equal(g.cos(0), 1);
+        assertAlmostEqual(g.cos(Math.PI), -1);
+    });
+
+});
+
+describe('The degrees function', function () {
+
+    it('converts radians to degrees', function () {
+        assertAlmostEqual(g.degrees(Math.PI), 180);
+        assertAlmostEqual(g.degrees(Math.PI / 2), 90);
+        assert.equal(g.degrees(0), 0);
+    });
+
+});
+
+describe('The e function', function () {
+
+    it('returns Math.E', function () {
+        assert.equal(g.e(), Math.E);
+    });
+
+});
+
+describe('The floor function', function () {
+
+    it('rounds down', function () {
+        assert.equal(g.floor(1.9), 1);
+        assert.equal(g.floor(-1.1), -2);
+    });
+
+});
+
+describe('The integer function', function () {
+
+    it('truncates to integer', function () {
+        assert.equal(g.integer(3.9), 3);
+        assert.equal(g.integer(-3.9), -3);
+        assert.equal(g.integer(5), 5);
+    });
+
+});
+
+describe('The log function', function () {
+
+    it('returns the natural logarithm', function () {
+        assert.equal(g.log(1), 0);
+        assertAlmostEqual(g.log(Math.E), 1);
+        assertAlmostEqual(g.log(-Math.E), -1);
+    });
+
+});
+
+describe('The makeNumbers function', function () {
+
+    it('parses numbers from a string', function () {
+        assert.deepEqual(g.makeNumbers('1,2,3', ','), [1, 2, 3]);
+        assert.deepEqual(g.makeNumbers('1.5 2.5 3.5', ' '), [1.5, 2.5, 3.5]);
+        assert.deepEqual(g.makeNumbers(''), []);
+        assert.deepEqual(g.makeNumbers(null), []);
+    });
+
+});
+
+describe('The max function', function () {
+
+    it('returns the maximum value', function () {
+        assert.equal(g.max(1, 2, 3), 3);
+        assert.equal(g.max([1, 2, 3]), 3);
+        assert.equal(g.max(), 0);
+        assert.equal(g.max(-5, -1, -3), -1);
+    });
+
+});
+
+describe('The min function', function () {
+
+    it('returns the minimum value', function () {
+        assert.equal(g.min(1, 2, 3), 1);
+        assert.equal(g.min([1, 2, 3]), 1);
+        assert.equal(g.min(), 0);
+        assert.equal(g.min(-5, -1, -3), -5);
+    });
+
+});
+
+describe('The mod function', function () {
+
+    it('returns the modulo', function () {
+        assert.equal(g.mod(10, 3), 1);
+        assert.equal(g.mod(9, 3), 0);
+        assert.equal(g.mod(-7, 3), -1);
+    });
+
+});
+
+describe('The negate function', function () {
+
+    it('negates a number', function () {
+        assert.equal(g.negate(5), -5);
+        assert.equal(g.negate(-3), 3);
+        assert.equal(g.negate(0), 0);
+    });
+
+});
+
+describe('The not function', function () {
+
+    it('returns the logical NOT', function () {
+        assert.equal(g.not(true), false);
+        assert.equal(g.not(false), true);
+        assert.equal(g.not(0), true);
+        assert.equal(g.not(1), false);
+    });
+
+});
+
+describe('The number function', function () {
+
+    it('is the identity function', function () {
+        assert.equal(g.number(5), 5);
+        assert.equal(g.number('hello'), 'hello');
+    });
+
+});
+
+describe('The or function', function () {
+
+    it('does logical OR', function () {
+        assert.equal(g.or(true, false), true);
+        assert.equal(g.or(false, false), false);
+        assert.equal(g.or(5), true);
+        assert.equal(g.or(0), false);
+        assert.equal(g.or(false, false, true), true);
+        assert.throws(() => g.or());
+    });
+
+});
+
+describe('The perlinNoise function', function () {
+
+    it('returns noise values', function () {
+        assert.equal(g.perlinNoise(0, 0, 0), 0.5);
+    });
+
+});
+
+describe('The pi function', function () {
+
+    it('returns Math.PI', function () {
+        assert.equal(g.pi(), Math.PI);
+    });
+
+});
+
+describe('The pow function', function () {
+
+    it('raises a number to a power', function () {
+        assert.equal(g.pow(2, 10), 1024);
+        assert.equal(g.pow(3, 3), 27);
+        assert.equal(g.pow(5, 0), 1);
+    });
+
+});
+
+describe('The radians function', function () {
+
+    it('converts degrees to radians', function () {
+        assertAlmostEqual(g.radians(180), Math.PI);
+        assertAlmostEqual(g.radians(90), Math.PI / 2);
+        assert.equal(g.radians(0), 0);
+    });
+
+});
+
+describe('The round function', function () {
+
+    it('rounds to the nearest integer', function () {
+        assert.equal(g.round(1.4), 1);
+        assert.equal(g.round(1.5), 2);
+        assert.equal(g.round(-1.5), -1);
+    });
+
+    it('rounds to a given multiple', function () {
+        assert.equal(g.round(123, 10), 120);
+        assert.equal(g.round(155, 10), 160);
+    });
+
+});
+
+describe('The sawtoothWave function', function () {
+
+    it('returns a valid sawtooth wave', function () {
+        assertAlmostEqual(g.sawtoothWave(0), -1);
+        assertAlmostEqual(g.sawtoothWave(0.5), 0);
+        assertAlmostEqual(g.sawtoothWave(0.75), 0.5);
+        assertAlmostEqual(g.sawtoothWave(1), -1);
+    });
+
+});
+
+describe('The sin function', function () {
+
+    it('returns the sine', function () {
+        assert.equal(g.sin(0), 0);
+        assertAlmostEqual(g.sin(Math.PI / 2), 1);
+    });
+
+});
+
+describe('The sqrt function', function () {
+
+    it('returns the square root', function () {
+        assert.equal(g.sqrt(4), 2);
+        assert.equal(g.sqrt(9), 3);
+        assert.equal(g.sqrt(0), 0);
+    });
+
+});
+
+describe('The tan function', function () {
+
+    it('returns the tangent', function () {
+        assert.equal(g.tan(0), 0);
+        assertAlmostEqual(g.tan(Math.PI / 4), 1);
+    });
+
+});
+
+describe('The xor function', function () {
+
+    it('does exclusive OR', function () {
+        assert.equal(g.xor(true, false), true);
+        assert.equal(g.xor(false, true), true);
+        assert.equal(g.xor(true, true), false);
+        assert.equal(g.xor(false, false), false);
+        assert.throws(() => g.xor(true));
+    });
+
+});
