@@ -333,6 +333,23 @@ describe('A path', function () {
         p = p.colorize({ fill: 'pink', strokeWidth: 3 });
         f(p, 'pink', 'green', 3);
     });
+
+    it('can combine multiple paths', function () {
+        let p1, p2, combined;
+        p1 = new vg.Path();
+        p1.moveTo(0, 0);
+        p1.lineTo(10, 0);
+        p2 = new vg.Path();
+        p2.moveTo(20, 0);
+        p2.lineTo(30, 0);
+        combined = vg.Path.combine(p1, p2);
+        assert.deepEqual(combined.commands, [
+            { type: 'M', x: 0, y: 0 },
+            { type: 'L', x: 10, y: 0 },
+            { type: 'M', x: 20, y: 0 },
+            { type: 'L', x: 30, y: 0 }
+        ]);
+    });
 });
 
 describe('A group', function () {
