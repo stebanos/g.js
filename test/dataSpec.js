@@ -13,6 +13,24 @@ describe('The importCSV function', function () {
 
 });
 
+describe('The keys function', function () {
+
+    it('returns all unique keys from a list of objects', function () {
+        const data = [{ name: 'Alice', age: 42 }, { name: 'Bob', age: 33 }];
+        assert.deepEqual(g.keys(data), ['name', 'age']);
+    });
+
+    it('deduplicates keys across objects', function () {
+        const data = [{ x: 1, y: 2 }, { y: 3, z: 4 }];
+        assert.deepEqual(g.keys(data), ['x', 'y', 'z']);
+    });
+
+    it('returns an empty array for an empty list', function () {
+        assert.deepEqual(g.keys([]), []);
+    });
+
+});
+
 describe('The filterData function', function () {
 
     it('works with strings', function () {
