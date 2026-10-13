@@ -183,6 +183,53 @@ describe('A point', function () {
 
 });
 
+describe('A transform', function () {
+    function assertPointAlmostEqual(p, x, y) {
+        assertAlmostEqual(p.x, x);
+        assertAlmostEqual(p.y, y);
+    }
+
+    it('can translate, scale, rotate and skew', function () {
+        const pt = new vg.Point(1, 1);
+        assertPointAlmostEqual(new vg.Transform().translate(10, 20).transformPoint(pt), 11, 21);
+        assertPointAlmostEqual(new vg.Transform().scale(2, 3).transformPoint(pt), 2, 3);
+        assertPointAlmostEqual(new vg.Transform().scale(4).transformPoint(pt), 4, 4);
+        assertPointAlmostEqual(new vg.Transform().rotate(90).transformPoint(pt), -1, 1);
+        assertPointAlmostEqual(new vg.Transform().skew(45, 0).transformPoint(pt), 0, 1);
+    });
+
+    it('applies operations added later first', function () {
+        const pt = new vg.Point(1, 1);
+        assertPointAlmostEqual(new vg.Transform().translate(10, 20).scale(2).transformPoint(pt), 12, 22);
+        assertPointAlmostEqual(new vg.Transform().scale(2).translate(10, 20).transformPoint(pt), 22, 42);
+        assertPointAlmostEqual(new vg.Transform().translate(10, 0).rotate(90).transformPoint(pt), 9, 1);
+    });
+
+    it('stays an identity transform for neutral operations around an origin', function () {
+        const around = op => op(new vg.Transform().translate(30, -40)).translate(-30, 40);
+        assert(new vg.Transform().translate(0, 0).isIdentity());
+        assert(around(t => t.rotate(0)).isIdentity());
+        assert(around(t => t.scale(1)).isIdentity());
+        assert(around(t => t.skew(0, 0)).isIdentity());
+        assert(!new vg.Transform().translate(1, 0).isIdentity());
+    });
+
+    it('returns a separate path for an identity transform', function () {
+        const p = new vg.Path([], 'red', 'blue', 2);
+        p.addRect(10, 20, 30, 40);
+        const commands = JSON.parse(JSON.stringify(p.commands));
+        const moved = p.translate(new vg.Point(0, 0));
+        assert.notStrictEqual(moved, p);
+        assert.deepEqual(moved.commands, commands);
+        assert.equal(moved.fill, 'red');
+        assert.equal(moved.stroke, 'blue');
+        assert.equal(moved.strokeWidth, 2);
+        moved.lineTo(100, 100);
+        assert.deepEqual(p.commands, commands);
+        assert.deepEqual(p.rotate(0, new vg.Point(5, 5)).commands, commands);
+    });
+});
+
 describe('A rect', function () {
 
     it('has a sane constructor', function () {
