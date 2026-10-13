@@ -191,100 +191,79 @@ function fuzzyCompare(p1, p2) {
     );
 }
 
-function coefficients(t) {
-    let mT, a, b, c, d;
-    mT = 1 - t;
-    b = mT * mT;
-    c = t * t;
-    d = c * t;
-    a = b * mT;
+// Extend the box with the point at t on the curve, if t lies on the curve.
+function addCurvePoint(box, x1, y1, x2, y2, x3, y3, x4, y4, t) {
+    if (!(t >= 0 && t <= 1)) {
+        return;
+    }
+    const mT = 1 - t;
+    let b = mT * mT;
+    let c = t * t;
+    const d = c * t;
+    const a = b * mT;
     b *= 3.0 * t;
     c *= 3.0 * mT;
-    return [a, b, c, d];
+    const x = a * x1 + b * x2 + c * x3 + d * x4;
+    const y = a * y1 + b * y2 + c * y3 + d * y4;
+    if (x < box[0]) {
+        box[0] = x;
+    } else if (x > box[2]) {
+        box[2] = x;
+    }
+    if (y < box[1]) {
+        box[1] = y;
+    } else if (y > box[3]) {
+        box[3] = y;
+    }
 }
 
-function pointAt(x1, y1, x2, y2, x3, y3, x4, y4, t) {
-    let a, b, c, d, coeff;
-    coeff = coefficients(t);
-    a = coeff[0];
-    b = coeff[1];
-    c = coeff[2];
-    d = coeff[3];
-    return {
-        x: a * x1 + b * x2 + c * x3 + d * x4,
-        y: a * y1 + b * y2 + c * y3 + d * y4
-    };
-}
+// Extend the box [minX, minY, maxX, maxY] with the bounds of the curve. Allocates nothing, so measuring paths
+// with many curves doesn't create garbage.
+export function addCurveBounds(box, x1, y1, x2, y2, x3, y3, x4, y4) {
+    box[0] = Math.min(box[0], x1, x4);
+    box[1] = Math.min(box[1], y1, y4);
+    box[2] = Math.max(box[2], x1, x4);
+    box[3] = Math.max(box[3], y1, y4);
 
-export function extrema(x1, y1, x2, y2, x3, y3, x4, y4) {
-    let minX, maxX, minY, maxY, ax, bx, cx, ay, by, cy, temp, rcp, tx, ty;
-
-    function bezierCheck(t) {
-        if (t >= 0 && t <= 1) {
-            const p = pointAt(x1, y1, x2, y2, x3, y3, x4, y4, t);
-            if (p.x < minX) {
-                minX = p.x;
-            } else if (p.x > maxX) {
-                maxX = p.x;
-            }
-            if (p.y < minY) {
-                minY = p.y;
-            } else if (p.y > maxY) {
-                maxY = p.y;
-            }
-        }
-    }
-
-    if (x1 < x4) {
-        minX = x1;
-        maxX = x4;
-    } else {
-        minX = x4;
-        maxX = x1;
-    }
-    if (y1 < y4) {
-        minY = y1;
-        maxY = y4;
-    } else {
-        minY = y4;
-        maxY = y1;
-    }
-
-    ax = 3 * (-x1 + 3 * x2 - 3 * x3 + x4);
-    bx = 6 * (x1 - 2 * x2 + x3);
-    cx = 3 * (-x1 + x2);
+    const ax = 3 * (-x1 + 3 * x2 - 3 * x3 + x4);
+    const bx = 6 * (x1 - 2 * x2 + x3);
+    const cx = 3 * (-x1 + x2);
 
     if (fuzzyCompare(ax + 1, 1)) {
         if (!fuzzyCompare(bx + 1, 1)) {
-            bezierCheck(-cx / bx);
+            addCurvePoint(box, x1, y1, x2, y2, x3, y3, x4, y4, -cx / bx);
         }
     } else {
-        tx = bx * bx - 4 * ax * cx;
+        const tx = bx * bx - 4 * ax * cx;
         if (tx >= 0) {
-            temp = Math.sqrt(tx);
-            rcp = 1 / (2 * ax);
-            bezierCheck((-bx + temp) * rcp);
-            bezierCheck((-bx - temp) * rcp);
+            const temp = Math.sqrt(tx);
+            const rcp = 1 / (2 * ax);
+            addCurvePoint(box, x1, y1, x2, y2, x3, y3, x4, y4, (-bx + temp) * rcp);
+            addCurvePoint(box, x1, y1, x2, y2, x3, y3, x4, y4, (-bx - temp) * rcp);
         }
     }
 
-    ay = 3 * (-y1 + 3 * y2 - 3 * y3 + y4);
-    by = 6 * (y1 - 2 * y2 + y3);
-    cy = 3 * (-y1 + y2);
+    const ay = 3 * (-y1 + 3 * y2 - 3 * y3 + y4);
+    const by = 6 * (y1 - 2 * y2 + y3);
+    const cy = 3 * (-y1 + y2);
 
     if (fuzzyCompare(ay + 1, 1)) {
         if (!fuzzyCompare(by + 1, 1)) {
-            bezierCheck(-cy / by);
+            addCurvePoint(box, x1, y1, x2, y2, x3, y3, x4, y4, -cy / by);
         }
     } else {
-        ty = by * by - 4 * ay * cy;
+        const ty = by * by - 4 * ay * cy;
         if (ty > 0) {
-            temp = Math.sqrt(ty);
-            rcp = 1 / (2 * ay);
-            bezierCheck((-by + temp) * rcp);
-            bezierCheck((-by - temp) * rcp);
+            const temp = Math.sqrt(ty);
+            const rcp = 1 / (2 * ay);
+            addCurvePoint(box, x1, y1, x2, y2, x3, y3, x4, y4, (-by + temp) * rcp);
+            addCurvePoint(box, x1, y1, x2, y2, x3, y3, x4, y4, (-by - temp) * rcp);
         }
     }
+}
 
-    return new Rect(minX, minY, maxX - minX, maxY - minY);
+export function extrema(x1, y1, x2, y2, x3, y3, x4, y4) {
+    const box = [Infinity, Infinity, -Infinity, -Infinity];
+    addCurveBounds(box, x1, y1, x2, y2, x3, y3, x4, y4);
+    return new Rect(box[0], box[1], box[2] - box[0], box[3] - box[1]);
 }

@@ -7,7 +7,7 @@ import {
     QUADTO,
     CURVETO,
     CLOSE,
-    extrema,
+    addCurveBounds,
     segmentLengths as bezierSegmentLengths,
     length as bezierLength,
     point as bezierPoint
@@ -74,6 +74,15 @@ export default class Path {
         for (i = 0; i < n; i += 1) {
             p.commands[i] = _cloneCommand(this.commands[i]);
         }
+        p.fill = Color.clone(this.fill);
+        p.stroke = Color.clone(this.stroke);
+        p.strokeWidth = this.strokeWidth;
+        return p;
+    }
+    // A copy to change the style of. It has its own list of commands but shares the command objects, which are
+    // never changed in place: copying them all would only make garbage.
+    _restyle() {
+        const p = new Path(this.commands.slice());
         p.fill = Color.clone(this.fill);
         p.stroke = Color.clone(this.stroke);
         p.strokeWidth = this.strokeWidth;
@@ -306,7 +315,7 @@ export default class Path {
                 options.strokeWidth = args[2];
             }
         }
-        const p = this.clone();
+        const p = this._restyle();
         if (options.fill) {
             p.fill = Color.clone(options.fill);
         }
@@ -319,7 +328,7 @@ export default class Path {
         return p;
     }
     desaturate(options) {
-        const p = this.clone();
+        const p = this._restyle();
         let fill = p.fill;
         let stroke = p.stroke;
         if (!(fill instanceof Color)) {
@@ -333,7 +342,7 @@ export default class Path {
         return p;
     }
     invert() {
-        const p = this.clone();
+        const p = this._restyle();
         let fill = p.fill;
         let stroke = p.stroke;
         if (!(fill instanceof Color)) {
@@ -377,65 +386,32 @@ export default class Path {
             return new Rect(0, 0, 0, 0);
         }
 
-        let px,
-            py,
-            prev,
-            right,
-            bottom,
-            minX = Number.MAX_VALUE,
-            minY = Number.MAX_VALUE,
-            maxX = -Number.MAX_VALUE,
-            maxY = -Number.MAX_VALUE;
-
-        let cmd;
+        // [minX, minY, maxX, maxY]
+        const box = [Number.MAX_VALUE, Number.MAX_VALUE, -Number.MAX_VALUE, -Number.MAX_VALUE];
+        let prev, cmd;
         for (let i = 0; i < this.commands.length; i += 1) {
             cmd = this.commands[i];
             if (cmd.type === MOVETO || cmd.type === LINETO) {
-                px = cmd.x;
-                py = cmd.y;
-                if (px < minX) {
-                    minX = px;
+                if (cmd.x < box[0]) {
+                    box[0] = cmd.x;
                 }
-                if (py < minY) {
-                    minY = py;
+                if (cmd.y < box[1]) {
+                    box[1] = cmd.y;
                 }
-                if (px > maxX) {
-                    maxX = px;
+                if (cmd.x > box[2]) {
+                    box[2] = cmd.x;
                 }
-                if (py > maxY) {
-                    maxY = py;
+                if (cmd.y > box[3]) {
+                    box[3] = cmd.y;
                 }
                 prev = cmd;
             } else if (cmd.type === CURVETO) {
-                const r = extrema(
-                    prev.x,
-                    prev.y,
-                    cmd.x1,
-                    cmd.y1,
-                    cmd.x2,
-                    cmd.y2,
-                    cmd.x,
-                    cmd.y
-                );
-                right = r.x + r.width;
-                bottom = r.y + r.height;
-                if (r.x < minX) {
-                    minX = r.x;
-                }
-                if (right > maxX) {
-                    maxX = right;
-                }
-                if (r.y < minY) {
-                    minY = r.y;
-                }
-                if (bottom > maxY) {
-                    maxY = bottom;
-                }
+                addCurveBounds(box, prev.x, prev.y, cmd.x1, cmd.y1, cmd.x2, cmd.y2, cmd.x, cmd.y);
                 prev = cmd;
             }
         }
 
-        return new Rect(minX, minY, maxX - minX, maxY - minY);
+        return new Rect(box[0], box[1], box[2] - box[0], box[3] - box[1]);
     }
     // Returns the DynamicPathElement at time t (0.0-1.0) on the path.
     point(t, segmentLengths) {
