@@ -282,6 +282,18 @@ describe('A path', function () {
         assert.deepEqual(p.bounds(), new vg.Rect(10, -10, 120, 70));
     });
 
+    it('has bounds that include the extremes of curves', function () {
+        // The curve's highest point is halfway, between its control points.
+        const p = new vg.Path();
+        p.moveTo(0, 0);
+        p.curveTo(0, 100, 100, 100, 100, 0);
+        assertRectsAlmostEqual(p.bounds(), new vg.Rect(0, 0, 100, 75));
+        const circle = new vg.Path();
+        circle.addEllipse(10, 20, 100, 50);
+        assertRectsAlmostEqual(circle.bounds(), new vg.Rect(10, 20, 100, 50));
+        assertRectsAlmostEqual(vg.bezier.extrema(0, 0, -50, 30, 150, 30, 100, 0), new vg.Rect(-8.0948, 0, 116.1895, 22.5));
+    });
+
     it('has a length', function () {
         const p1 = new vg.Path();
         assert.equal(p1.length(), 0);
@@ -332,6 +344,17 @@ describe('A path', function () {
         f(p, 'red', 'green', 1);
         p = p.colorize({ fill: 'pink', strokeWidth: 3 });
         f(p, 'pink', 'green', 3);
+    });
+
+    it('keeps the original path when the colorized path is changed', function () {
+        const p = new vg.Path();
+        p.addRect(10, 20, 30, 40);
+        const commands = JSON.parse(JSON.stringify(p.commands));
+        const colorized = p.colorize('red');
+        assert.deepEqual(colorized.commands, commands);
+        colorized.lineTo(100, 100);
+        assert.deepEqual(p.commands, commands);
+        assert.equal(p.fill, 'black');
     });
 
     it('can combine multiple paths', function () {
