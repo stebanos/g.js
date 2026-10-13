@@ -40,6 +40,18 @@ export default class Transform {
             a[4] * b[1] + a[5] * b[3] + b[5]
         ]);
     }
+    // Returns the matrix multiplication of the matrix (a, b, c, d, e, f) and the transform's matrix m.
+    // The same as _mmult([a, b, c, d, e, f], m), without allocating the first matrix.
+    static _premultiply(a, b, c, d, e, f, m) {
+        return new Transform([
+            a * m[0] + b * m[2],
+            a * m[1] + b * m[3],
+            c * m[0] + d * m[2],
+            c * m[1] + d * m[3],
+            e * m[0] + f * m[2] + m[4],
+            e * m[1] + f * m[3] + m[5]
+        ]);
+    }
     isIdentity() {
         const m = this.m;
         return (
@@ -73,20 +85,21 @@ export default class Transform {
         if (y === undefined) {
             y = x;
         }
-        return Transform._mmult([x, 0, 0, y, 0, 0], this.m);
+        return Transform._premultiply(x, 0, 0, y, 0, 0, this.m);
     }
     translate(x, y) {
-        return Transform._mmult([1, 0, 0, 1, x, y], this.m);
+        return Transform._premultiply(1, 0, 0, 1, x, y, this.m);
     }
     rotate(angle) {
-        const c = Math.cos(radians(angle)),
-            s = Math.sin(radians(angle));
-        return Transform._mmult([c, s, -s, c, 0, 0], this.m);
+        const r = radians(angle),
+            c = Math.cos(r),
+            s = Math.sin(r);
+        return Transform._premultiply(c, s, -s, c, 0, 0, this.m);
     }
     skew(x, y) {
         const kx = (Math.PI * x) / 180.0,
             ky = (Math.PI * y) / 180.0;
-        return Transform._mmult([1, Math.tan(ky), -Math.tan(kx), 1, 0, 0], this.m);
+        return Transform._premultiply(1, Math.tan(ky), -Math.tan(kx), 1, 0, 0, this.m);
     }
     // Returns the new coordinates of the given point (x,y) after transformation.
     transformPoint(point) {
@@ -103,6 +116,11 @@ export default class Transform {
         return transformedPoints;
     }
     transformPath(path) {
+        // Nothing moves: copy the list of commands but share the commands themselves, which are never changed
+        // in place. The result is still a separate path.
+        if (this.isIdentity()) {
+            return new Path(path.commands.slice(), path.fill, path.stroke, path.strokeWidth);
+        }
         const m = this.m;
         const commands = [];
         commands.length = path.commands.length;
